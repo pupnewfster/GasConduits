@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+version = "${mc_version}-" + getVersion()
+group 'gg.galaxygaming'
+archivesBaseName = "${mod_name}"
+
+minecraft {
+    version = "${mc_version}-${forge_version}"
+    runDir = "run"
+
+    mappings = "${mc_mappings}"
+    replace 'GRADLE:VERSION', "${mc_version}"
+
+    makeObfSourceJar = false
+}
+
+repositories {
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven {
+        name = "EnderIO"
+        url = "https://maven2.tterrag.com/"
+    }
+}
+
+dependencies {
+    deobfCompile "com.enderio:EnderIO:1.12.2-5.0.37:api"
+    deobfCompile "mekanism:Mekanism-1.12.2:9.4.13.349:api"
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
