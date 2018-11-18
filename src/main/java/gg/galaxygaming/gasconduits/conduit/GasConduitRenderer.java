@@ -9,7 +9,6 @@ import com.enderio.core.common.vecmath.Vector4f;
 import com.enderio.core.common.vecmath.Vertex;
 import crazypants.enderio.base.conduit.IClientConduit;
 import crazypants.enderio.base.conduit.IConduit;
-import crazypants.enderio.base.conduit.IConduitBundle;
 import crazypants.enderio.base.conduit.IConduitTexture;
 import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.base.conduit.geom.ConduitGeometryUtil;
@@ -20,7 +19,6 @@ import mekanism.api.gas.GasStack;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.BlockRenderLayer;
@@ -31,12 +29,6 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class GasConduitRenderer extends DefaultConduitRenderer implements IResourceManagerReloadListener {
-
-    private float downRatio;
-
-    private float flatRatio;
-
-    private float upRatio;
 
     private GasConduitRenderer() {
         super();
@@ -76,13 +68,6 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
                 renderGasOutline(component, gas);
             }
         }
-    }
-
-    @Override
-    public void renderDynamicEntity(@Nonnull TileEntitySpecialRenderer<?> conduitBundleRenderer, @Nonnull IConduitBundle te,
-                                    @Nonnull IClientConduit.WithDefaultRendering conduit, double x, double y, double z, float partialTick, float worldLight) {
-        calculateRatios((GasConduit) conduit);
-        super.renderDynamicEntity(conduitBundleRenderer, te, conduit, x, y, z, partialTick, worldLight);
     }
 
     @Override
@@ -215,11 +200,9 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
 
     @Override
     protected void setVerticesForTransmission(@Nonnull BoundingBox bound, @Nonnull EnumFacing id) {
-
-        float yScale = getRatioForConnection(id);
         float scale = 0.7f;
         float xs = id.getXOffset() == 0 ? scale : 1;
-        float ys = id.getYOffset() == 0 ? Math.min(yScale, scale) : yScale;
+        float ys = id.getYOffset() == 0 ? scale : 1;
         float zs = id.getZOffset() == 0 ? scale : 1;
 
         double sizeY = bound.sizeY();
@@ -227,53 +210,6 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
         double transY = (bound.sizeY() - sizeY) / 2;
         Vector3d translation = new Vector3d(0, transY + 0.025, 0);
         setupVertices(bound.translate(translation));
-    }
-
-    private void calculateRatios(GasConduit conduit) {
-        ConduitTank tank = conduit.getTank();
-        int totalAmount = tank.getStored();
-
-        int upCapacity = 0;
-        if (conduit.containsConduitConnection(EnumFacing.UP) || conduit.containsExternalConnection(EnumFacing.UP)) {
-            upCapacity = GasConduit.VOLUME_PER_CONNECTION;
-        }
-        int downCapacity = 0;
-        if (conduit.containsConduitConnection(EnumFacing.DOWN) || conduit.containsExternalConnection(EnumFacing.DOWN)) {
-            downCapacity = GasConduit.VOLUME_PER_CONNECTION;
-        }
-
-        int flatCapacity = tank.getMaxGas() - upCapacity - downCapacity;
-
-        int usedCapacity = 0;
-        if (downCapacity > 0) {
-            int inDown = Math.min(totalAmount, downCapacity);
-            usedCapacity += inDown;
-            downRatio = (float) inDown / downCapacity;
-        }
-        if (flatCapacity > 0 && usedCapacity < totalAmount) {
-            int inFlat = Math.min(flatCapacity, totalAmount - usedCapacity);
-            usedCapacity += inFlat;
-            flatRatio = (float) inFlat / flatCapacity;
-        } else {
-            flatRatio = 0;
-        }
-        if (upCapacity > 0 && usedCapacity < totalAmount) {
-            int inUp = Math.min(upCapacity, totalAmount - usedCapacity);
-            upRatio = (float) inUp / upCapacity;
-        } else {
-            upRatio = 0;
-        }
-
-    }
-
-    private float getRatioForConnection(EnumFacing id) {
-        if (id == EnumFacing.UP) {
-            return upRatio;
-        }
-        if (id == EnumFacing.DOWN) {
-            return downRatio;
-        }
-        return flatRatio;
     }
 
     // TODO: ModelBakeEvent would be better

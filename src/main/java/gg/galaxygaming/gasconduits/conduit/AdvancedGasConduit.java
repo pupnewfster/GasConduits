@@ -200,26 +200,26 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
         return gasTypeLocked ? ICON_KEY_LOCKED : ICON_KEY;
     }
 
+    @Nonnull
     @SideOnly(Side.CLIENT)
-    public @Nonnull
-    TextureAtlasSprite getNotSetEdgeTexture() {
+    public TextureAtlasSprite getNotSetEdgeTexture() {
         return ICON_EMPTY_EDGE.get(TextureAtlasSprite.class);
     }
 
+    @Nullable
     @Override
     @SideOnly(Side.CLIENT)
-    public @Nullable
-    IConduitTexture getTransmitionTextureForState(@Nonnull CollidableComponent component) {
-        if (isActive() && tank.containsValidGas()) {
+    public IConduitTexture getTransmitionTextureForState(@Nonnull CollidableComponent component) {
+        if (isActive() && tank.getGas() != null) {
             return new ConduitTextureWrapper(GasRenderUtil.getStillTexture(tank.getGas()));
         }
         return null;
     }
 
+    @Nullable
     @Override
     @SideOnly(Side.CLIENT)
-    public @Nullable
-    Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
+    public Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
         if (isActive() && tank.containsValidGas()) {
             int color = tank.getGasType().getTint();
             return new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, tank.getFilledRatio());
@@ -239,13 +239,13 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
 
     @Override
     public int receiveGas(EnumFacing side, GasStack resource, boolean doFill) {
-        return network.receiveGas(side, resource, doFill);
+        return network == null || !canReceiveGas(side, resource.getGas()) ? 0 : network.receiveGas(resource, doFill);
     }
 
     @Nullable
     @Override
     public GasStack drawGas(EnumFacing side, int maxDrain, boolean doDrain) {
-        return network.drawGas(side, maxDrain, doDrain);
+        return network == null || !canDrawGas(side, tank.getGasType()) ? null : network.drawGas(maxDrain, doDrain);
     }
 
     // --------------- End -------------------------

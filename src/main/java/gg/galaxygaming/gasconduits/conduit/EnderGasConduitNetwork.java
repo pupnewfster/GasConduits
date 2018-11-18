@@ -125,7 +125,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             // TODO: Only change starting pos of iterator is doFill is true so a false then true returns the same
 
             for (NetworkTank target : getIteratorForTank(tank)) {
-                if ((!target.equals(tank) || tank.selfFeed) && target.acceptsOuput && target.isValid() && target.inputColor == tank.outputColor
+                if (target.externalTank != null && (!target.equals(tank) || tank.selfFeed) && target.acceptsOuput && target.isValid() && target.inputColor == tank.outputColor
                         && matchedFilter(resource, target.con, target.conDir, false)) {
                     int vol = target.externalTank.receiveGas(target.conDir, resource.copy(), doFill);
                     remaining -= vol;

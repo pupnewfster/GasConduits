@@ -155,7 +155,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     @Nullable
     @Override
     public GasStack drawGas(EnumFacing side, int maxDrain, boolean doDrain) {
-        return tank.draw(maxDrain, doDrain);
+        return canDrawGas(side, tank.getGasType()) ? null : tank.draw(maxDrain, doDrain);
     }
 
     // --------------- End -------------------------
@@ -353,7 +353,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
     @Override
     public float getTransmitionGeometryScale() {
-        return tank.getFilledRatio();
+        return 1F;//tank.getFilledRatio();
     }
 
     @Override

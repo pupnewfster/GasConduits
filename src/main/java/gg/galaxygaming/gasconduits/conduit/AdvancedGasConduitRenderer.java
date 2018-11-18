@@ -115,8 +115,7 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
         if (layer == BlockRenderLayer.TRANSLUCENT && conduit.getConnectionMode(component.getDirection()) == ConnectionMode.DISABLED) {
             TextureAtlasSprite tex2 = ConduitBundleRenderManager.instance.getConnectorIcon(component.data);
             List<Vertex> corners = component.bound.getCornersWithUvForFace(component.getDirection(), tex2.getMinU(), tex2.getMaxU(), tex2.getMinV(), tex2.getMaxV());
-            List<Vertex> vertices = new ArrayList<>();
-            vertices.addAll(corners);
+            List<Vertex> vertices = new ArrayList<>(corners);
             // back face
             for (int i = corners.size() - 1; i >= 0; i--) {
                 Vertex c = corners.get(i);

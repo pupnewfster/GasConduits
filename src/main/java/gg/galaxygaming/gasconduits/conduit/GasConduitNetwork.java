@@ -199,10 +199,9 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
         if (con.getConduitConnections().contains(EnumFacing.DOWN)) {
             BlockPos pos = con.getBundle().getLocation().offset(EnumFacing.DOWN);
             IGasConduit dc = ConduitUtil.getConduit(con.getBundle().getEntity().getWorld(), pos, IGasConduit.class);
-            if (dc instanceof GasConduit && getConduits().contains(dc)) {
+            if (dc instanceof GasConduit && getConduits().contains(dc) && tank.getGas() != null) {
                 GasConduit downCon = (GasConduit) dc;
-                int filled = downCon.receiveGas(EnumFacing.UP, tank.getGas().copy(), false, false, pushPoken);
-                int actual = filled;
+                int actual = downCon.receiveGas(EnumFacing.UP, tank.getGas().copy(), false, false, pushPoken);
                 actual = Math.min(actual, tank.getStored());
                 actual = Math.min(actual, downCon.getTank().getNeeded());
                 tank.addAmount(-actual);
@@ -299,11 +298,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
         if (neighbour.getNetwork() != this) {
             return false;
         }
-        if (neighbour.getBundle().getLocation().getY() > con.getBundle().getLocation().getY()) {
-            return false;
-        }
-        float nr = neighbour.getTank().getFilledRatio();
-        return !(nr >= con.getTank().getFilledRatio());
+        return neighbour.getTank().getFilledRatio() < con.getTank().getFilledRatio();
     }
 
     static class FlowAction {
