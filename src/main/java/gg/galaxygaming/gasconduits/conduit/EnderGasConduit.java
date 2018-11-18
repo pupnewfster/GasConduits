@@ -105,15 +105,9 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     public @Nonnull
     NNList<ItemStack> getDrops() {
         NNList<ItemStack> res = super.getDrops();
-        for (ItemStack stack : functionUpgrades.values()) {
-            res.add(stack);
-        }
-        for (ItemStack stack : inputFilterUpgrades.values()) {
-            res.add(stack);
-        }
-        for (ItemStack stack : outputFilterUpgrades.values()) {
-            res.add(stack);
-        }
+        res.addAll(functionUpgrades.values());
+        res.addAll(inputFilterUpgrades.values());
+        res.addAll(outputFilterUpgrades.values());
         return res;
     }
 
@@ -254,10 +248,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
         if (!super.canConnectToConduit(direction, con)) {
             return false;
         }
-        if (!(con instanceof EnderGasConduit)) {
-            return false;
-        }
-        return true;
+        return con instanceof EnderGasConduit;
     }
 
     @Override
@@ -564,11 +555,8 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
 
     @Override
     public boolean hasInternalCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY
-                || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY && containsExternalConnection(facing)) {
-            return true;
-        }
-        return false;
+        return capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY
+                || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY && facing != null && containsExternalConnection(facing);
     }
 
     // FILTERS

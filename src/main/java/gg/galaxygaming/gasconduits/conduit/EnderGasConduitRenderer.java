@@ -18,10 +18,7 @@ public class EnderGasConduitRenderer extends DefaultConduitRenderer {
 
     @Override
     public boolean isRendererForConduit(@Nonnull IConduit conduit) {
-        if (conduit instanceof EnderGasConduit) {
-            return true;
-        }
-        return false;
+        return conduit instanceof EnderGasConduit;
     }
 
     @Override

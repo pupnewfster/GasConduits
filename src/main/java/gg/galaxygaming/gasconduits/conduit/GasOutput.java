@@ -19,8 +19,8 @@ public class GasOutput {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((location == null) ? 0 : location.hashCode());
-        result = prime * result + ((dir == null) ? 0 : dir.hashCode());
+        result = prime * result + location.hashCode();
+        result = prime * result + dir.hashCode();
         return result;
     }
 
@@ -33,14 +33,9 @@ public class GasOutput {
         if (getClass() != obj.getClass())
             return false;
         GasOutput other = (GasOutput) obj;
-        if (location == null) {
-            if (other.location != null)
-                return false;
-        } else if (!location.equals(other.location))
+        if (!location.equals(other.location))
             return false;
-        if (dir != other.dir)
-            return false;
-        return true;
+        return dir == other.dir;
     }
 
     @Override

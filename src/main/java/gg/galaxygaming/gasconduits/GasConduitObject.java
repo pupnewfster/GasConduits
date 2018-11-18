@@ -20,20 +20,20 @@ public class GasConduitObject implements IModObjectBase {
         event.register(instance = new GasConduitObject());
     }
 
-    final @Nonnull
-    String unlocalisedName;
+    @Nonnull
+    final String unlocalisedName;
 
-    protected @Nullable
-    Block block;
-    protected @Nullable
-    Item item;
+    @Nullable
+    protected Block block;
+    @Nullable
+    protected Item item;
 
-    protected final @Nonnull
-    Class<?> clazz;
-    protected final @Nullable
-    String blockMethodName, itemMethodName;
-    protected final @Nullable
-    IModTileEntity modTileEntity;
+    @Nullable
+    protected final Class<?> clazz;
+    @Nullable
+    protected final String blockMethodName, itemMethodName;
+    @Nullable
+    protected final IModTileEntity modTileEntity;
 
     private GasConduitObject() {
         this.unlocalisedName = ModObjectRegistry.sanitizeName("item_gas_conduit");
@@ -50,9 +50,9 @@ public class GasConduitObject implements IModObjectBase {
         this.modTileEntity = null;
     }
 
+    @Nonnull
     @Override
-    public @Nonnull
-    Class<?> getClazz() {
+    public Class<?> getClazz() {
         return clazz;
     }
 
@@ -96,9 +96,9 @@ public class GasConduitObject implements IModObjectBase {
         return modTileEntity;
     }
 
+    @Nonnull
     @Override
-    public final @Nonnull
-    <B extends Block> B apply(@Nonnull B blockIn) {
+    public final <B extends Block> B apply(@Nonnull B blockIn) {
         blockIn.setCreativeTab(EnderIOTab.tabEnderIOConduits);
         return IModObjectBase.super.apply(blockIn);
     }

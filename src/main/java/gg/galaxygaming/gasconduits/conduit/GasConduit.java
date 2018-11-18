@@ -110,13 +110,13 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
                         }
                     }
 
-                    if (type == null) {
+                    if (type == null || stored <= 0) {
                         continue;
                     }
                     GasStack couldDrain = new GasStack(type, stored);
 
                     //GasStack couldDrain = extTank.stored;
-                    if (couldDrain != null && couldDrain.amount > 0 && canReceiveGas(dir, couldDrain.getGas())) {
+                    if (canReceiveGas(dir, couldDrain.getGas())) {
                         couldDrain = couldDrain.copy();
                         if (couldDrain.amount > GasConduitConfig.tier1_extractRate) {
                             couldDrain.amount = GasConduitConfig.tier1_extractRate;
@@ -254,10 +254,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
         if (tank.getGas() == null) {
             return true;
         }
-        if (GasUtil.areGassesTheSame(gas, tank.getGasType())) {
-            return true;
-        }
-        return false;
+        return GasUtil.areGassesTheSame(gas, tank.getGasType());
     }
 
     @Override

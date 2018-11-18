@@ -23,7 +23,7 @@ public class PacketGasFilter extends AbstractConduitPacket<IGasConduit> {
     }
 
     public PacketGasFilter(EnderGasConduit eConduit, EnumFacing dir, IGasFilter filter, boolean isInput) {
-        super(eConduit.getBundle().getEntity(), eConduit);
+        super(eConduit);
         this.dir = dir;
         this.filter = filter;
         this.isInput = isInput;

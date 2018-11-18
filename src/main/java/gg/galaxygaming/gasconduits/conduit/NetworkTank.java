@@ -68,10 +68,7 @@ public class NetworkTank {
         if (conDir != other.conDir) {
             return false;
         }
-        if (!conduitLoc.equals(other.conduitLoc)) {
-            return false;
-        }
-        return true;
+        return conduitLoc.equals(other.conduitLoc);
     }
 
 }

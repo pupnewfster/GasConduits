@@ -303,10 +303,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
             return false;
         }
         float nr = neighbour.getTank().getFilledRatio();
-        if (nr >= con.getTank().getFilledRatio()) {
-            return false;
-        }
-        return true;
+        return !(nr >= con.getTank().getFilledRatio());
     }
 
     static class FlowAction {

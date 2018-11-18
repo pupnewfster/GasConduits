@@ -7,7 +7,6 @@ import crazypants.enderio.util.NbtValue;
 import gg.galaxygaming.gasconduits.utils.GasUtil;
 import io.netty.buffer.ByteBuf;
 import mekanism.api.gas.Gas;
-import mekanism.api.gas.GasRegistry;
 import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -76,12 +75,6 @@ public class GasFilter implements IGasFilter {
         }
         gasses[index] = null;
         return true;
-    }
-
-    @Deprecated
-    protected void setGas(int index, String gasName) {
-        Gas g = GasRegistry.getGas(gasName);
-        setGas(index, g);
     }
 
     @Override
@@ -172,16 +165,14 @@ public class GasFilter implements IGasFilter {
     }
 
     public void createGhostSlots(@Nonnull NNList<GhostSlot> slots, int xOffset, int yOffset, @Nullable Runnable cb) {
-        int topY = yOffset;
-        int leftX = xOffset;
         int index = 0;
         int numRows = 1;
         int rowSpacing = 2;
         int numCols = 5;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
-                int x = leftX + col * 18;
-                int y = topY + row * 18 + rowSpacing * row;
+                int x = xOffset + col * 18;
+                int y = yOffset + row * 18 + rowSpacing * row;
                 slots.add(new GasFilterGhostSlot(index, x, y, cb));
                 index++;
             }

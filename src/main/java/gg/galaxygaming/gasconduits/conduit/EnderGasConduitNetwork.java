@@ -68,13 +68,12 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             }
         }
 
-        if (type == null) {
+        if (type == null || stored <= 0) {
             return false;
         }
         GasStack drained = new GasStack(type, stored);
 
-        //GasStack drained = tank.externalTank.stored;
-        if (drained == null || drained.amount <= 0 || !matchedFilter(drained, con, conDir, true)) {
+        if (!matchedFilter(drained, con, conDir, true)) {
             return false;
         }
 
@@ -115,7 +114,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
             filling = true;
 
-            if (resource == null || !matchedFilter(resource, tank.con, tank.conDir, true)) {
+            if (!matchedFilter(resource, tank.con, tank.conDir, true)) {
                 return 0;
             }
 
@@ -194,7 +193,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
                 res.addAll(Arrays.asList(target.externalTank.getTankInfo()));
             }
         }
-        return res.toArray(new GasTankInfo[res.size()]);
+        return res.toArray(new GasTankInfo[0]);
     }
 
     static class NetworkTankKey {
@@ -236,13 +235,8 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
                 return false;
             }
             if (conduitLoc == null) {
-                if (other.conduitLoc != null) {
-                    return false;
-                }
-            } else if (!conduitLoc.equals(other.conduitLoc)) {
-                return false;
-            }
-            return true;
+                return other.conduitLoc == null;
+            } else return conduitLoc.equals(other.conduitLoc);
         }
 
     }

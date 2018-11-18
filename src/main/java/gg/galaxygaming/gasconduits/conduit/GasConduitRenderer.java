@@ -51,10 +51,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
 
     @Override
     public boolean isRendererForConduit(@Nonnull IConduit conduit) {
-        if (conduit instanceof GasConduit) {
-            return true;
-        }
-        return false;
+        return conduit instanceof GasConduit;
     }
 
     @Override

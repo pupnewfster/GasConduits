@@ -41,10 +41,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     @Override
     public boolean canConnectToExternal(@Nonnull EnumFacing direction, boolean ignoreDisabled) {
         IGasHandler h = getExternalHandler(direction);
-        if (h == null) {
-            return false;
-        }
-        return true;
+        return h != null;
     }
 
     @Override
@@ -91,10 +88,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         if (conduitConnections.contains(dir)) {
             return true;
         }
-        if (!externalConnections.contains(dir)) {
-            return false;
-        }
-        return true;
+        return externalConnections.contains(dir);
     }
 
     protected boolean autoExtractForDir(@Nonnull EnumFacing dir) {
@@ -270,7 +264,6 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
             return false;
         }
 
-        @Nonnull
         @Override
         public GasTankInfo[] getTankInfo() {
             return AbstractGasConduit.this.getTankInfo();
@@ -281,7 +274,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
             if (!side.equals(facing)) {
                 return false;
             }
-            ConnectionMode connectionMode = getConnectionMode(side);
+            ConnectionMode connectionMode = getConnectionMode(facing);
             return connectionMode.acceptsOutput() || connectionMode.acceptsInput();
         }
     }

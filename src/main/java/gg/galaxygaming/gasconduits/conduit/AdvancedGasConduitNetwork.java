@@ -223,14 +223,10 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
                     }
                 }
 
-                if (type == null) {
+                if (type == null || stored <= 0) {
                     return false;
                 }
-                GasStack available = new GasStack(type, stored);
-                if (available == null || available.amount <= 0) {
-                    return false;
-                }
-                setGasType(available);
+                setGasType(new GasStack(type, stored));
             }
 
             GasStack couldDrain = gasType.copy();

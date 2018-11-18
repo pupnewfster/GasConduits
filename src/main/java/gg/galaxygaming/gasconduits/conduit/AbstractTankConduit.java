@@ -196,7 +196,7 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
         //TODO
         //GasStack stack = getGasType();
         //return stack == null || stack.amount <= 0 ? 0 : stack.getGas().getLuminosity(stack);
-        return 1;
+        return 15;
     }
 
     protected abstract void updateTank();

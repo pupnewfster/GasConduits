@@ -100,16 +100,12 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
                     List<Vertex> corners = bb.getCornersWithUvForFace(dir, minU, maxU, minV, maxV);
                     moveEdgeCorners(corners, vDir, width);
                     moveEdgeCorners(corners, componentDirection.getOpposite(), sideScale);
-                    for (Vertex c : corners) {
-                        vertices.add(c);
-                    }
+                    vertices.addAll(corners);
 
                     corners = bb.getCornersWithUvForFace(dir, minU, maxU, minV, maxV);
                     moveEdgeCorners(corners, vDir.getOpposite(), width);
                     moveEdgeCorners(corners, componentDirection.getOpposite(), sideScale);
-                    for (Vertex c : corners) {
-                        vertices.add(c);
-                    }
+                    vertices.addAll(corners);
 
                 }
             }
@@ -120,9 +116,7 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
             TextureAtlasSprite tex2 = ConduitBundleRenderManager.instance.getConnectorIcon(component.data);
             List<Vertex> corners = component.bound.getCornersWithUvForFace(component.getDirection(), tex2.getMinU(), tex2.getMaxU(), tex2.getMinV(), tex2.getMaxV());
             List<Vertex> vertices = new ArrayList<>();
-            for (Vertex c : corners) {
-                vertices.add(c);
-            }
+            vertices.addAll(corners);
             // back face
             for (int i = corners.size() - 1; i >= 0; i--) {
                 Vertex c = corners.get(i);
