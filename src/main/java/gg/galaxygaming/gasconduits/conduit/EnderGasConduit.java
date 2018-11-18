@@ -98,7 +98,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     @Override
     @Nonnull
     public ItemStack createItem() {
-        return new ItemStack(GasConduitObject.getInstance().getItemNN(), 1, 2);
+        return new ItemStack(GasConduitObject.itemGasConduit.getItemNN(), 1, 2);
     }
 
     @Override

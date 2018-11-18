@@ -14,7 +14,6 @@ import crazypants.enderio.base.conduit.IGuiExternalConnection;
 import crazypants.enderio.base.filter.gui.FilterGuiUtil;
 import crazypants.enderio.base.gui.IconEIO;
 import crazypants.enderio.base.gui.RedstoneModeButton;
-import crazypants.enderio.base.init.ModObject;
 import crazypants.enderio.base.machine.modes.RedstoneControlMode;
 import crazypants.enderio.base.network.PacketHandler;
 import crazypants.enderio.conduits.gui.BaseSettingsPanel;
@@ -67,7 +66,7 @@ public class GasSettings extends BaseSettingsPanel {
     private final IGasConduit conduit;
 
     public GasSettings(@Nonnull final IGuiExternalConnection gui, @Nonnull IClientConduit con) {
-        super(IconEIO.WRENCH_OVERLAY_FLUID, GasConduitObject.getInstance().getUnlocalisedName(), gui, con, "in_out_settings");
+        super(IconEIO.WRENCH_OVERLAY_FLUID, GasConduitObject.itemGasConduit.getUnlocalisedName(), gui, con, "in_out_settings");
 
         conduit = (IGasConduit) con;
         if (con instanceof EnderGasConduit) {
@@ -173,7 +172,7 @@ public class GasSettings extends BaseSettingsPanel {
 
     private void createGhostSlots() {
         //TODO make gas filter
-        NNList<ItemStack> filtersAll = new NNList<>(new ItemStack(ModObject.itemFluidFilter.getItemNN()));
+        NNList<ItemStack> filtersAll = new NNList<>(new ItemStack(GasConduitObject.itemGasFilter.getItemNN()));
         NNList<ItemStack> upgrades = new NNList<>(new ItemStack(ConduitObject.item_extract_speed_upgrade.getItemNN()),
                 new ItemStack(ConduitObject.item_extract_speed_downgrade.getItemNN()));
         gui.getContainer().createGhostSlots(gui.getGhostSlotHandler().getGhostSlots(), filtersAll, upgrades);

@@ -274,7 +274,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     @Override
     @Nonnull
     public ItemStack createItem() {
-        return new ItemStack(GasConduitObject.getInstance().getItemNN(), 1, 0);
+        return new ItemStack(GasConduitObject.itemGasConduit.getItemNN(), 1, 0);
     }
 
     @Override

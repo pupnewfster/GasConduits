@@ -24,3 +24,6 @@ gasconduits.gui.gas_blacklist=Blacklist
 
 gasconduits.gui.conduit_gas.header=Gas Conduit
 gasconduits.config.condit.gas=Gas Conduits
+
+
+item.item_gas_filter.name=Gas Filter
