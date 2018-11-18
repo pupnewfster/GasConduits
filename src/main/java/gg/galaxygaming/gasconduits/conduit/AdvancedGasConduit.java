@@ -210,7 +210,7 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
     @Override
     @SideOnly(Side.CLIENT)
     public IConduitTexture getTransmitionTextureForState(@Nonnull CollidableComponent component) {
-        if (isActive() && tank.getGas() != null) {
+        if (tank.getGas() != null) {
             return new ConduitTextureWrapper(GasRenderUtil.getStillTexture(tank.getGas()));
         }
         return null;
@@ -220,7 +220,7 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
     @Override
     @SideOnly(Side.CLIENT)
     public Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
-        if (isActive() && tank.containsValidGas()) {
+        if (tank.containsValidGas()) {
             int color = tank.getGasType().getTint();
             return new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, tank.getFilledRatio());
         }
