@@ -130,7 +130,7 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
                 if (cont != null) {
                     GasStack offer = tank.getGas().copy();
                     Prof.start(profiler, "otherMod_fill");
-                    int filled = cont.receiveGas(output.dir.getOpposite(), offer, true);
+                    int filled = cont.receiveGas(output.dir, offer, true);
                     Prof.stop(profiler);
                     if (filled > 0) {
                         tank.addAmount(-filled);
@@ -236,13 +236,13 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
             GasStack couldDrain = gasType.copy();
             couldDrain.amount = maxExtract;
 
-            GasStack drained = extTank.drawGas(dir.getOpposite(), couldDrain.amount, true);
+            GasStack drained = extTank.drawGas(dir, couldDrain.amount, true);
             if (drained == null || drained.amount == 0) {
                 return false;
             } else if (drained.isGasEqual(getGasType())) {
                 tank.addAmount(drained.amount);
             } else {
-                extTank.receiveGas(dir.getOpposite(), drained, true);
+                extTank.receiveGas(dir, drained, true);
             }
             return true;
         }

@@ -124,7 +124,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
                         int used = pushGas(dir, couldDrain, true, network == null ? -1 : network.getNextPushToken());
                         if (used > 0) {
                             couldDrain.amount = used;
-                            extTank.drawGas(dir.getOpposite(), couldDrain.amount, true);
+                            extTank.drawGas(dir, couldDrain.amount, true);
                             if (network != null && network.getGasType() == null) {
                                 network.setGasType(couldDrain);
                             }

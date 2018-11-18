@@ -170,7 +170,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
         for (LocatedGasHandler lh : externals) {
             int distance = (int) lh.pos.distanceSq(conPos);
             if (distance < closestDistance && con.canOutputToDir(lh.dir.getOpposite())) {
-                int couldFill = lh.tank.receiveGas(lh.dir.getOpposite(), toDrain.copy(), false);
+                int couldFill = lh.tank.receiveGas(lh.dir, toDrain.copy(), false);
                 if (couldFill > 0) {
                     closestTank = lh;
                     closestDistance = distance;
@@ -179,7 +179,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
         }
 
         if (closestTank != null) {
-            int filled = closestTank.tank.receiveGas(closestTank.dir.getOpposite(), toDrain.copy(), true);
+            int filled = closestTank.tank.receiveGas(closestTank.dir, toDrain.copy(), true);
             con.getTank().addAmount(-filled);
         }
 
@@ -222,7 +222,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
             if (con.canOutputToDir(dir)) {
                 IGasHandler extCon = con.getExternalHandler(dir);
                 if (extCon != null) {
-                    int amount = extCon.receiveGas(dir.getOpposite(), available.copy(), false);
+                    int amount = extCon.receiveGas(dir, available.copy(), false);
                     if (amount > 0) {
                         totalRequested += amount;
                         numRequests++;
@@ -241,7 +241,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
                 if (con.canOutputToDir(dir)) {
                     IGasHandler extCon = con.getExternalHandler(dir);
                     if (extCon != null) {
-                        int amount = extCon.receiveGas(dir.getOpposite(), requestSource.copy(), true);
+                        int amount = extCon.receiveGas(dir, requestSource.copy(), true);
                         if (amount > 0) {
                             outputedToExternal(amount);
                             tank.addAmount(-amount);
