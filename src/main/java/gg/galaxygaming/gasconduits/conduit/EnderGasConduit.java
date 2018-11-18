@@ -30,11 +30,11 @@ import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import crazypants.enderio.util.Prep;
 import gg.galaxygaming.gasconduits.GasConduitObject;
 import gg.galaxygaming.gasconduits.common.GasFilter;
-import gg.galaxygaming.gasconduits.common.GasWrapper;
 import gg.galaxygaming.gasconduits.common.IGasFilter;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
+import mekanism.common.capabilities.Capabilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -709,7 +709,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == GasWrapper.GAS_HANDLER_CAPABILITY) {
+        if (capability == Capabilities.GAS_HANDLER_CAPABILITY || capability == Capabilities.TUBE_CONNECTION_CAPABILITY) {
             return (T) new ConnectionEnderGasSide(facing);
         }
         return null;

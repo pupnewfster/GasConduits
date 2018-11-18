@@ -172,6 +172,7 @@ public class GasSettings extends BaseSettingsPanel {
     }
 
     private void createGhostSlots() {
+        //TODO make gas filter
         NNList<ItemStack> filtersAll = new NNList<>(new ItemStack(ModObject.itemFluidFilter.getItemNN()));
         NNList<ItemStack> upgrades = new NNList<>(new ItemStack(ConduitObject.item_extract_speed_upgrade.getItemNN()),
                 new ItemStack(ConduitObject.item_extract_speed_downgrade.getItemNN()));

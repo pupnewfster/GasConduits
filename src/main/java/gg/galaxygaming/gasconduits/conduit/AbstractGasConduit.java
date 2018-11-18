@@ -7,10 +7,8 @@ import crazypants.enderio.base.machine.modes.RedstoneControlMode;
 import crazypants.enderio.conduits.conduit.AbstractConduit;
 import gg.galaxygaming.gasconduits.client.GasSettings;
 import gg.galaxygaming.gasconduits.common.GasWrapper;
-import mekanism.api.gas.Gas;
-import mekanism.api.gas.GasStack;
-import mekanism.api.gas.GasTankInfo;
-import mekanism.api.gas.IGasHandler;
+import mekanism.api.gas.*;
+import mekanism.common.capabilities.Capabilities;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -199,7 +197,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == GasWrapper.GAS_HANDLER_CAPABILITY) {
+        if (capability == Capabilities.GAS_HANDLER_CAPABILITY || capability == Capabilities.TUBE_CONNECTION_CAPABILITY) {
             return getExternalConnections().contains(facing);
         }
         return false;
@@ -209,7 +207,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == GasWrapper.GAS_HANDLER_CAPABILITY) {
+        if (capability == Capabilities.GAS_HANDLER_CAPABILITY || capability == Capabilities.TUBE_CONNECTION_CAPABILITY) {
             return (T) getGasDir(facing);
         }
         return null;
@@ -224,10 +222,16 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         return null;
     }
 
+    @Override
+    public boolean canTubeConnect(EnumFacing facing) {
+        ConnectionMode connectionMode = getConnectionMode(facing);
+        return connectionMode.acceptsOutput() || connectionMode.acceptsInput();
+    }
+
     /**
      * Inner class for holding the direction of capabilities.
      */
-    protected class ConnectionGasSide implements IGasHandler {
+    protected class ConnectionGasSide implements IGasHandler, ITubeConnection {
         protected EnumFacing side;
 
         public ConnectionGasSide(EnumFacing side) {
@@ -237,6 +241,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         @Override
         public int receiveGas(EnumFacing facing, GasStack resource, boolean doFill) {
             if (canReceiveGas(side, resource.getGas())) {
+
                 return AbstractGasConduit.this.receiveGas(facing, resource, doFill);
             }
             return 0;
@@ -252,24 +257,16 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
         @Override
         public boolean canReceiveGas(EnumFacing facing, Gas gas) {
-            if (conectionModes.containsKey(facing)) {
-                ConnectionMode connectionMode = conectionModes.get(facing);
-                if (connectionMode.acceptsInput()) {
-                    RedstoneControlMode redstoneControlMode = extractionModes.get(facing);
-                    return RedstoneControlMode.isConditionMet(redstoneControlMode, getExternalRedstoneLevel());
-                }
+            if (conectionModes.containsKey(facing) && conectionModes.get(facing).acceptsInput()) {
+                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
             }
             return false;
         }
 
         @Override
         public boolean canDrawGas(EnumFacing facing, Gas gas) {
-            if (conectionModes.containsKey(facing)) {
-                ConnectionMode connectionMode = conectionModes.get(facing);
-                if (connectionMode.acceptsOutput()) {
-                    RedstoneControlMode redstoneControlMode = extractionModes.get(facing);
-                    return RedstoneControlMode.isConditionMet(redstoneControlMode, getExternalRedstoneLevel());
-                }
+            if (conectionModes.containsKey(facing) && conectionModes.get(facing).acceptsOutput()) {
+                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
             }
             return false;
         }
@@ -278,6 +275,12 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         @Override
         public GasTankInfo[] getTankInfo() {
             return AbstractGasConduit.this.getTankInfo();
+        }
+
+        @Override
+        public boolean canTubeConnect(EnumFacing facing) {
+            ConnectionMode connectionMode = getConnectionMode(facing);
+            return connectionMode.acceptsOutput() || connectionMode.acceptsInput();
         }
     }
 

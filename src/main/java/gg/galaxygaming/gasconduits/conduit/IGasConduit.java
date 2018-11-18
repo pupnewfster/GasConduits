@@ -4,12 +4,13 @@ import crazypants.enderio.base.conduit.IClientConduit;
 import crazypants.enderio.base.conduit.IExtractor;
 import crazypants.enderio.base.conduit.IServerConduit;
 import mekanism.api.gas.IGasHandler;
+import mekanism.api.gas.ITubeConnection;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface IGasConduit extends IGasHandler, IExtractor, IServerConduit, IClientConduit {
+public interface IGasConduit extends IGasHandler, IExtractor, IServerConduit, IClientConduit, ITubeConnection {
 
     boolean canOutputToDir(@Nonnull EnumFacing dir);
 
