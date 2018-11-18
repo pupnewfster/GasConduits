@@ -18,19 +18,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class AbstractTankConduit extends AbstractGasConduit {
-
     protected ConduitTank tank = new ConduitTank(0);
     protected boolean stateDirty = false;
     protected long lastEmptyTick = 0;
     protected int numEmptyEvents = 0;
     protected boolean gasTypeLocked = false;
-    private int lastLightValue;
 
     @Override
     public boolean onBlockActivated(@Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull RaytraceResult res, @Nonnull List<RaytraceResult> all) {
@@ -175,28 +172,6 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
 
     public boolean isGasTypeLocked() {
         return gasTypeLocked;
-    }
-
-    @Override
-    public void updateEntity(@Nonnull World world) {
-        //TODO
-        /*if (ConduitConfig.dynamicLighting.get()) {
-            int lightValue = getLightValue();
-            if (lastLightValue != lightValue) {
-                BlockPos pos = getBundle().getLocation();
-                getBundle().getBundleworld().checkLightFor(EnumSkyBlock.BLOCK, pos);
-                lastLightValue = lightValue;
-            }
-        }*/
-        super.updateEntity(world);
-    }
-
-    @Override
-    public int getLightValue() {
-        //TODO
-        //GasStack stack = getGasType();
-        //return stack == null || stack.amount <= 0 ? 0 : stack.getGas().getLuminosity(stack);
-        return 15;
     }
 
     protected abstract void updateTank();

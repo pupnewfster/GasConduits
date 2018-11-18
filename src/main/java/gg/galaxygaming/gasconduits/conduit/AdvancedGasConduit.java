@@ -40,7 +40,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class AdvancedGasConduit extends AbstractTankConduit implements IConduitComponent {
-
     public static final int CONDUIT_VOLUME = Fluid.BUCKET_VOLUME;
 
     public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(1));
@@ -137,7 +136,6 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
     @Override
     public void clearNetwork() {
         this.network = null;
-        // TODO: Spill gas
     }
 
     @Override

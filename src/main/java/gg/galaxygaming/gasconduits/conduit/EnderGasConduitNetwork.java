@@ -53,11 +53,10 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
     public boolean extractFrom(@Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir) {
         NetworkTank tank = getTank(con, conDir);
-        if (!tank.isValid()) {
+        if (!tank.isValid() || tank.externalTank == null) {
             return false;
         }
 
-        //TODO
         GasTankInfo[] tankInfo = tank.externalTank.getTankInfo();
         int stored = 0;
         Gas type = null;
@@ -85,14 +84,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         }
         drained.amount = amountAccepted;
         drained = tank.externalTank.drawGas(tank.conDir, drained.amount, true);
-        if (drained == null || drained.amount <= 0) {
-            return false;
-        }
-        // if(drained.amount != amountAccepted) {
-        // Log.warn("EnderGasConduit.extractFrom: Extracted gas volume is not equal to inserted volume. Drained=" + drained.amount + " filled="
-        // + amountAccepted + " Gas: " + drained + " Accepted=" + amountAccepted);
-        // }
-        return true;
+        return drained != null && drained.amount > 0;
     }
 
     @Nonnull
@@ -105,13 +97,11 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
     }
 
     public int fillFrom(@Nonnull NetworkTank tank, GasStack resource, boolean doFill) {
-
         if (filling) {
             return 0;
         }
 
         try {
-
             filling = true;
 
             if (!matchedFilter(resource, tank.con, tank.conDir, true)) {
@@ -189,7 +179,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         List<GasTankInfo> res = new ArrayList<>(tanks.size());
         NetworkTank tank = getTank(con, conDir);
         for (NetworkTank target : tanks) {
-            if (!target.equals(tank) && target.isValid()) {
+            if (!target.equals(tank) && target.isValid() && target.externalTank != null) {
                 res.addAll(Arrays.asList(target.externalTank.getTankInfo()));
             }
         }
@@ -197,7 +187,6 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
     }
 
     static class NetworkTankKey {
-
         EnumFacing conDir;
         BlockPos conduitLoc;
 
@@ -213,10 +202,8 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         @Override
         public int hashCode() {
             final int prime = 31;
-            int result = 1;
-            result = prime * result + ((conDir == null) ? 0 : conDir.hashCode());
-            result = prime * result + ((conduitLoc == null) ? 0 : conduitLoc.hashCode());
-            return result;
+            int result = prime + ((conDir == null) ? 0 : conDir.hashCode());
+            return prime * result + ((conduitLoc == null) ? 0 : conduitLoc.hashCode());
         }
 
         @Override
@@ -224,10 +211,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
+            if (obj == null || getClass() != obj.getClass()) {
                 return false;
             }
             NetworkTankKey other = (NetworkTankKey) obj;
@@ -238,7 +222,5 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
                 return other.conduitLoc == null;
             } else return conduitLoc.equals(other.conduitLoc);
         }
-
     }
-
 }

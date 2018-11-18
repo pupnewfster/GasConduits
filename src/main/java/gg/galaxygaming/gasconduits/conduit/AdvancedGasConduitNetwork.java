@@ -80,7 +80,7 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
     }
 
     private void setConduitVolumes() {
-        if (tank.containsValidGas() && !getConduits().isEmpty()) {
+        if (tank.getGas() != null && !getConduits().isEmpty()) {
             GasStack gasPerConduit = tank.getGas().copy();
             int numCons = getConduits().size();
             int leftOvers = gasPerConduit.amount % numCons;
@@ -189,7 +189,7 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
     }
 
     public GasStack drawGas(int maxDrain, boolean doDrain) {
-        if (tank.isEmpty() || !tank.containsValidGas()) {
+        if (tank.isEmpty() || tank.getGas() == null) {
             return null;
         }
         int amount = Math.min(maxDrain, tank.getStored());
@@ -211,8 +211,6 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
             int maxExtract = Math.min(maxExtractPerTick, tank.getNeeded());
 
             if (gasType == null || !tank.containsValidGas()) {
-                //TODO
-
                 GasTankInfo[] tankInfo = extTank.getTankInfo();
                 int stored = 0;
                 Gas type = null;

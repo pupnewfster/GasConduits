@@ -31,7 +31,7 @@ public enum GasConduitObject implements IModObjectBase {
     @Nullable
     protected Item item;
 
-    @Nullable
+    @Nonnull
     protected final Class<?> clazz;
     @Nullable
     protected final String blockMethodName, itemMethodName;

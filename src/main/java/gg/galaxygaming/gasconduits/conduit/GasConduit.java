@@ -99,7 +99,6 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
                 IGasHandler extTank = getExternalHandler(dir);
                 if (extTank != null) {
-                    //TODO
                     GasTankInfo[] tankInfo = extTank.getTankInfo();
                     int stored = 0;
                     Gas type = null;
@@ -304,7 +303,6 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     @Override
     public void clearNetwork() {
         this.network = null;
-        // TODO: spill gas
     }
 
     @Override

@@ -73,37 +73,26 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
     @Override
     protected void renderTransmissionDynamic(@Nonnull IConduit conduit, @Nonnull IConduitTexture tex, @Nullable Vector4f color,
                                              @Nonnull CollidableComponent component, float selfIllum) {
-
         final float filledRatio = ((GasConduit) conduit).getTank().getFilledRatio();
-        if (filledRatio <= 0) {
+        if (filledRatio <= 0 || !component.isDirectional()) {
             return;
         }
 
-        if (component.isDirectional()) {
-            TextureAtlasSprite sprite = tex.getSprite();
-            BoundingBox[] cubes = toCubes(component.bound);
-            for (BoundingBox cube : cubes) {
-                if (cube != null) {
+        TextureAtlasSprite sprite = tex.getSprite();
+        BoundingBox[] cubes = toCubes(component.bound);
+        for (BoundingBox cube : cubes) {
+            if (cube != null) {
+                float shrink = 1 / 128f;
+                final EnumFacing componentDirection = component.getDirection();
+                float xLen = Math.abs(componentDirection.getXOffset()) == 1 ? 0 : shrink;
+                float yLen = Math.abs(componentDirection.getYOffset()) == 1 ? 0 : shrink;
+                float zLen = Math.abs(componentDirection.getZOffset()) == 1 ? 0 : shrink;
 
-                    float shrink = 1 / 128f;
-                    final EnumFacing componentDirection = component.getDirection();
-                    float xLen = Math.abs(componentDirection.getXOffset()) == 1 ? 0 : shrink;
-                    float yLen = Math.abs(componentDirection.getYOffset()) == 1 ? 0 : shrink;
-                    float zLen = Math.abs(componentDirection.getZOffset()) == 1 ? 0 : shrink;
+                BoundingBox bb = cube.expand(-xLen, -yLen, -zLen);
 
-                    BoundingBox bb = cube.expand(-xLen, -yLen, -zLen);
-
-                    // TODO: This leaves holes between conduits as it only render 4 sides instead of the needed 5-6 sides
-                    drawDynamicSection(bb, sprite.getInterpolatedU(tex.getUv().x * 16), sprite.getInterpolatedU(tex.getUv().z * 16),
-                            sprite.getInterpolatedV(tex.getUv().y * 16), sprite.getInterpolatedV(tex.getUv().w * 16), color, componentDirection, true);
-                }
+                drawDynamicSection(bb, sprite.getInterpolatedU(tex.getUv().x * 16), sprite.getInterpolatedU(tex.getUv().z * 16),
+                        sprite.getInterpolatedV(tex.getUv().y * 16), sprite.getInterpolatedV(tex.getUv().w * 16), color, componentDirection, true);
             }
-
-        } else {
-            // TODO: HL: I commented this out because component.getDirection() (the second to last parameter) is always null in
-            // this else branch and drawDynamicSection() with isTransmission=true (last parameter) would NPE on it. (Not a
-            // mistake in the component.dir encapsulation, this was that way before.)
-            // drawDynamicSection(component.bound, tex.getMinU(), tex.getMaxU(), tex.getMinV(), tex.getMaxV(), color, component.getDir(), true);
         }
     }
 
@@ -125,9 +114,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
     // (3) could this be done more efficiently (on the fly)?
     private static Map<CollidableComponent, Map<Gas, List<CachableRenderStatement>>> cache = new WeakHashMap<>();
 
-    public static List<CachableRenderStatement> computeGasOutlineToCache(@Nonnull CollidableComponent component, @Nonnull Gas gas, double scaleFactor,
-                                                                         float outlineWidth) {
-
+    public static List<CachableRenderStatement> computeGasOutlineToCache(@Nonnull CollidableComponent component, @Nonnull Gas gas, double scaleFactor, float width) {
         Map<Gas, List<CachableRenderStatement>> cache0 = cache.computeIfAbsent(component, k -> new HashMap<>());
 
         List<CachableRenderStatement> data = cache0.get(gas);
@@ -143,7 +130,6 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
 
         BoundingBox bbb;
 
-        double width = outlineWidth;
         scaleFactor = scaleFactor - 0.05;
         final EnumFacing componentDirection = component.getDirection();
         double xScale = Math.abs(componentDirection.getXOffset()) == 1 ? width : scaleFactor;

@@ -6,7 +6,6 @@ import com.enderio.core.common.util.NNList;
 import crazypants.enderio.util.NbtValue;
 import gg.galaxygaming.gasconduits.utils.GasUtil;
 import io.netty.buffer.ByteBuf;
-import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,12 +37,6 @@ public class GasFilter implements IGasFilter {
     @Override
     public GasStack getGasStackAt(int index) {
         return gasses[index];
-    }
-
-    @Deprecated
-    public boolean setGas(int index, Gas gas) {
-        gasses[index] = new GasStack(gas, 0);
-        return true;
     }
 
     @Override

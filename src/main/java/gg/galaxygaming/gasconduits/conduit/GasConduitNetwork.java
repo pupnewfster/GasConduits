@@ -320,17 +320,12 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
 
         void apply() {
             if (amount != 0) {
-
                 // don't take more than it has
                 int actual = Math.min(amount, from.getTank().getStored());
                 // and don't add more than it can take
                 actual = Math.min(actual, to.getTank().getNeeded());
-
-                if (from != null && to != null) {
-                    from.getTank().addAmount(-actual);
-                    to.getTank().addAmount(actual);
-                }
-
+                from.getTank().addAmount(-actual);
+                to.getTank().addAmount(actual);
             }
         }
 
