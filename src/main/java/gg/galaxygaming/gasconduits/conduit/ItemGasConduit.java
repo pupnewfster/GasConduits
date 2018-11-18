@@ -12,7 +12,6 @@ import crazypants.enderio.base.conduit.registry.ConduitRegistry;
 import crazypants.enderio.base.gui.IconEIO;
 import crazypants.enderio.conduits.conduit.AbstractItemConduit;
 import crazypants.enderio.conduits.conduit.ItemConduitSubtype;
-import crazypants.enderio.conduits.lang.Lang;
 import crazypants.enderio.conduits.render.ConduitBundleRenderManager;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
@@ -41,7 +40,7 @@ public class ItemGasConduit extends AbstractItemConduit implements IAdvancedTool
                 .setOffsets(Offset.WEST, Offset.NORTH, Offset.WEST, Offset.WEST).build().setUUID(new ResourceLocation(GasConduitsConstants.MOD_ID, "gas_conduit"))
                 .setClass(GasConduit.class).build().setUUID(new ResourceLocation(GasConduitsConstants.MOD_ID, "advanced_gas_conduit")).setClass(AdvancedGasConduit.class)
                 .build().setUUID(new ResourceLocation(GasConduitsConstants.MOD_ID, "ender_gas_conduit")).setClass(EnderGasConduit.class).build().finish());
-        ConduitDisplayMode.registerDisplayMode(new ConduitDisplayMode(getBaseConduitType(), IconEIO.WRENCH_OVERLAY_FLUID, IconEIO.WRENCH_OVERLAY_FLUID_OFF));
+        ConduitDisplayMode.registerDisplayMode(new ConduitDisplayMode(getBaseConduitType(), IconEIO.WRENCH_OVERLAY_GAS, IconEIO.WRENCH_OVERLAY_GAS_OFF));
     }
 
     @Override
@@ -97,7 +96,7 @@ public class ItemGasConduit extends AbstractItemConduit implements IAdvancedTool
             maxIo = GasConduitConfig.tier3_maxIO;
         }
 
-        String mbt = " " + Lang.FLUID_MILLIBUCKETS_TICK.get();
+        String mbt = new TextComponentTranslation("gasconduits.gas.millibuckets_tick").getUnformattedComponentText();
         list.add(new TextComponentTranslation("gasconduits.item_gas_conduit.tooltip.max_extract").getUnformattedComponentText() + " " + extractRate + mbt);
         list.add(new TextComponentTranslation("gasconduits.item_gas_conduit.tooltip.max_io").getUnformattedComponentText() + " " + maxIo + mbt);
 

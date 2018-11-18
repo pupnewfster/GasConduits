@@ -13,7 +13,6 @@ import crazypants.enderio.base.conduit.geom.ConduitGeometryUtil;
 import crazypants.enderio.base.filter.FilterRegistry;
 import crazypants.enderio.base.filter.capability.CapabilityFilterHolder;
 import crazypants.enderio.base.filter.capability.IFilterHolder;
-import crazypants.enderio.base.filter.gui.FilterGuiUtil;
 import crazypants.enderio.base.machine.modes.RedstoneControlMode;
 import crazypants.enderio.base.render.registry.TextureRegistry;
 import crazypants.enderio.base.tool.ToolUtil;
@@ -30,6 +29,7 @@ import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import crazypants.enderio.util.Prep;
 import gg.galaxygaming.gasconduits.GasConduitObject;
 import gg.galaxygaming.gasconduits.common.GasFilter;
+import gg.galaxygaming.gasconduits.common.GasFilterGuiUtil;
 import gg.galaxygaming.gasconduits.common.IGasFilter;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
@@ -564,9 +564,9 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     @Override
     @Nonnull
     public ItemStack getFilterStack(int filterIndex, int param1) {
-        if (filterIndex == FilterGuiUtil.INDEX_INPUT_FLUID) {
+        if (filterIndex == getInputFilterIndex()) {
             return getFilterStack(EnumFacing.byIndex(param1), true);
-        } else if (filterIndex == FilterGuiUtil.INDEX_OUTPUT_FLUID) {
+        } else if (filterIndex == getOutputFilterIndex()) {
             return getFilterStack(EnumFacing.byIndex(param1), false);
         }
         return ItemStack.EMPTY;
@@ -574,9 +574,9 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
 
     @Override
     public IGasFilter getFilter(int filterIndex, int param1) {
-        if (filterIndex == FilterGuiUtil.INDEX_INPUT_FLUID) {
+        if (filterIndex == getInputFilterIndex()) {
             return getFilter(EnumFacing.byIndex(param1), true);
-        } else if (filterIndex == FilterGuiUtil.INDEX_OUTPUT_FLUID) {
+        } else if (filterIndex == getOutputFilterIndex()) {
             return getFilter(EnumFacing.byIndex(param1), false);
         }
         return null;
@@ -584,30 +584,30 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
 
     @Override
     public void setFilter(int filterIndex, int param1, @Nonnull IGasFilter filter) {
-        if (filterIndex == FilterGuiUtil.INDEX_INPUT_FLUID) {
+        if (filterIndex == getInputFilterIndex()) {
             setFilter(EnumFacing.byIndex(param1), filter, true);
-        } else if (filterIndex == FilterGuiUtil.INDEX_OUTPUT_FLUID) {
+        } else if (filterIndex == getOutputFilterIndex()) {
             setFilter(EnumFacing.byIndex(param1), filter, false);
         }
     }
 
     @Override
     public void setFilterStack(int filterIndex, int param1, @Nonnull ItemStack stack) {
-        if (filterIndex == FilterGuiUtil.INDEX_INPUT_FLUID) {
+        if (filterIndex == getInputFilterIndex()) {
             setFilterStack(EnumFacing.byIndex(param1), stack, true);
-        } else if (filterIndex == FilterGuiUtil.INDEX_OUTPUT_FLUID) {
+        } else if (filterIndex == getOutputFilterIndex()) {
             setFilterStack(EnumFacing.byIndex(param1), stack, false);
         }
     }
 
     @Override
     public int getInputFilterIndex() {
-        return FilterGuiUtil.INDEX_INPUT_FLUID;
+        return GasFilterGuiUtil.INDEX_INPUT_GAS;
     }
 
     @Override
     public int getOutputFilterIndex() {
-        return FilterGuiUtil.INDEX_OUTPUT_FLUID;
+        return GasFilterGuiUtil.INDEX_OUTPUT_GAS;
     }
 
     // ------------------------------------------------

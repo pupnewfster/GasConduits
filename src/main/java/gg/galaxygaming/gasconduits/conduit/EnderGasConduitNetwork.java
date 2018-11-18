@@ -5,6 +5,7 @@ import crazypants.enderio.base.conduit.item.FunctionUpgrade;
 import crazypants.enderio.base.conduit.item.ItemFunctionUpgrade;
 import crazypants.enderio.conduits.conduit.AbstractConduitNetwork;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
+import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.IGasFilter;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
@@ -143,7 +144,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         if (!upgradeStack.isEmpty()) {
             FunctionUpgrade upgrade = ItemFunctionUpgrade.getFunctionUpgrade(upgradeStack);
             if (upgrade == FunctionUpgrade.EXTRACT_SPEED_UPGRADE) {
-                extractSpeedMultiplier += FunctionUpgrade.LIQUID_MAX_EXTRACTED_SCALER * Math.min(upgrade.maxStackSize, upgradeStack.getCount());
+                extractSpeedMultiplier += GasConduitsConstants.GAS_MAX_EXTRACTED_SCALER * Math.min(upgrade.maxStackSize, upgradeStack.getCount());
             } else if (upgrade == FunctionUpgrade.EXTRACT_SPEED_DOWNGRADE) {
                 extractSpeedMultiplier = 1;
             }

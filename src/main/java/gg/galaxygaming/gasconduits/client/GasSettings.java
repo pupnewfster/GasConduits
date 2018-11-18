@@ -11,7 +11,6 @@ import crazypants.enderio.base.EnderIO;
 import crazypants.enderio.base.conduit.ConnectionMode;
 import crazypants.enderio.base.conduit.IClientConduit;
 import crazypants.enderio.base.conduit.IGuiExternalConnection;
-import crazypants.enderio.base.filter.gui.FilterGuiUtil;
 import crazypants.enderio.base.gui.IconEIO;
 import crazypants.enderio.base.gui.RedstoneModeButton;
 import crazypants.enderio.base.machine.modes.RedstoneControlMode;
@@ -23,6 +22,7 @@ import crazypants.enderio.conduits.init.ConduitObject;
 import crazypants.enderio.conduits.lang.Lang;
 import crazypants.enderio.conduits.network.PacketExtractMode;
 import gg.galaxygaming.gasconduits.GasConduitObject;
+import gg.galaxygaming.gasconduits.common.GasFilterGuiUtil;
 import gg.galaxygaming.gasconduits.conduit.EnderGasConduit;
 import gg.galaxygaming.gasconduits.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.network.PacketEnderGasConduit;
@@ -66,7 +66,7 @@ public class GasSettings extends BaseSettingsPanel {
     private final IGasConduit conduit;
 
     public GasSettings(@Nonnull final IGuiExternalConnection gui, @Nonnull IClientConduit con) {
-        super(IconEIO.WRENCH_OVERLAY_FLUID, GasConduitObject.itemGasConduit.getUnlocalisedName(), gui, con, "in_out_settings");
+        super(IconEIO.WRENCH_OVERLAY_GAS, GasConduitObject.itemGasConduit.getUnlocalisedName(), gui, con, "in_out_settings");
 
         conduit = (IGasConduit) con;
         if (con instanceof EnderGasConduit) {
@@ -129,10 +129,10 @@ public class GasSettings extends BaseSettingsPanel {
             conduit.setExtractionSignalColor(gui.getDir(), DyeColor.fromIndex(colorB.getColorIndex()));
             PacketHandler.INSTANCE.sendToServer(new PacketExtractMode(conduit, gui.getDir()));
         } else if (guiButton.id == ID_INSERT_FILTER_OPTIONS) {
-            doOpenFilterGui(FilterGuiUtil.INDEX_OUTPUT_FLUID);
+            doOpenFilterGui(GasFilterGuiUtil.INDEX_OUTPUT_GAS);
             return;
         } else if (guiButton.id == ID_EXTRACT_FILTER_OPTIONS) {
-            doOpenFilterGui(FilterGuiUtil.INDEX_INPUT_FLUID);
+            doOpenFilterGui(GasFilterGuiUtil.INDEX_INPUT_GAS);
             return;
         } else if (guiButton.id == ID_INSERT_CHANNEL) {
             DyeColor col = DyeColor.values()[insertChannelB.getColorIndex()];

@@ -11,6 +11,7 @@ import crazypants.enderio.conduits.render.ConduitTexture;
 import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitObject;
+import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.client.GasRenderUtil;
 import gg.galaxygaming.gasconduits.utils.GasUtil;
 import mekanism.api.gas.Gas;
@@ -22,7 +23,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 
 public class GasConduit extends AbstractTankConduit implements IConduitComponent {
 
-    static final int VOLUME_PER_CONNECTION = Fluid.BUCKET_VOLUME / 4;
+    static final int VOLUME_PER_CONNECTION = GasConduitsConstants.GAS_VOLUME / 4;
 
     public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(0));
     public static final IConduitTexture ICON_KEY_LOCKED = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_locked", false));

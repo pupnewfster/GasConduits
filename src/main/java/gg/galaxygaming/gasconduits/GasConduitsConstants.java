@@ -10,4 +10,7 @@ public class GasConduitsConstants {
     public static final String PROXY_COMMON = "gg.galaxygaming.gasconduits.common.CommonProxy";
     public static final String PROXY_CLIENT = "gg.galaxygaming.gasconduits.client.ClientProxy";
     public static final String DEPENDENCIES = "after:enderioconduits;after:mekanism;";
+
+    public static final int GAS_VOLUME = 1000;
+    public static final int GAS_MAX_EXTRACTED_SCALER = 2;
 }
