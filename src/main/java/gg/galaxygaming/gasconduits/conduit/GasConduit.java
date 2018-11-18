@@ -309,13 +309,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
     @Override
     public boolean canConnectToConduit(@Nonnull EnumFacing direction, @Nonnull IConduit con) {
-        if (!super.canConnectToConduit(direction, con)) {
-            return false;
-        }
-        if (!(con instanceof GasConduit)) {
-            return false;
-        }
-        if (getGasType() != null && ((GasConduit) con).getGasType() == null) {
+        if (!super.canConnectToConduit(direction, con) || !(con instanceof GasConduit)) {
             return false;
         }
         return GasConduitNetwork.areGassesCompatable(getGasType(), ((GasConduit) con).getGasType());
@@ -352,7 +346,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     public Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
         if (tank.getGasType() != null) {
             int color = tank.getGasType().getTint();
-            return new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, 1);
+            return new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, tank.getFilledRatio());
         }
         return null;
     }
