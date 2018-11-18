@@ -9,4 +9,5 @@ public class GasConduitsConstants {
     //Proxy Constants
     public static final String PROXY_COMMON = "gg.galaxygaming.gasconduits.common.CommonProxy";
     public static final String PROXY_CLIENT = "gg.galaxygaming.gasconduits.client.ClientProxy";
+    public static final String DEPENDENCIES = "after:enderioconduits;after:mekanism;";
 }
