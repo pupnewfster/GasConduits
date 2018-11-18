@@ -721,9 +721,9 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
         }
 
         @Override
-        public int receiveGas(EnumFacing side, GasStack resource, boolean doFill) {
-            if (canReceiveGas(side, resource.getGas())) {
-                return network.fillFrom(EnderGasConduit.this, side, resource, doFill);
+        public int receiveGas(EnumFacing facing, GasStack resource, boolean doFill) {
+            if (canReceiveGas(facing, resource.getGas())) {
+                return network.fillFrom(EnderGasConduit.this, facing, resource, doFill);
             }
             return 0;
         }

@@ -240,8 +240,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
         @Override
         public int receiveGas(EnumFacing facing, GasStack resource, boolean doFill) {
-            if (canReceiveGas(side, resource.getGas())) {
-
+            if (canReceiveGas(facing, resource.getGas())) {
                 return AbstractGasConduit.this.receiveGas(facing, resource, doFill);
             }
             return 0;
@@ -249,7 +248,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
         @Override
         public GasStack drawGas(EnumFacing facing, int maxDrain, boolean doDrain) {
-            if (canDrawGas(side, null)) {
+            if (canDrawGas(facing, null)) {
                 return AbstractGasConduit.this.drawGas(facing, maxDrain, doDrain);
             }
             return null;
@@ -257,7 +256,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
         @Override
         public boolean canReceiveGas(EnumFacing facing, Gas gas) {
-            if (conectionModes.containsKey(facing) && conectionModes.get(facing).acceptsInput()) {
+            if (side.equals(facing) && getConnectionMode(facing).acceptsInput()) {
                 return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
             }
             return false;
@@ -265,7 +264,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
         @Override
         public boolean canDrawGas(EnumFacing facing, Gas gas) {
-            if (conectionModes.containsKey(facing) && conectionModes.get(facing).acceptsOutput()) {
+            if (side.equals(facing) && getConnectionMode(facing).acceptsOutput()) {
                 return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
             }
             return false;
@@ -279,7 +278,10 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
         @Override
         public boolean canTubeConnect(EnumFacing facing) {
-            ConnectionMode connectionMode = getConnectionMode(facing);
+            if (!side.equals(facing)) {
+                return false;
+            }
+            ConnectionMode connectionMode = getConnectionMode(side);
             return connectionMode.acceptsOutput() || connectionMode.acceptsInput();
         }
     }
