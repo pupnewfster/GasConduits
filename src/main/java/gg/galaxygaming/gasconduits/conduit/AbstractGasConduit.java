@@ -192,7 +192,10 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         if (capability == Capabilities.GAS_HANDLER_CAPABILITY || capability == Capabilities.TUBE_CONNECTION_CAPABILITY) {
-            return getExternalConnections().contains(facing);
+            if (facing != null && containsExternalConnection(facing)) {
+                ConnectionMode mode = getConnectionMode(facing);
+                return mode.acceptsInput() || mode.acceptsOutput();
+            }
         }
         return false;
     }
@@ -201,7 +204,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == Capabilities.GAS_HANDLER_CAPABILITY || capability == Capabilities.TUBE_CONNECTION_CAPABILITY) {
+        if (hasCapability(capability, facing)) {
             return (T) getGasDir(facing);
         }
         return null;

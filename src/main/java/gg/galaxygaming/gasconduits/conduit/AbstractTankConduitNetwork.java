@@ -72,6 +72,14 @@ public class AbstractTankConduitNetwork<T extends AbstractTankConduit> extends A
         return a == b;
     }
 
+    public static boolean areGassesCompatable(GasStack a, Gas b) {
+        return a == null || areGassesCompatable(a.getGas(), b);
+    }
+
+    public static boolean areGassesCompatable(Gas a, GasStack b) {
+        return areGassesCompatable(b, a);
+    }
+
     public int getTotalVolume() {
         int totalVolume = 0;
         for (T con : getConduits()) {
