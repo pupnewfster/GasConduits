@@ -37,7 +37,7 @@ public class ItemGasConduit extends AbstractItemConduit implements IAdvancedTool
                 new ItemConduitSubtype(modObject.getUnlocalisedName() + "_advanced", modObject.getRegistryName().toString() + "_advanced"),
                 new ItemConduitSubtype(modObject.getUnlocalisedName() + "_ender", modObject.getRegistryName().toString() + "_ender"));
         ConduitRegistry.register(ConduitBuilder.start().setUUID(new ResourceLocation(GasConduitsConstants.MOD_ID, "gas")).setClass(getBaseConduitType())
-                .setOffsets(Offset.WEST, Offset.NORTH, Offset.WEST, Offset.WEST).build().setUUID(new ResourceLocation(GasConduitsConstants.MOD_ID, "gas_conduit"))
+                .setOffsets(Offset.NONE, Offset.NONE, Offset.NONE, Offset.NONE).build().setUUID(new ResourceLocation(GasConduitsConstants.MOD_ID, "gas_conduit"))
                 .setClass(GasConduit.class).build().setUUID(new ResourceLocation(GasConduitsConstants.MOD_ID, "advanced_gas_conduit")).setClass(AdvancedGasConduit.class)
                 .build().setUUID(new ResourceLocation(GasConduitsConstants.MOD_ID, "ender_gas_conduit")).setClass(EnderGasConduit.class).build().finish());
         ConduitDisplayMode.registerDisplayMode(new ConduitDisplayMode(getBaseConduitType(), IconEIO.WRENCH_OVERLAY_GAS, IconEIO.WRENCH_OVERLAY_GAS_OFF));
