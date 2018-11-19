@@ -220,16 +220,16 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
         return ICON_KEY;
     }
 
+    @Nonnull
     @Override
-    public @Nonnull
-    IConduitTexture getTransmitionTextureForState(@Nonnull CollidableComponent component) {
+    public IConduitTexture getTransmitionTextureForState(@Nonnull CollidableComponent component) {
         return ItemConduit.ICON_KEY_ENDER;
     }
 
+    @Nullable
     @Override
     @SideOnly(Side.CLIENT)
-    public @Nullable
-    Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
+    public Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
         return null;
     }
 

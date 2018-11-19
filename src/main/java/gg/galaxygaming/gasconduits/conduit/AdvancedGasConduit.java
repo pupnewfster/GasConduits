@@ -24,6 +24,7 @@ import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitObject;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.client.GasRenderUtil;
+import gg.galaxygaming.gasconduits.utils.GasUtil;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -219,8 +220,7 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
     @SideOnly(Side.CLIENT)
     public Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
         if (tank.containsValidGas()) {
-            int color = tank.getGasType().getTint();
-            return new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, tank.getFilledRatio());
+            return GasUtil.getColor(tank.getGasType().getTint(), tank.getFilledRatio());
         }
         return null;
     }

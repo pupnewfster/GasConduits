@@ -34,8 +34,8 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
         super();
     }
 
-    public static @Nonnull
-    GasConduitRenderer create() {
+    @Nonnull
+    public static GasConduitRenderer create() {
         GasConduitRenderer result = new GasConduitRenderer();
         RenderUtil.registerReloadListener(result);
         return result;
@@ -46,9 +46,9 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
         return conduit instanceof GasConduit;
     }
 
+    @Nonnull
     @Override
-    protected @Nonnull
-    BlockRenderLayer getConduitQuadsLayer() {
+    protected BlockRenderLayer getConduitQuadsLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
 

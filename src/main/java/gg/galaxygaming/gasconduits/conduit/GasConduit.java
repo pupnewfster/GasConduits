@@ -343,15 +343,14 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     @SideOnly(Side.CLIENT)
     public Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
         if (tank.getGasType() != null) {
-            int color = tank.getGasType().getTint();
-            return new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, tank.getFilledRatio());
+            return GasUtil.getColor(tank.getGasType().getTint(), tank.getFilledRatio());
         }
         return null;
     }
 
     @Override
     public float getTransmitionGeometryScale() {
-        return 1F;//tank.getFilledRatio();
+        return 1F;
     }
 
     @Override
@@ -401,7 +400,6 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
                     return res;
                 } finally {
                     network.unlockNetworkFromFill();
-
                 }
             } else {
                 return 0;
