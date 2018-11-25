@@ -2,7 +2,6 @@ package gg.galaxygaming.gasconduits.conduit;
 
 import com.enderio.core.client.render.BoundingBox;
 import com.enderio.core.client.render.IconUtil;
-import com.enderio.core.common.vecmath.Vector4f;
 import crazypants.enderio.base.conduit.ConnectionMode;
 import crazypants.enderio.base.conduit.IConduit;
 import crazypants.enderio.base.conduit.IConduitNetwork;
@@ -23,8 +22,6 @@ import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitObject;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
-import gg.galaxygaming.gasconduits.client.GasRenderUtil;
-import gg.galaxygaming.gasconduits.utils.GasUtil;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -203,26 +200,6 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
     @SideOnly(Side.CLIENT)
     public TextureAtlasSprite getNotSetEdgeTexture() {
         return ICON_EMPTY_EDGE.get(TextureAtlasSprite.class);
-    }
-
-    @Nullable
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IConduitTexture getTransmitionTextureForState(@Nonnull CollidableComponent component) {
-        if (tank.getGas() != null) {
-            return new ConduitTextureWrapper(GasRenderUtil.getStillTexture(tank.getGas()));
-        }
-        return null;
-    }
-
-    @Nullable
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
-        if (tank.containsValidGas()) {
-            return GasUtil.getColor(tank.getGasType().getTint(), tank.getFilledRatio());
-        }
-        return null;
     }
 
     // --------------- Gas Capability ------------

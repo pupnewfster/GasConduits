@@ -193,26 +193,6 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
             return;
         }
 
-        int maxFlowVolume = 20;
-
-        // First flow all we can down, then balance the rest
-        if (con.getConduitConnections().contains(EnumFacing.DOWN)) {
-            BlockPos pos = con.getBundle().getLocation().offset(EnumFacing.DOWN);
-            IGasConduit dc = ConduitUtil.getConduit(con.getBundle().getEntity().getWorld(), pos, IGasConduit.class);
-            if (dc instanceof GasConduit && getConduits().contains(dc) && tank.getGas() != null) {
-                GasConduit downCon = (GasConduit) dc;
-                int actual = downCon.receiveGas(EnumFacing.UP, tank.getGas().copy(), false, false, pushPoken);
-                actual = Math.min(actual, tank.getStored());
-                actual = Math.min(actual, downCon.getTank().getNeeded());
-                tank.addAmount(-actual);
-                downCon.getTank().addAmount(actual);
-            }
-        }
-
-        totalAmount = tank.getStored();
-        if (totalAmount <= 0) {
-            return;
-        }
         GasStack available = tank.getGas();
         int totalRequested = 0;
         int numRequests = 0;
@@ -229,6 +209,8 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
                 }
             }
         }
+
+        int maxFlowVolume = 20;
 
         if (numRequests > 0) {
             int amountPerRequest = Math.min(totalAmount, totalRequested) / numRequests;

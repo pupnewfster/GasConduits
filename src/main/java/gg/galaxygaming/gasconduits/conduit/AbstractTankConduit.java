@@ -1,12 +1,12 @@
 package gg.galaxygaming.gasconduits.conduit;
 
-import crazypants.enderio.base.conduit.ConduitUtil;
-import crazypants.enderio.base.conduit.ConnectionMode;
-import crazypants.enderio.base.conduit.IConduitNetwork;
-import crazypants.enderio.base.conduit.RaytraceResult;
+import com.enderio.core.common.vecmath.Vector4f;
+import crazypants.enderio.base.conduit.*;
 import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.base.tool.ToolUtil;
 import crazypants.enderio.conduits.render.BlockStateWrapperConduitBundle.ConduitCacheKey;
+import crazypants.enderio.conduits.render.ConduitTextureWrapper;
+import gg.galaxygaming.gasconduits.client.GasRenderUtil;
 import gg.galaxygaming.gasconduits.utils.GasUtil;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
@@ -18,6 +18,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -226,4 +228,22 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
         return canInputToDir(side) && GasConduitNetwork.areGassesCompatable(getGasType(), gas);
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IConduitTexture getTransmitionTextureForState(@Nonnull CollidableComponent component) {
+        if (tank.getGas() != null && tank.getGasType() != null && tank.getFilledRatio() > 0.01F) {
+            return new ConduitTextureWrapper(GasRenderUtil.getStillTexture(tank.getGas()));
+        }
+        return null;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
+        if (tank.getGasType() != null && tank.getFilledRatio() > 0.01F) {
+            int color = tank.getGasType().getTint();
+            return new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, tank.getFilledRatio());
+        }
+        return null;
+    }
 }

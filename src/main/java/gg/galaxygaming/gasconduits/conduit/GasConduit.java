@@ -1,18 +1,15 @@
 package gg.galaxygaming.gasconduits.conduit;
 
 import com.enderio.core.common.util.Log;
-import com.enderio.core.common.vecmath.Vector4f;
 import crazypants.enderio.base.conduit.*;
 import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.base.network.PacketHandler;
 import crazypants.enderio.base.render.registry.TextureRegistry;
 import crazypants.enderio.conduits.conduit.IConduitComponent;
 import crazypants.enderio.conduits.render.ConduitTexture;
-import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitObject;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
-import gg.galaxygaming.gasconduits.client.GasRenderUtil;
 import gg.galaxygaming.gasconduits.utils.GasUtil;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
@@ -167,7 +164,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
         EnumFacing newVal = getNextDir(startPushDir);
         boolean foundNewStart = false;
         while (newVal != startPushDir && !foundNewStart) {
-            foundNewStart = getConduitConnections().contains(newVal) || getExternalConnections().contains(newVal);
+            foundNewStart = containsConduitConnection(newVal) || containsExternalConnection(newVal);
             newVal = getNextDir(newVal);
         }
         startPushDir = newVal;
@@ -197,16 +194,16 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
         do {
             if (dir != from && canOutputToDir(dir) && !autoExtractForDir(dir)) {
-                if (getConduitConnections().contains(dir)) {
+                if (containsConduitConnection(dir)) {
                     IGasConduit conduitCon = getGasConduit(dir);
                     if (conduitCon != null) {
                         int toCon = ((GasConduit) conduitCon).pushGas(dir.getOpposite(), toPush, doPush, token);
                         toPush.amount -= toCon;
                         pushed += toCon;
                     }
-                } else if (getExternalConnections().contains(dir)) {
+                } else if (containsExternalConnection(dir)) {
                     IGasHandler con = getExternalHandler(dir);
-                    if (con != null) {
+                    if (con != null && con.canReceiveGas(dir.getOpposite(), toPush.getGas())) {
                         int toExt = con.receiveGas(dir.getOpposite(), toPush, doPush);
                         toPush.amount -= toExt;
                         pushed += toExt;
@@ -310,29 +307,6 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
             return getGasType() == null ? ICON_EMPTY_INSERT_KEY : ICON_INSERT_KEY;
         }
         return gasTypeLocked ? ICON_KEY_LOCKED : ICON_KEY;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IConduitTexture getTransmitionTextureForState(@Nonnull CollidableComponent component) {
-        if (tank.getGas() != null && tank.getGasType() != null) {
-            return new ConduitTextureWrapper(GasRenderUtil.getStillTexture(tank.getGas()));
-        }
-        return null;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Vector4f getTransmitionTextureColorForState(@Nonnull CollidableComponent component) {
-        if (tank.getGasType() != null) {
-            return GasUtil.getColor(tank.getGasType().getTint(), tank.getFilledRatio());
-        }
-        return null;
-    }
-
-    @Override
-    public float getTransmitionGeometryScale() {
-        return 1F;
     }
 
     @Override
