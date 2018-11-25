@@ -64,6 +64,10 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             return false;
         }
 
+        if (!tank.externalTank.canDrawGas(tank.conDir, drained.getGas())) {
+            return false;
+        }
+
         drained.amount = Math.min(drained.amount, GasConduitConfig.tier3_extractRate * getExtractSpeedMultiplier(tank) / 2);
         int amountAccepted = fillFrom(tank, drained.copy(), true);
         if (amountAccepted <= 0) {
@@ -103,8 +107,8 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
             for (NetworkTank target : getIteratorForTank(tank)) {
                 if (target.externalTank != null && (!target.equals(tank) || tank.selfFeed) && target.acceptsOuput && target.isValid() && target.inputColor == tank.outputColor
-                        && matchedFilter(resource, target.con, target.conDir, false)) {
-                    int vol = target.externalTank.receiveGas(target.conDir, resource.copy(), doFill);
+                        && matchedFilter(resource, target.con, target.conDir, false) && target.externalTank.canReceiveGas(target.conDir.getOpposite(), resource.getGas())) {
+                    int vol = target.externalTank.receiveGas(target.conDir.getOpposite(), resource.copy(), doFill);
                     remaining -= vol;
                     filled += vol;
                     if (remaining <= 0) {

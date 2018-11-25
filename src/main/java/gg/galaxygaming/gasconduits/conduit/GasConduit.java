@@ -99,7 +99,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
                 IGasHandler extTank = getExternalHandler(dir);
                 GasStack couldDrain = GasUtil.getGasStack(extTank);
-                if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas())) {
+                if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas()) && extTank.canDrawGas(dir, couldDrain.getGas())) {
                     if (couldDrain.amount > GasConduitConfig.tier1_extractRate) {
                         couldDrain.amount = GasConduitConfig.tier1_extractRate;
                     }
@@ -136,7 +136,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     @Nullable
     @Override
     public GasStack drawGas(EnumFacing side, int maxDrain, boolean doDrain) {
-        return canDrawGas(side, tank.getGasType()) ? null : tank.draw(maxDrain, doDrain);
+        return canDrawGas(side, tank.getGasType()) ? tank.draw(maxDrain, doDrain) : null;
     }
 
     // --------------- End -------------------------
@@ -373,7 +373,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
         @Override
         public int receiveGas(EnumFacing side, GasStack resource, boolean doFill) {
-            if (canReceiveGas(side, resource.getGas()) && network.lockNetworkForFill()) {
+            if (canReceiveGas(side, resource.getGas()) && network != null && network.lockNetworkForFill()) {
                 try {
                     int res = GasConduit.this.receiveGas(side, resource, doFill, true, network == null ? -1 : network.getNextPushToken());
                     if (doFill && externalConnections.contains(side) && network != null) {
