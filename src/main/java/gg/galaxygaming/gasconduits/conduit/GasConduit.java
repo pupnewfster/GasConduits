@@ -96,14 +96,14 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
                 IGasHandler extTank = getExternalHandler(dir);
                 GasStack couldDrain = GasUtil.getGasStack(extTank);
-                if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas()) && extTank.canDrawGas(dir, couldDrain.getGas())) {
+                if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas()) && extTank.canDrawGas(dir.getOpposite(), couldDrain.getGas())) {
                     if (couldDrain.amount > GasConduitConfig.tier1_extractRate) {
                         couldDrain.amount = GasConduitConfig.tier1_extractRate;
                     }
                     int used = pushGas(dir, couldDrain, true, network == null ? -1 : network.getNextPushToken());
                     if (used > 0) {
                         couldDrain.amount = used;
-                        extTank.drawGas(dir, couldDrain.amount, true);
+                        extTank.drawGas(dir.getOpposite(), couldDrain.amount, true);
                         if (network != null && network.getGasType() == null) {
                             network.setGasType(couldDrain);
                         }

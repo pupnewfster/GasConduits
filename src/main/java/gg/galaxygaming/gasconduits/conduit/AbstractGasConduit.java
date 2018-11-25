@@ -40,8 +40,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
     @Override
     public boolean canConnectToExternal(@Nonnull EnumFacing direction, boolean ignoreDisabled) {
-        IGasHandler h = getExternalHandler(direction);
-        return h != null;
+        return getExternalHandler(direction) != null;
     }
 
     @Override

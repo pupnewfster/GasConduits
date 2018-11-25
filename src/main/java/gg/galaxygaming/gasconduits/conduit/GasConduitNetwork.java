@@ -194,14 +194,17 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
         }
 
         GasStack available = tank.getGas();
+        if (available == null) {
+            return;
+        }
         int totalRequested = 0;
         int numRequests = 0;
         // Then to external connections
         for (EnumFacing dir : con.getExternalConnections()) {
             if (con.canOutputToDir(dir)) {
                 IGasHandler extCon = con.getExternalHandler(dir);
-                if (extCon != null) {
-                    int amount = extCon.receiveGas(dir, available.copy(), false);
+                if (extCon != null && extCon.canReceiveGas(dir.getOpposite(), available.getGas())) {
+                    int amount = extCon.receiveGas(dir.getOpposite(), available.copy(), false);
                     if (amount > 0) {
                         totalRequested += amount;
                         numRequests++;
@@ -221,8 +224,8 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
             for (EnumFacing dir : con.getExternalConnections()) {
                 if (con.canOutputToDir(dir)) {
                     IGasHandler extCon = con.getExternalHandler(dir);
-                    if (extCon != null) {
-                        int amount = extCon.receiveGas(dir, requestSource.copy(), true);
+                    if (extCon != null && extCon.canReceiveGas(dir.getOpposite(), requestSource.getGas())) {
+                        int amount = extCon.receiveGas(dir.getOpposite(), requestSource.copy(), true);
                         if (amount > 0) {
                             outputedToExternal(amount);
                             tank.addAmount(-amount);
