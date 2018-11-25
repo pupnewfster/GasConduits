@@ -1,6 +1,8 @@
 package gg.galaxygaming.gasconduits;
 
+import com.enderio.core.common.util.NNList;
 import crazypants.enderio.api.addon.IEnderIOAddon;
+import crazypants.enderio.base.config.recipes.RecipeFactory;
 import crazypants.enderio.base.init.RegisterModObject;
 import gg.galaxygaming.gasconduits.common.CommonProxy;
 import gg.galaxygaming.gasconduits.network.PacketHandler;
@@ -12,6 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -50,5 +53,11 @@ public class GasConduits implements IEnderIOAddon {
     @SubscribeEvent
     public static void registerBlocksEarly(@Nonnull RegisterModObject event) {
         GasConduitObject.registerBlocksEarly(event);
+    }
+
+    @Override
+    @Nonnull
+    public NNList<Triple<Integer, RecipeFactory, String>> getRecipeFiles() {
+        return new NNList<>(Triple.of(2, null, "conduits-gas"));
     }
 }

@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-version = "${mc_version}-" + getVersion()
+version = "${mc_version}-${mod_version}"
 group 'gg.galaxygaming'
 archivesBaseName = "${mod_name}"
 
