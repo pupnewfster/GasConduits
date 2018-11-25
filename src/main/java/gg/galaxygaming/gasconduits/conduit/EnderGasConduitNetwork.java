@@ -7,7 +7,7 @@ import crazypants.enderio.conduits.conduit.AbstractConduitNetwork;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.IGasFilter;
-import mekanism.api.gas.Gas;
+import gg.galaxygaming.gasconduits.utils.GasUtil;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
 import net.minecraft.item.ItemStack;
@@ -58,26 +58,12 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             return false;
         }
 
-        GasTankInfo[] tankInfo = tank.externalTank.getTankInfo();
-        int stored = 0;
-        Gas type = null;
-        for (GasTankInfo info : tankInfo) {
-            stored += info.getStored();
-            if (info.getGas() != null) {
-                type = info.getGas().getGas();
-            }
-        }
-
-        if (type == null || stored <= 0) {
-            return false;
-        }
-        GasStack drained = new GasStack(type, stored);
+        GasStack drained = GasUtil.getGasStack(tank.externalTank);
 
         if (!matchedFilter(drained, con, conDir, true)) {
             return false;
         }
 
-        drained = drained.copy();
         drained.amount = Math.min(drained.amount, GasConduitConfig.tier3_extractRate * getExtractSpeedMultiplier(tank) / 2);
         int amountAccepted = fillFrom(tank, drained.copy(), true);
         if (amountAccepted <= 0) {

@@ -98,37 +98,19 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
             if (autoExtractForDir(dir)) {
 
                 IGasHandler extTank = getExternalHandler(dir);
-                if (extTank != null) {
-                    GasTankInfo[] tankInfo = extTank.getTankInfo();
-                    int stored = 0;
-                    Gas type = null;
-                    for (GasTankInfo info : tankInfo) {
-                        stored += info.getStored();
-                        if (info.getGas() != null) {
-                            type = info.getGas().getGas();
-                        }
+                GasStack couldDrain = GasUtil.getGasStack(extTank);
+                if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas())) {
+                    if (couldDrain.amount > GasConduitConfig.tier1_extractRate) {
+                        couldDrain.amount = GasConduitConfig.tier1_extractRate;
                     }
-
-                    if (type == null || stored <= 0) {
-                        continue;
-                    }
-                    GasStack couldDrain = new GasStack(type, stored);
-
-                    //GasStack couldDrain = extTank.stored;
-                    if (canReceiveGas(dir, couldDrain.getGas())) {
-                        couldDrain = couldDrain.copy();
-                        if (couldDrain.amount > GasConduitConfig.tier1_extractRate) {
-                            couldDrain.amount = GasConduitConfig.tier1_extractRate;
+                    int used = pushGas(dir, couldDrain, true, network == null ? -1 : network.getNextPushToken());
+                    if (used > 0) {
+                        couldDrain.amount = used;
+                        extTank.drawGas(dir, couldDrain.amount, true);
+                        if (network != null && network.getGasType() == null) {
+                            network.setGasType(couldDrain);
                         }
-                        int used = pushGas(dir, couldDrain, true, network == null ? -1 : network.getNextPushToken());
-                        if (used > 0) {
-                            couldDrain.amount = used;
-                            extTank.drawGas(dir, couldDrain.amount, true);
-                            if (network != null && network.getGasType() == null) {
-                                network.setGasType(couldDrain);
-                            }
-                            ticksSinceFailedExtract = 0;
-                        }
+                        ticksSinceFailedExtract = 0;
                     }
                 }
             }

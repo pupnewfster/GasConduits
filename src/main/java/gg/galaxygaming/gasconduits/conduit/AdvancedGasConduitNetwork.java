@@ -4,9 +4,8 @@ import crazypants.enderio.base.conduit.IServerConduit;
 import crazypants.enderio.base.diagnostics.Prof;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.common.GasWrapper;
-import mekanism.api.gas.Gas;
+import gg.galaxygaming.gasconduits.utils.GasUtil;
 import mekanism.api.gas.GasStack;
-import mekanism.api.gas.GasTankInfo;
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.EnumFacing;
@@ -211,20 +210,11 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
             int maxExtract = Math.min(maxExtractPerTick, tank.getNeeded());
 
             if (gasType == null || !tank.containsValidGas()) {
-                GasTankInfo[] tankInfo = extTank.getTankInfo();
-                int stored = 0;
-                Gas type = null;
-                for (GasTankInfo info : tankInfo) {
-                    stored += info.getStored();
-                    if (info.getGas() != null) {
-                        type = info.getGas().getGas();
-                    }
-                }
-
-                if (type == null || stored <= 0) {
+                GasStack newGas = GasUtil.getGasStack(extTank);
+                if (newGas == null) {
                     return false;
                 }
-                setGasType(new GasStack(type, stored));
+                setGasType(newGas);
             }
 
             GasStack couldDrain = gasType.copy();

@@ -1,9 +1,7 @@
 package gg.galaxygaming.gasconduits.utils;
 
 import com.enderio.core.common.vecmath.Vector4f;
-import mekanism.api.gas.Gas;
-import mekanism.api.gas.GasStack;
-import mekanism.api.gas.IGasItem;
+import mekanism.api.gas.*;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -43,5 +41,25 @@ public class GasUtil {
 
     public static Vector4f getColor(int color, float filledRatio) {
         return new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, filledRatio);
+    }
+
+    public static GasStack getGasStack(IGasHandler tank) {
+        if (tank == null) {
+            return null;
+        }
+        GasTankInfo[] tankInfo = tank.getTankInfo();
+        int stored = 0;
+        Gas type = null;
+        for (GasTankInfo info : tankInfo) {
+            stored += info.getStored();
+            if (info.getGas() != null) {
+                type = info.getGas().getGas();
+            }
+        }
+
+        if (type == null || stored <= 0) {
+            return null;
+        }
+        return new GasStack(type, stored);
     }
 }
