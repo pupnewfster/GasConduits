@@ -9,17 +9,16 @@ import net.minecraft.util.math.BlockPos;
 import javax.annotation.Nonnull;
 
 public class NetworkTank {
-
-    final @Nonnull
-    EnderGasConduit con;
-    final @Nonnull
-    EnumFacing conDir;
+    @Nonnull
+    final EnderGasConduit con;
+    @Nonnull
+    final EnumFacing conDir;
     final IGasHandler externalTank;
-    final @Nonnull
-    EnumFacing tankDir;
-    final @Nonnull
-    BlockPos conduitLoc;
-    final boolean acceptsOuput;
+    @Nonnull
+    final EnumFacing tankDir;
+    @Nonnull
+    final BlockPos conduitLoc;
+    final boolean acceptsOutput;
     final DyeColor inputColor;
     final DyeColor outputColor;
     final int priority;
@@ -32,7 +31,7 @@ public class NetworkTank {
         conduitLoc = con.getBundle().getLocation();
         tankDir = conDir.getOpposite();
         externalTank = AbstractGasConduit.getExternalGasHandler(con.getBundle().getBundleworld(), conduitLoc.offset(conDir), tankDir);
-        acceptsOuput = con.getConnectionMode(conDir).acceptsOutput();
+        acceptsOutput = con.getConnectionMode(conDir).acceptsOutput();
         inputColor = con.getOutputColor(conDir);
         outputColor = con.getInputColor(conDir);
         priority = con.getOutputPriority(conDir);
@@ -47,10 +46,8 @@ public class NetworkTank {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
-        result = prime * result + conDir.hashCode();
-        result = prime * result + conduitLoc.hashCode();
-        return result;
+        int result = prime + conDir.hashCode();
+        return prime * result + conduitLoc.hashCode();
     }
 
     @Override
@@ -58,10 +55,7 @@ public class NetworkTank {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         NetworkTank other = (NetworkTank) obj;
@@ -70,5 +64,4 @@ public class NetworkTank {
         }
         return conduitLoc.equals(other.conduitLoc);
     }
-
 }

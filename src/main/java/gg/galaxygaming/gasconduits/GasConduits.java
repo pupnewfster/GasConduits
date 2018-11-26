@@ -5,7 +5,7 @@ import crazypants.enderio.api.addon.IEnderIOAddon;
 import crazypants.enderio.base.config.recipes.RecipeFactory;
 import crazypants.enderio.base.init.RegisterModObject;
 import gg.galaxygaming.gasconduits.common.CommonProxy;
-import gg.galaxygaming.gasconduits.network.PacketHandler;
+import gg.galaxygaming.gasconduits.common.network.PacketHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;

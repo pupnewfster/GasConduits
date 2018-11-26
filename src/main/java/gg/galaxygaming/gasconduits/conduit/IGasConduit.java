@@ -11,7 +11,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface IGasConduit extends IGasHandler, IExtractor, IServerConduit, IClientConduit, ITubeConnection {
-
     boolean canOutputToDir(@Nonnull EnumFacing dir);
 
     boolean canExtractFromDir(@Nonnull EnumFacing dir);

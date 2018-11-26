@@ -15,15 +15,14 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class EnderGasConduitRenderer extends DefaultConduitRenderer {
-
     @Override
     public boolean isRendererForConduit(@Nonnull IConduit conduit) {
         return conduit instanceof EnderGasConduit;
     }
 
     @Override
-    public @Nonnull
-    BlockRenderLayer getCoreLayer() {
+    @Nonnull
+    public BlockRenderLayer getCoreLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
 
@@ -36,5 +35,4 @@ public class EnderGasConduitRenderer extends DefaultConduitRenderer {
         EnumFacing dir = component.getDirection();
         ConduitInOutRenderer.renderIO(bundle, conduit, component, layer, quads, pc.getInputColor(dir), pc.getOutputColor(dir));
     }
-
 }

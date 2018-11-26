@@ -1,16 +1,15 @@
-package gg.galaxygaming.gasconduits.network;
+package gg.galaxygaming.gasconduits.common.network;
 
 import com.enderio.core.common.network.ThreadedNetworkWrapper;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
-import gg.galaxygaming.gasconduits.conduit.PacketConduitGasLevel;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 
 public class PacketHandler {
-    public static final @Nonnull
-    ThreadedNetworkWrapper INSTANCE = new ThreadedNetworkWrapper(GasConduitsConstants.MOD_ID);
+    @Nonnull
+    public static final ThreadedNetworkWrapper INSTANCE = new ThreadedNetworkWrapper(GasConduitsConstants.MOD_ID);
     public static int ID;
 
     public static void init(FMLInitializationEvent event) {

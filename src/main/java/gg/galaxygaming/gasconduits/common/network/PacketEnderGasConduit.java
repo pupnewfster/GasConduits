@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.network;
+package gg.galaxygaming.gasconduits.common.network;
 
 import com.enderio.core.common.util.DyeColor;
 import crazypants.enderio.base.conduit.IConduit;
@@ -17,7 +17,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import javax.annotation.Nonnull;
 
 public class PacketEnderGasConduit extends PacketConduitFilter<EnderGasConduit> {
-
     private DyeColor colIn;
     private DyeColor colOut;
     private int priority;
@@ -57,7 +56,6 @@ public class PacketEnderGasConduit extends PacketConduitFilter<EnderGasConduit> 
     }
 
     public static class Handler implements IMessageHandler<PacketEnderGasConduit, IMessage> {
-
         @Override
         public IMessage onMessage(PacketEnderGasConduit message, MessageContext ctx) {
             EnderGasConduit conduit = message.getConduit(ctx);
@@ -79,16 +77,10 @@ public class PacketEnderGasConduit extends PacketConduitFilter<EnderGasConduit> 
         private void applyFilter(EnumFacing dir, IConduit conduit, IFilter filter, boolean isInput) {
             if (conduit.hasInternalCapability(CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY, dir)) {
                 IFilterHolder<IFilter> filterHolder = conduit.getInternalCapability(CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY, dir);
-                if (filterHolder == null) {
-                    return;
-                }
-                if (isInput) {
-                    filterHolder.setFilter(filterHolder.getInputFilterIndex(), dir.ordinal(), filter);
-                } else {
-                    filterHolder.setFilter(filterHolder.getOutputFilterIndex(), dir.ordinal(), filter);
+                if (filterHolder != null) {
+                    filterHolder.setFilter(isInput ? filterHolder.getInputFilterIndex() : filterHolder.getOutputFilterIndex(), dir.ordinal(), filter);
                 }
             }
         }
-
     }
 }

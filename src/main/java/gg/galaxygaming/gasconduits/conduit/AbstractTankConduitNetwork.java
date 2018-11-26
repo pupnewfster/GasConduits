@@ -7,7 +7,6 @@ import mekanism.api.gas.GasStack;
 import javax.annotation.Nonnull;
 
 public class AbstractTankConduitNetwork<T extends AbstractTankConduit> extends AbstractConduitNetwork<IGasConduit, T> {
-
     protected GasStack gasType;
     protected boolean gasTypeLocked = false;
 
@@ -38,9 +37,7 @@ public class AbstractTankConduitNetwork<T extends AbstractTankConduit> extends A
         } else {
             gasType = null;
         }
-        for (AbstractTankConduit conduit : getConduits()) {
-            conduit.setGasType(gasType);
-        }
+        getConduits().forEach(conduit -> conduit.setGasType(gasType));
         return true;
     }
 
@@ -49,9 +46,7 @@ public class AbstractTankConduitNetwork<T extends AbstractTankConduit> extends A
             return;
         }
         this.gasTypeLocked = gasTypeLocked;
-        for (AbstractTankConduit conduit : getConduits()) {
-            conduit.setGasTypeLocked(gasTypeLocked);
-        }
+        getConduits().forEach(conduit -> conduit.setGasTypeLocked(gasTypeLocked));
     }
 
     public boolean canAcceptGas(GasStack acceptable) {
@@ -59,17 +54,11 @@ public class AbstractTankConduitNetwork<T extends AbstractTankConduit> extends A
     }
 
     public static boolean areGassesCompatable(GasStack a, GasStack b) {
-        if (a == null || b == null) {
-            return true;
-        }
-        return a.isGasEqual(b);
+        return a == null || b == null || a.isGasEqual(b);
     }
 
     public static boolean areGassesCompatable(Gas a, Gas b) {
-        if (a == null || b == null) {
-            return true;
-        }
-        return a == b;
+        return a == null || b == null || a == b;
     }
 
     public static boolean areGassesCompatable(GasStack a, Gas b) {
@@ -87,5 +76,4 @@ public class AbstractTankConduitNetwork<T extends AbstractTankConduit> extends A
         }
         return totalVolume;
     }
-
 }

@@ -84,13 +84,10 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
         }
 
         for (EnumFacing dir : externalConnections) {
-            if (autoExtractForDir(dir)) {
-                if (network.extractFrom(this, dir, GasConduitConfig.tier2_extractRate)) {
-                    ticksSinceFailedExtract = 0;
-                }
+            if (autoExtractForDir(dir) && network.extractFrom(this, dir, GasConduitConfig.tier2_extractRate)) {
+                ticksSinceFailedExtract = 0;
             }
         }
-
     }
 
     @Override
@@ -204,12 +201,10 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
 
     // --------------- Gas Capability ------------
 
+    @Nonnull
     @Override
     public GasTankInfo[] getTankInfo() {
-        if (network == null) {
-            return new GasTankInfo[0];
-        }
-        return new GasTankInfo[]{tank};
+        return network == null ? new GasTankInfo[0] : new GasTankInfo[]{tank};
     }
 
     @Override
@@ -270,5 +265,4 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
 
         return result;
     }
-
 }

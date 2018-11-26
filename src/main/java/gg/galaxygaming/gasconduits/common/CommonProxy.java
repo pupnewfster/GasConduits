@@ -7,18 +7,14 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
-
     }
 
     public void Init(FMLInitializationEvent event) {
-
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-
     }
 
     public void serverStart(FMLServerStartingEvent event) {
-
     }
 }

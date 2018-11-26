@@ -1,7 +1,6 @@
 package gg.galaxygaming.gasconduits.client;
 
 import com.enderio.core.client.gui.button.IconButton;
-import com.enderio.core.client.gui.widget.GhostSlot;
 import crazypants.enderio.base.filter.gui.AbstractFilterGui;
 import crazypants.enderio.base.filter.gui.ContainerFilter;
 import crazypants.enderio.base.filter.gui.FilterGuiUtil;
@@ -22,17 +21,15 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GasFilterGui extends AbstractFilterGui {
-
     private static final int ID_WHITELIST = FilterGuiUtil.nextButtonId();
 
     private final IconButton whiteListB;
-
-    private final @Nonnull
-    GasFilter filter;
+    @Nonnull
+    private final GasFilter filter;
 
     private int xOffset;
     private int yOffset;
@@ -45,10 +42,7 @@ public class GasFilterGui extends AbstractFilterGui {
 
         filter = (GasFilter) filterIn;
 
-        int x = xOffset + 98;
-        int y = yOffset + 1;
-
-        whiteListB = new IconButton(this, ID_WHITELIST, x, y, IconEIO.FILTER_WHITELIST);
+        whiteListB = new IconButton(this, ID_WHITELIST, xOffset + 98, yOffset + 1, IconEIO.FILTER_WHITELIST);
         whiteListB.setToolTip(Lang.GUI_ITEM_FILTER_WHITELIST.get());
     }
 
@@ -116,12 +110,8 @@ public class GasFilterGui extends AbstractFilterGui {
     }
 
     @Override
-    public @Nonnull
-    List<GhostSlotTarget<?>> getGhostTargets() {
-        List<GhostSlotTarget<?>> targets = new ArrayList<>();
-        for (GhostSlot slot : getGhostSlotHandler().getGhostSlots()) {
-            targets.add(new GhostSlotTarget<>(filter, slot, getGuiLeft(), getGuiTop(), this));
-        }
-        return targets;
+    @Nonnull
+    public List<GhostSlotTarget<?>> getGhostTargets() {
+        return getGhostSlotHandler().getGhostSlots().stream().map(slot -> new GhostSlotTarget<>(filter, slot, getGuiLeft(), getGuiTop(), this)).collect(Collectors.toList());
     }
 }

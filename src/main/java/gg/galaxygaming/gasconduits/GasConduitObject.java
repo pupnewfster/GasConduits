@@ -110,8 +110,6 @@ public enum GasConduitObject implements IModObjectBase {
         return IModObjectBase.super.apply(blockIn);
     }
 
-
-
     @Override
     @Nullable
     public String getBlockMethodName() {

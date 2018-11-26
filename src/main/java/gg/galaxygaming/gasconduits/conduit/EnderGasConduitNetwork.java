@@ -18,10 +18,8 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, EnderGasConduit> {
-
     List<NetworkTank> tanks = new ArrayList<>();
     Map<NetworkTankKey, NetworkTank> tankMap = new HashMap<>();
-
     Map<NetworkTank, RoundRobinIterator<NetworkTank>> iterators;
 
     boolean filling;
@@ -60,11 +58,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
         GasStack drained = GasUtil.getGasStack(tank.externalTank);
 
-        if (!matchedFilter(drained, con, conDir, true)) {
-            return false;
-        }
-
-        if (!tank.externalTank.canDrawGas(tank.conDir, drained.getGas())) {
+        if (!matchedFilter(drained, con, conDir, true) || !tank.externalTank.canDrawGas(tank.conDir, drained.getGas())) {
             return false;
         }
 
@@ -106,7 +100,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             // TODO: Only change starting pos of iterator is doFill is true so a false then true returns the same
 
             for (NetworkTank target : getIteratorForTank(tank)) {
-                if (target.externalTank != null && (!target.equals(tank) || tank.selfFeed) && target.acceptsOuput && target.isValid() && target.inputColor == tank.outputColor
+                if (target.externalTank != null && (!target.equals(tank) || tank.selfFeed) && target.acceptsOutput && target.isValid() && target.inputColor == tank.outputColor
                         && matchedFilter(resource, target.con, target.conDir, false) && target.externalTank.canReceiveGas(target.conDir.getOpposite(), resource.getGas())) {
                     int vol = target.externalTank.receiveGas(target.conDir.getOpposite(), resource.copy(), doFill);
                     remaining -= vol;
@@ -148,10 +142,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             return false;
         }
         IGasFilter filter = con.getFilter(conDir, isInput);
-        if (filter == null || filter.isEmpty()) {
-            return true;
-        }
-        return filter.matchesFilter(drained);
+        return filter == null || filter.isEmpty() || filter.matchesFilter(drained);
     }
 
     private RoundRobinIterator<NetworkTank> getIteratorForTank(@Nonnull NetworkTank tank) {
@@ -211,7 +202,8 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             }
             if (conduitLoc == null) {
                 return other.conduitLoc == null;
-            } else return conduitLoc.equals(other.conduitLoc);
+            }
+            return conduitLoc.equals(other.conduitLoc);
         }
     }
 }

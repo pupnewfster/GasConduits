@@ -1,6 +1,7 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.network;
 
 import crazypants.enderio.conduits.network.AbstractConduitPacket;
+import gg.galaxygaming.gasconduits.conduit.IGasConduit;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -11,7 +12,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import javax.annotation.Nonnull;
 
 public class PacketConduitGasLevel extends AbstractConduitPacket<IGasConduit> {
-
     public NBTTagCompound tc;
 
     public PacketConduitGasLevel() {
@@ -36,7 +36,6 @@ public class PacketConduitGasLevel extends AbstractConduitPacket<IGasConduit> {
     }
 
     public static class Handler implements IMessageHandler<PacketConduitGasLevel, IMessage> {
-
         @Override
         public IMessage onMessage(PacketConduitGasLevel message, MessageContext ctx) {
             final NBTTagCompound nbt = message.tc;
@@ -46,7 +45,5 @@ public class PacketConduitGasLevel extends AbstractConduitPacket<IGasConduit> {
             }
             return null;
         }
-
     }
-
 }

@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemGasConduit extends AbstractItemConduit implements IAdvancedTooltipProvider {
-
     public static ItemGasConduit create(@Nonnull IModObject modObject) {
         return new ItemGasConduit(modObject);
     }
@@ -53,8 +52,8 @@ public class ItemGasConduit extends AbstractItemConduit implements IAdvancedTool
     }
 
     @Override
-    public @Nonnull
-    Class<? extends IConduit> getBaseConduitType() {
+    @Nonnull
+    public Class<? extends IConduit> getBaseConduitType() {
         return IGasConduit.class;
     }
 
@@ -76,7 +75,6 @@ public class ItemGasConduit extends AbstractItemConduit implements IAdvancedTool
     @Override
     @SideOnly(Side.CLIENT)
     public void addBasicEntries(@Nonnull ItemStack itemstack, @Nullable EntityPlayer entityplayer, @Nonnull List<String> list, boolean flag) {
-
     }
 
     @Override
@@ -103,12 +101,10 @@ public class ItemGasConduit extends AbstractItemConduit implements IAdvancedTool
         if (itemstack.getItemDamage() == 0) {
             SpecialTooltipHandler.addDetailedTooltipFromResources(list, "gasconduits.item_gas_conduit");
         }
-
     }
 
     @Override
     public boolean shouldHideFacades(@Nonnull ItemStack stack, @Nonnull EntityPlayer player) {
         return true;
     }
-
 }

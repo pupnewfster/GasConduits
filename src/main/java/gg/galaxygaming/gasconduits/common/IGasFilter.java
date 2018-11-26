@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface IGasFilter extends IFilter {
-
     /**
      * Checks if the filter has no gas stacks
      *
@@ -94,5 +93,4 @@ public interface IGasFilter extends IFilter {
      * @return The number of slots for the filter
      */
     int getSlotCount();
-
 }

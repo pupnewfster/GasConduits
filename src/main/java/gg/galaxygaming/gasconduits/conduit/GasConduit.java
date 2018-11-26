@@ -10,6 +10,7 @@ import crazypants.enderio.conduits.render.ConduitTexture;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitObject;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
+import gg.galaxygaming.gasconduits.common.network.PacketConduitGasLevel;
 import gg.galaxygaming.gasconduits.utils.GasUtil;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
@@ -28,7 +29,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class GasConduit extends AbstractTankConduit implements IConduitComponent {
-
     static final int VOLUME_PER_CONNECTION = GasConduitsConstants.GAS_VOLUME / 4;
 
     public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(0));
@@ -49,8 +49,6 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
     private EnumFacing startPushDir = EnumFacing.DOWN;
 
-    // private final Set<BlockPos> filledFromThisTick = new HashSet<BlockPos>();
-
     private long ticksSinceFailedExtract = 0;
 
     @Override
@@ -59,7 +57,6 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
         if (world.isRemote) {
             return;
         }
-        // filledFromThisTick.clear();
         updateStartPushDir();
         doExtract();
 
@@ -67,14 +64,11 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
             getBundle().dirty();
             stateDirty = false;
             lastSyncRatio = tank.getFilledRatio();
-
         } else if ((lastSyncRatio != tank.getFilledRatio() && world.getTotalWorldTime() % 2 == 0)) {
-
             // need to send a custom packet as we don't want want to trigger a full chunk update, just
             // need to get the required values to the entity renderer
             BlockPos pos = getBundle().getLocation();
-            PacketHandler.INSTANCE.sendToAllAround(new PacketConduitGasLevel(this),
-                    new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
+            PacketHandler.INSTANCE.sendToAllAround(new PacketConduitGasLevel(this), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
             lastSyncRatio = tank.getFilledRatio();
         }
     }
@@ -93,7 +87,6 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
         for (EnumFacing dir : externalConnections) {
             if (autoExtractForDir(dir)) {
-
                 IGasHandler extTank = getExternalHandler(dir);
                 GasStack couldDrain = GasUtil.getGasStack(extTank);
                 if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas()) && extTank.canDrawGas(dir.getOpposite(), couldDrain.getGas())) {
@@ -112,17 +105,13 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
                 }
             }
         }
-
     }
 
     // --------------- Gas Capability ------------
 
     @Override
     public GasTankInfo[] getTankInfo() {
-        if (network == null) {
-            return new GasTankInfo[0];
-        }
-        return new GasTankInfo[]{tank};
+        return network == null ? new GasTankInfo[0] : new GasTankInfo[]{tank};
     }
 
     @Override
@@ -154,13 +143,11 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
         if (doPush) {
             return pushGas(from, resource, doFill, pushToken);
-        } else {
-            return tank.receive(resource, doFill);
         }
+        return tank.receive(resource, doFill);
     }
 
     private void updateStartPushDir() {
-
         EnumFacing newVal = getNextDir(startPushDir);
         boolean foundNewStart = false;
         while (newVal != startPushDir && !foundNewStart) {
@@ -171,10 +158,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     }
 
     private EnumFacing getNextDir(@Nonnull EnumFacing dir) {
-        if (dir.ordinal() >= EnumFacing.VALUES.length - 1) {
-            return EnumFacing.VALUES[0];
-        }
-        return EnumFacing.VALUES[dir.ordinal() + 1];
+        return dir.ordinal() >= EnumFacing.VALUES.length - 1 ? EnumFacing.VALUES[0] : EnumFacing.VALUES[dir.ordinal() + 1];
     }
 
     private int pushGas(@Nullable EnumFacing from, GasStack pushStack, boolean doPush, int token) {
@@ -215,7 +199,6 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
             }
             dir = getNextDir(dir);
         } while (dir != startPushDir && pushed < total);
-
         return pushed;
     }
 
@@ -229,18 +212,12 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
         if (!getConnectionMode(from).acceptsInput() || network == null || gas == null) {
             return false;
         }
-        if (tank.getGas() == null) {
-            return true;
-        }
-        return GasUtil.areGassesTheSame(gas, tank.getGasType());
+        return tank.getGas() == null || GasUtil.areGassesTheSame(gas, tank.getGasType());
     }
 
     @Override
     public boolean canDrawGas(EnumFacing from, Gas gas) {
-        if (!getConnectionMode(from).acceptsOutput() || tank.getGasType() == null || gas == null) {
-            return false;
-        }
-        return GasUtil.areGassesTheSame(tank.getGasType(), gas);
+        return getConnectionMode(from).acceptsOutput() && tank.getGasType() != null && gas != null && GasUtil.areGassesTheSame(tank.getGasType(), gas);
     }
 
     @Override
@@ -256,8 +233,8 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     }
 
     @Override
-    public @Nonnull
-    IConduitNetwork<?, ?> getNetwork() {
+    @Nonnull
+    public IConduitNetwork<?, ?> getNetwork() {
         return network;
     }
 
@@ -327,10 +304,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
     @Override
     public IGasHandler getGasDir(@Nullable EnumFacing dir) {
-        if (dir != null) {
-            return new ConnectionGasConduitSide(dir);
-        }
-        return this;
+        return dir != null ? new ConnectionGasConduitSide(dir) : this;
     }
 
     @Override
@@ -340,7 +314,6 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     }
 
     protected class ConnectionGasConduitSide extends ConnectionGasSide {
-
         public ConnectionGasConduitSide(EnumFacing side) {
             super(side);
         }
@@ -368,5 +341,4 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     public Class<? extends IConduit> getCollidableType() {
         return GasConduit.class;
     }
-
 }

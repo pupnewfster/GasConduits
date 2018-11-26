@@ -15,7 +15,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class GasFilter implements IGasFilter {
-
     private final GasStack[] gasses = new GasStack[5];
     private boolean isBlacklist;
 
@@ -194,7 +193,8 @@ public class GasFilter implements IGasFilter {
         }
 
         @Override
-        public @Nonnull ItemStack getStack() {
+        public @Nonnull
+        ItemStack getStack() {
             return ItemStack.EMPTY;
         }
     }

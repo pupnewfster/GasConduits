@@ -10,20 +10,21 @@ import net.minecraft.world.IBlockAccess;
 import javax.annotation.Nullable;
 
 public class GasWrapper {
-    public static @Nullable IGasHandler getGasHandler(IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public static @Nullable
+    IGasHandler getGasHandler(IBlockAccess world, BlockPos pos, EnumFacing side) {
         if (world == null || pos == null) {
             return null;
         }
         return getGasHandler(world.getTileEntity(pos), side);
     }
 
-    public static @Nullable IGasHandler getGasHandler(TileEntity tile, EnumFacing facing) {
+    public static @Nullable
+    IGasHandler getGasHandler(TileEntity tile, EnumFacing facing) {
         if (tile instanceof IGasHandler) {
             return (IGasHandler) tile;
         } else if (tile != null && tile.hasCapability(Capabilities.GAS_HANDLER_CAPABILITY, facing)) {
             return tile.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, facing);
-        } else {
-            return null;
         }
+        return null;
     }
 }

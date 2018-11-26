@@ -26,21 +26,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
-
     @Override
     public boolean isRendererForConduit(@Nonnull IConduit conduit) {
         return conduit instanceof AdvancedGasConduit;
     }
 
     @Override
-    protected @Nonnull
-    BlockRenderLayer getConduitQuadsLayer() {
+    @Nonnull
+    protected BlockRenderLayer getConduitQuadsLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
 
     @Override
-    protected @Nonnull
-    BlockRenderLayer getTransmissionQuadsLayer() {
+    @Nonnull
+    protected BlockRenderLayer getTransmissionQuadsLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
 
@@ -60,7 +59,6 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
         }
 
         if (layer == BlockRenderLayer.TRANSLUCENT) {
-
             AdvancedGasConduit lc = (AdvancedGasConduit) conduit;
             GasStack gas = lc.getGasType();
             @Nonnull
@@ -124,7 +122,6 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
 
             BakedQuadBuilder.addBakedQuads(quads, vertices, tex2, null);
         }
-
     }
 
     private void moveEdgeCorners(List<Vertex> vertices, EnumFacing edge, double scaleFactor) {

@@ -28,8 +28,8 @@ public class GasRenderUtil {
     @Nonnull
     public static TextureAtlasSprite getStillTexture(@Nonnull Gas gas) {
         ResourceLocation iconKey = gas.getIcon();
-        final TextureAtlasSprite textureExtry = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(iconKey.toString());
-        return textureExtry != null ? textureExtry : RenderUtil.getMissingSprite();
+        final TextureAtlasSprite textureEntry = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(iconKey.toString());
+        return textureEntry != null ? textureEntry : RenderUtil.getMissingSprite();
     }
 
     public static void renderGuiTank(@Nullable GasStack gas, int capacity, int amount, double x, double y, double zLevel, double width, double height) {

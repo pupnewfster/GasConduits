@@ -50,38 +50,37 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class EnderGasConduit extends AbstractGasConduit implements IConduitComponent, IFilterHolder<IGasFilter>, IUpgradeHolder, IEnderConduit {
-
     public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(3));
     public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(2));
 
     private EnderGasConduitNetwork network;
     private int ticksSinceFailedExtract;
 
-    private final @Nonnull
-    EnumMap<EnumFacing, IGasFilter> outputFilters = new EnumMap<>(EnumFacing.class);
-    private final @Nonnull
-    EnumMap<EnumFacing, IGasFilter> inputFilters = new EnumMap<>(EnumFacing.class);
-    private final @Nonnull
-    EnumMap<EnumFacing, ItemStack> outputFilterUpgrades = new EnumMap<>(EnumFacing.class);
-    private final @Nonnull
-    EnumMap<EnumFacing, ItemStack> inputFilterUpgrades = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    private final EnumMap<EnumFacing, IGasFilter> outputFilters = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    private final EnumMap<EnumFacing, IGasFilter> inputFilters = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    private final EnumMap<EnumFacing, ItemStack> outputFilterUpgrades = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    private final EnumMap<EnumFacing, ItemStack> inputFilterUpgrades = new EnumMap<>(EnumFacing.class);
 
-    private final @Nonnull
-    EnumMap<EnumFacing, DyeColor> inputColors = new EnumMap<>(EnumFacing.class);
-    private final @Nonnull
-    EnumMap<EnumFacing, DyeColor> outputColors = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    private final EnumMap<EnumFacing, DyeColor> inputColors = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    private final EnumMap<EnumFacing, DyeColor> outputColors = new EnumMap<>(EnumFacing.class);
 
-    protected final @Nonnull
-    EnumMap<EnumFacing, Integer> priorities = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    protected final EnumMap<EnumFacing, Integer> priorities = new EnumMap<>(EnumFacing.class);
 
-    protected final @Nonnull
-    EnumMap<EnumFacing, Boolean> roundRobin = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    protected final EnumMap<EnumFacing, Boolean> roundRobin = new EnumMap<>(EnumFacing.class);
 
-    protected final @Nonnull
-    EnumMap<EnumFacing, Boolean> selfFeed = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    protected final EnumMap<EnumFacing, Boolean> selfFeed = new EnumMap<>(EnumFacing.class);
 
-    protected final @Nonnull
-    EnumMap<EnumFacing, ItemStack> functionUpgrades = new EnumMap<>(EnumFacing.class);
+    @Nonnull
+    protected final EnumMap<EnumFacing, ItemStack> functionUpgrades = new EnumMap<>(EnumFacing.class);
 
     public EnderGasConduit() {
         super();
@@ -101,8 +100,8 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     }
 
     @Override
-    public @Nonnull
-    NNList<ItemStack> getDrops() {
+    @Nonnull
+    public NNList<ItemStack> getDrops() {
         NNList<ItemStack> res = super.getDrops();
         res.addAll(functionUpgrades.values());
         res.addAll(inputFilterUpgrades.values());
@@ -112,48 +111,42 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
 
     @Override
     public boolean onBlockActivated(@Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull RaytraceResult res, @Nonnull List<RaytraceResult> all) {
-        if (Prep.isInvalid(player.getHeldItem(hand))) {
+        if (Prep.isInvalid(player.getHeldItem(hand)) || !ToolUtil.isToolEquipped(player, hand)) {
             return false;
         }
 
-        if (ToolUtil.isToolEquipped(player, hand)) {
-            if (!getBundle().getEntity().getWorld().isRemote) {
-                final CollidableComponent component = res.component;
-                if (component != null) {
-                    EnumFacing faceHit = res.movingObjectPosition.sideHit;
-                    if (component.isCore()) {
-                        if (getConnectionMode(faceHit) == ConnectionMode.DISABLED) {
-                            setConnectionMode(faceHit, getNextConnectionMode(faceHit));
-                            return true;
-                        }
-                        // Attempt to join networks
-                        return ConduitUtil.connectConduits(this, faceHit);
-                    } else {
-                        EnumFacing connDir = component.getDirection();
-                        if (containsExternalConnection(connDir)) {
-                            setConnectionMode(connDir, getNextConnectionMode(connDir));
-                        } else if (containsConduitConnection(connDir)) {
-                            ConduitUtil.disconnectConduits(this, connDir);
-                        }
+        if (!getBundle().getEntity().getWorld().isRemote) {
+            final CollidableComponent component = res.component;
+            if (component != null) {
+                EnumFacing faceHit = res.movingObjectPosition.sideHit;
+                if (component.isCore()) {
+                    if (getConnectionMode(faceHit) == ConnectionMode.DISABLED) {
+                        setConnectionMode(faceHit, getNextConnectionMode(faceHit));
+                        return true;
+                    }
+                    // Attempt to join networks
+                    return ConduitUtil.connectConduits(this, faceHit);
+                } else {
+                    EnumFacing connDir = component.getDirection();
+                    if (containsExternalConnection(connDir)) {
+                        setConnectionMode(connDir, getNextConnectionMode(connDir));
+                    } else if (containsConduitConnection(connDir)) {
+                        ConduitUtil.disconnectConduits(this, connDir);
                     }
                 }
             }
-            return true;
         }
-        return false;
+        return true;
     }
 
     @Override
-    public @Nullable
-    IConduitNetwork<?, ?> getNetwork() {
+    @Nullable
+    public IConduitNetwork<?, ?> getNetwork() {
         return network;
     }
 
     public IGasFilter getFilter(@Nonnull EnumFacing dir, boolean isInput) {
-        if (isInput) {
-            return inputFilters.get(dir);
-        }
-        return outputFilters.get(dir);
+        return isInput ? inputFilters.get(dir) : outputFilters.get(dir);
     }
 
     public void setFilter(@Nonnull EnumFacing dir, @Nonnull IGasFilter filter, boolean isInput) {
@@ -167,11 +160,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
 
     @Nonnull
     public ItemStack getFilterStack(@Nonnull EnumFacing dir, boolean isInput) {
-        if (isInput) {
-            return inputFilterUpgrades.get(dir);
-        } else {
-            return outputFilterUpgrades.get(dir);
-        }
+        return isInput ? inputFilterUpgrades.get(dir) : outputFilterUpgrades.get(dir);
     }
 
     public void setFilterStack(@Nonnull EnumFacing dir, @Nonnull ItemStack stack, boolean isInput) {
@@ -190,10 +179,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
             return false;
         }
         this.network = (EnderGasConduitNetwork) network;
-        for (EnumFacing dir : externalConnections) {
-            this.network.connectionChanged(this, dir);
-        }
-
+        externalConnections.forEach(dir -> this.network.connectionChanged(this, dir));
         return super.setNetwork(network);
     }
 
@@ -244,10 +230,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
 
     @Override
     public boolean canConnectToConduit(@Nonnull EnumFacing direction, @Nonnull IConduit con) {
-        if (!super.canConnectToConduit(direction, con)) {
-            return false;
-        }
-        return con instanceof EnderGasConduit;
+        return super.canConnectToConduit(direction, con) && con instanceof EnderGasConduit;
     }
 
     @Override
@@ -284,10 +267,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     }
 
     private void doExtract() {
-        if (!hasExtractableMode()) {
-            return;
-        }
-        if (network == null) {
+        if (!hasExtractableMode() || network == null) {
             return;
         }
 
@@ -299,13 +279,10 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
         }
 
         for (EnumFacing dir : externalConnections) {
-            if (autoExtractForDir(dir)) {
-                if (network.extractFrom(this, dir)) {
-                    ticksSinceFailedExtract = 0;
-                }
+            if (autoExtractForDir(dir) && network.extractFrom(this, dir)) {
+                ticksSinceFailedExtract = 0;
             }
         }
-
     }
 
     // ---------- Gas Capability -----------------
@@ -333,10 +310,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
 
     @Override
     public boolean canReceiveGas(EnumFacing from, Gas gas) {
-        if (network == null) {
-            return false;
-        }
-        return getConnectionMode(from).acceptsInput();
+        return network != null && getConnectionMode(from).acceptsInput();
     }
 
     @Override
@@ -371,10 +345,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     }
 
     private boolean isDefault(IGasFilter f) {
-        if (f instanceof GasFilter) {
-            return f.isDefault();
-        }
-        return false;
+        return f instanceof GasFilter && f.isDefault();
     }
 
     @Override
@@ -540,9 +511,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
                 ItemStack ups = new ItemStack(upTag);
                 functionUpgrades.put(dir, ups);
             }
-
         }
-
         connectionsDirty = true;
     }
 
@@ -686,20 +655,14 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     @Nullable
     @Override
     public <T> T getInternalCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY) {
-            return (T) this;
-        }
-        return null;
+        return capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY ? (T) this : null;
     }
 
     @SuppressWarnings("unchecked")
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (hasCapability(capability, facing)) {
-            return (T) new ConnectionEnderGasSide(facing);
-        }
-        return null;
+        return hasCapability(capability, facing) ? (T) new ConnectionEnderGasSide(facing) : null;
     }
 
     protected class ConnectionEnderGasSide extends ConnectionGasSide {
@@ -709,18 +672,12 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
 
         @Override
         public int receiveGas(EnumFacing facing, GasStack resource, boolean doFill) {
-            if (canReceiveGas(facing, resource.getGas())) {
-                return network == null ? 0 : network.fillFrom(EnderGasConduit.this, facing, resource, doFill);
-            }
-            return 0;
+            return canReceiveGas(facing, resource.getGas()) ? network == null ? 0 : network.fillFrom(EnderGasConduit.this, facing, resource, doFill) : 0;
         }
 
         @Override
         public GasTankInfo[] getTankInfo() {
-            if (network == null) {
-                return new GasTankInfo[0];
-            }
-            return network.getTankProperties(EnderGasConduit.this, side);
+            return network == null ? new GasTankInfo[0] : network.getTankProperties(EnderGasConduit.this, side);
         }
     }
 
@@ -741,5 +698,4 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
 
         return result;
     }
-
 }

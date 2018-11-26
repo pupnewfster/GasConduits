@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<AdvancedGasConduit> {
-
     private final ConduitTank tank = new ConduitTank(0);
 
     private final Set<GasOutput> outputs = new HashSet<>();
@@ -55,7 +54,6 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
     @Override
     public boolean setGasType(GasStack newType) {
         if (super.setGasType(newType)) {
-
             GasStack gt = getGasType();
             tank.setGas(gt == null ? null : gt.copy());
             return true;
@@ -95,7 +93,6 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
                 BlockPos pos = con.getBundle().getLocation();
                 con.getBundle().getEntity().getWorld().markChunkDirty(pos, con.getBundle().getEntity());
             }
-
         }
     }
 
@@ -133,18 +130,15 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
                     Prof.stop(profiler);
                     if (filled > 0) {
                         tank.addAmount(-filled);
-
                     }
                 }
             }
             numVisited++;
         }
-
         Prof.stop(profiler);
     }
 
     private void updateActiveState() {
-
         boolean isActive = tank.containsValidGas() && !tank.isEmpty();
         if (!isActive) {
             if (!gasTypeLocked && gasType != null) {
@@ -164,12 +158,9 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
         ticksEmpty = 0;
 
         if (!lastSyncedActive) {
-            for (IServerConduit con : getConduits()) {
-                con.setActive(true);
-            }
+            getConduits().forEach(con -> con.setActive(true));
             lastSyncedActive = true;
         }
-
     }
 
     public int receiveGas(GasStack resource, boolean doFill) {

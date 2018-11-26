@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class GasConduitRenderer extends DefaultConduitRenderer implements IResourceManagerReloadListener {
-
     private GasConduitRenderer() {
         super();
     }
@@ -89,7 +88,6 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
                 float zLen = Math.abs(componentDirection.getZOffset()) == 1 ? 0 : shrink;
 
                 BoundingBox bb = cube.expand(-xLen, -yLen, -zLen);
-
                 drawDynamicSection(bb, sprite.getInterpolatedU(tex.getUv().x * 16), sprite.getInterpolatedU(tex.getUv().z * 16),
                         sprite.getInterpolatedV(tex.getUv().y * 16), sprite.getInterpolatedV(tex.getUv().w * 16), color, componentDirection, true);
             }
@@ -103,9 +101,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
     public static void renderGasOutline(@Nonnull CollidableComponent component, @Nonnull GasStack gasStack, double scaleFactor, float outlineWidth) {
         final Gas gas = gasStack.getGas();
         if (gas != null) {
-            for (CachableRenderStatement elem : computeGasOutlineToCache(component, gas, scaleFactor, outlineWidth)) {
-                elem.execute();
-            }
+            computeGasOutlineToCache(component, gas, scaleFactor, outlineWidth).forEach(CachableRenderStatement::execute);
         }
     }
 
@@ -203,5 +199,4 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
     public void onResourceManagerReload(@Nonnull IResourceManager p_110549_1_) {
         cache.clear();
     }
-
 }

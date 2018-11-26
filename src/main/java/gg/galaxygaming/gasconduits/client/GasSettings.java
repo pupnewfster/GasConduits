@@ -23,9 +23,9 @@ import crazypants.enderio.conduits.lang.Lang;
 import crazypants.enderio.conduits.network.PacketExtractMode;
 import gg.galaxygaming.gasconduits.GasConduitObject;
 import gg.galaxygaming.gasconduits.common.GasFilterGuiUtil;
+import gg.galaxygaming.gasconduits.common.network.PacketEnderGasConduit;
 import gg.galaxygaming.gasconduits.conduit.EnderGasConduit;
 import gg.galaxygaming.gasconduits.conduit.IGasConduit;
-import gg.galaxygaming.gasconduits.network.PacketEnderGasConduit;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -155,8 +155,8 @@ public class GasSettings extends BaseSettingsPanel {
     }
 
     @Override
-    protected void connectionModeChanged(@Nonnull ConnectionMode conectionMode) {
-        super.connectionModeChanged(conectionMode);
+    protected void connectionModeChanged(@Nonnull ConnectionMode connectionMode) {
+        super.connectionModeChanged(connectionMode);
         if (isEnder) {
             PacketHandler.INSTANCE.sendToServer(new PacketExtractMode(eCon, gui.getDir()));
         }
@@ -242,5 +242,4 @@ public class GasSettings extends BaseSettingsPanel {
     protected boolean hasUpgrades() {
         return isEnder;
     }
-
 }

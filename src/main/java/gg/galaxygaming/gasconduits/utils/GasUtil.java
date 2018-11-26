@@ -22,20 +22,17 @@ public class GasUtil {
             return null;
         }
         if (stack.getItem() instanceof IGasItem) {
-            IGasItem item = (IGasItem) stack.getItem();
-            return item.getGas(stack);
-        } else {
-            return null;
+            return ((IGasItem) stack.getItem()).getGas(stack);
         }
+        return null;
     }
 
     @Nullable
     public static IGasItem getGasHandler(@Nonnull ItemStack stack) {
         if (stack.getItem() instanceof IGasItem) {
             return (IGasItem) stack.getItem();
-        } else {
-            return null;
         }
+        return null;
     }
 
     public static GasStack getGasStack(IGasHandler tank) {

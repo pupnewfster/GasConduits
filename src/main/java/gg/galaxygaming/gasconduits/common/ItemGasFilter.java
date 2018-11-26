@@ -33,7 +33,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemGasFilter extends Item implements IItemFilterGasUpgrade, IResourceTooltipProvider {
-
     public static ItemGasFilter create(@Nonnull IModObject modObject) {
         return new ItemGasFilter(modObject);
     }
@@ -81,11 +80,9 @@ public class ItemGasFilter extends Item implements IItemFilterGasUpgrade, IResou
     @SideOnly(Side.CLIENT)
     public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        if (FilterRegistry.isFilterSet(stack)) {
-            if (SpecialTooltipHandler.showAdvancedTooltips()) {
-                tooltip.add(Lang.ITEM_FILTER_CONFIGURED.get(TextFormatting.ITALIC));
-                tooltip.add(Lang.ITEM_FILTER_CLEAR.get(TextFormatting.ITALIC));
-            }
+        if (FilterRegistry.isFilterSet(stack) && SpecialTooltipHandler.showAdvancedTooltips()) {
+            tooltip.add(Lang.ITEM_FILTER_CONFIGURED.get(TextFormatting.ITALIC));
+            tooltip.add(Lang.ITEM_FILTER_CLEAR.get(TextFormatting.ITALIC));
         }
     }
 
@@ -98,10 +95,8 @@ public class ItemGasFilter extends Item implements IItemFilterGasUpgrade, IResou
         if (container instanceof IFilterContainer) {
             return new GasFilterGui(player.inventory, new ContainerFilter(player, (TileEntityBase) world.getTileEntity(pos), facing, param1),
                     world.getTileEntity(pos), ((IFilterContainer<IGasFilter>) container).getFilter(param1));
-        } else {
-            return new GasFilterGui(player.inventory, new ContainerFilter(player, null, facing, param1), null,
-                    FilterRegistry.getFilterForUpgrade(player.getHeldItem(EnumHand.values()[param1])));
         }
+        return new GasFilterGui(player.inventory, new ContainerFilter(player, null, facing, param1), null,
+                FilterRegistry.getFilterForUpgrade(player.getHeldItem(EnumHand.values()[param1])));
     }
-
 }

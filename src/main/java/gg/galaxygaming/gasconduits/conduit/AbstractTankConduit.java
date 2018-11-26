@@ -39,7 +39,6 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
         }
         AbstractTankConduitNetwork<? extends AbstractTankConduit> network = getTankNetwork();
         if (ToolUtil.isToolEquipped(player, hand)) {
-
             if (!getBundle().getEntity().getWorld().isRemote) {
                 final CollidableComponent component = res.component;
                 if (component != null) {
@@ -78,9 +77,7 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
                 }
             }
             return true;
-
         } else if (heldItem.getItem() == Items.BUCKET) {
-
             if (!getBundle().getEntity().getWorld().isRemote) {
                 long curTick = getBundle().getEntity().getWorld().getTotalWorldTime();
                 if (curTick - lastEmptyTick < 20) {
@@ -101,25 +98,20 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
                     numEmptyEvents = 0;
                 }
             }
-
             return true;
         } else {
-
             GasStack gas = GasUtil.getGasTypeFromItem(heldItem);
             if (gas != null) {
                 if (!getBundle().getEntity().getWorld().isRemote) {
-                    if (network != null
-                            && (network.getGasType() == null || network.getTotalVolume() < 500 || GasConduitNetwork.areGassesCompatable(getGasType(), gas))) {
+                    if (network != null && (network.getGasType() == null || network.getTotalVolume() < 500 || GasConduitNetwork.areGassesCompatable(getGasType(), gas))) {
                         network.setGasType(gas);
                         network.setGasTypeLocked(true);
-
                         player.sendStatusMessage(new TextComponentTranslation("enderio.item_gas_conduit.locked_type", gas.getGas().getLocalizedName()), true);
                     }
                 }
                 return true;
             }
         }
-
         return false;
     }
 
@@ -137,7 +129,6 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
             AbstractTankConduitNetwork<?> network = (AbstractTankConduitNetwork<?>) n;
             network.setGasType(type);
         }
-
     }
 
     protected abstract boolean canJoinNeighbour(IGasConduit n);

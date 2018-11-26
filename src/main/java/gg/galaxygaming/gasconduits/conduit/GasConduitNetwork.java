@@ -18,16 +18,13 @@ import java.util.List;
 import java.util.Set;
 
 public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
-
     public GasConduitNetwork() {
         super(GasConduit.class);
     }
 
     private int ticksEmpty = 0;
-
     private int maxFlowsPerTick = 10;
     private int lastFlowIndex = 0;
-
     private int lastPushToken = 0;
 
     private boolean inputLocked = false;
@@ -85,11 +82,9 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
     }
 
     private boolean doFlow() {
-
         int pushToken = getNextPushToken();
         List<FlowAction> actions = new ArrayList<>();
         for (int i = 0; i < Math.min(maxFlowsPerTick, getConduits().size()); i++) {
-
             if (lastFlowIndex >= getConduits().size()) {
                 lastFlowIndex = 0;
             }
@@ -97,10 +92,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
             ++lastFlowIndex;
 
         }
-        for (FlowAction action : actions) {
-            action.apply();
-        }
-
+        actions.forEach(FlowAction::apply);
         boolean result = !actions.isEmpty();
 
         // Flush any tanks with a tiny bit left
@@ -112,7 +104,6 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
                 // some of the conduits have gas left in them so don't do the final drawGas yet
                 return result;
             }
-
         }
         if (toEmpty.isEmpty()) {
             return result;
@@ -121,7 +112,6 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
         List<LocatedGasHandler> externals = new ArrayList<>();
         for (AbstractTankConduit con : getConduits()) {
             Set<EnumFacing> extCons = con.getExternalConnections();
-
             for (EnumFacing dir : extCons) {
                 if (con.canOutputToDir(dir)) {
                     IGasHandler externalTank = con.getExternalHandler(dir);
@@ -134,11 +124,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
         if (externals.isEmpty()) {
             return result;
         }
-
-        for (GasConduit con : toEmpty) {
-            drainConduitToNearestExternal(con, externals);
-        }
-
+        toEmpty.forEach(con -> drainConduitToNearestExternal(con, externals));
         return result;
     }
 
@@ -151,12 +137,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
     }
 
     private boolean isEmpty() {
-        for (GasConduit con : getConduits()) {
-            if (con.tank.getStored() > 0) {
-                return false;
-            }
-        }
-        return true;
+        return getConduits().stream().noneMatch(con -> con.tank.getStored() > 0);
     }
 
     private void drainConduitToNearestExternal(@Nonnull GasConduit con, List<LocatedGasHandler> externals) {
@@ -182,11 +163,9 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
             int filled = closestTank.tank.receiveGas(closestTank.dir, toDrain.copy(), true);
             con.getTank().addAmount(-filled);
         }
-
     }
 
     private void flowFrom(@Nonnull GasConduit con, List<FlowAction> actions, int pushPoken) {
-
         ConduitTank tank = con.getTank();
         int totalAmount = tank.getStored();
         if (totalAmount <= 0) {
@@ -273,7 +252,6 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
         } catch (UnloadedBlockException e) {
             // NOP, should be impossible
         }
-
     }
 
     private boolean canFlowTo(GasConduit con, GasConduit neighbour) {
@@ -313,7 +291,6 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
                 to.getTank().addAmount(actual);
             }
         }
-
     }
 
     static class LocatedGasHandler {
@@ -327,5 +304,4 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
             this.dir = dir;
         }
     }
-
 }

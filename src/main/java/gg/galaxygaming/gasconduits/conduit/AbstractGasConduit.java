@@ -23,15 +23,11 @@ import java.util.EnumMap;
 import java.util.Map.Entry;
 
 public abstract class AbstractGasConduit extends AbstractConduit implements IGasConduit {
-
     protected final EnumMap<EnumFacing, RedstoneControlMode> extractionModes = new EnumMap<>(EnumFacing.class);
     protected final EnumMap<EnumFacing, DyeColor> extractionColors = new EnumMap<>(EnumFacing.class);
 
     public static IGasHandler getExternalGasHandler(@Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EnumFacing side) {
-        if (world.getTileEntity(pos) instanceof IConduitBundle) {
-            return null;
-        }
-        return GasWrapper.getGasHandler(world, pos, side);
+        return world.getTileEntity(pos) instanceof IConduitBundle ? null : GasWrapper.getGasHandler(world, pos, side);
     }
 
     public IGasHandler getExternalHandler(EnumFacing direction) {
@@ -58,10 +54,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     @Nonnull
     public RedstoneControlMode getExtractionRedstoneMode(@Nonnull EnumFacing dir) {
         RedstoneControlMode res = extractionModes.get(dir);
-        if (res == null) {
-            res = RedstoneControlMode.NEVER;
-        }
-        return res;
+        return res == null ? RedstoneControlMode.NEVER : res;
     }
 
     @Override
@@ -73,21 +66,12 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     @Nonnull
     public DyeColor getExtractionSignalColor(@Nonnull EnumFacing dir) {
         DyeColor result = extractionColors.get(dir);
-        if (result == null) {
-            return DyeColor.RED;
-        }
-        return result;
+        return result == null ? DyeColor.RED : result;
     }
 
     @Override
     public boolean canOutputToDir(@Nonnull EnumFacing dir) {
-        if (!canInputToDir(dir)) {
-            return false;
-        }
-        if (conduitConnections.contains(dir)) {
-            return true;
-        }
-        return externalConnections.contains(dir);
+        return canInputToDir(dir) && (conduitConnections.contains(dir) || externalConnections.contains(dir));
     }
 
     protected boolean autoExtractForDir(@Nonnull EnumFacing dir) {
@@ -130,15 +114,13 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
         for (Entry<EnumFacing, RedstoneControlMode> entry : extractionModes.entrySet()) {
             if (entry.getValue() != null) {
-                short ord = (short) entry.getValue().ordinal();
-                nbtRoot.setShort("extRM." + entry.getKey().name(), ord);
+                nbtRoot.setShort("extRM." + entry.getKey().name(), (short) entry.getValue().ordinal());
             }
         }
 
         for (Entry<EnumFacing, DyeColor> entry : extractionColors.entrySet()) {
             if (entry.getValue() != null) {
-                short ord = (short) entry.getValue().ordinal();
-                nbtRoot.setShort("extSC." + entry.getKey().name(), ord);
+                nbtRoot.setShort("extSC." + entry.getKey().name(), (short) entry.getValue().ordinal());
             }
         }
 
@@ -176,10 +158,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     @Override
     @SideOnly(Side.CLIENT)
     public boolean updateGuiPanel(@Nonnull ITabPanel panel) {
-        if (panel instanceof GasSettings) {
-            return ((GasSettings) panel).updateConduit(this);
-        }
-        return false;
+        return panel instanceof GasSettings && ((GasSettings) panel).updateConduit(this);
     }
 
     @SideOnly(Side.CLIENT)
@@ -203,10 +182,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (hasCapability(capability, facing)) {
-            return (T) getGasDir(facing);
-        }
-        return null;
+        return hasCapability(capability, facing) ? (T) getGasDir(facing) : null;
     }
 
     @Override
@@ -280,5 +256,4 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
             return connectionMode.acceptsOutput() || connectionMode.acceptsInput();
         }
     }
-
 }
