@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit.ender;
 
 import com.enderio.core.common.util.RoundRobinIterator;
 import crazypants.enderio.base.conduit.item.FunctionUpgrade;
@@ -6,8 +6,10 @@ import crazypants.enderio.base.conduit.item.ItemFunctionUpgrade;
 import crazypants.enderio.conduits.conduit.AbstractConduitNetwork;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
-import gg.galaxygaming.gasconduits.common.IGasFilter;
-import gg.galaxygaming.gasconduits.utils.GasUtil;
+import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.NetworkTank;
+import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
+import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
 import net.minecraft.item.ItemStack;
@@ -35,7 +37,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         // Check for later
         boolean sort = false;
         NetworkTank oldTank = tankMap.get(key);
-        if (oldTank != null && oldTank.priority != tank.priority) {
+        if (oldTank != null && oldTank.getPriority() != tank.getPriority()) {
             sort = true;
         }
 
@@ -46,19 +48,19 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
         // If the priority has been changed, then sort the list to match
         if (sort) {
-            tanks.sort((arg0, arg1) -> arg1.priority - arg0.priority);
+            tanks.sort((arg0, arg1) -> arg1.getPriority() - arg0.getPriority());
         }
     }
 
     public boolean extractFrom(@Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir) {
         NetworkTank tank = getTank(con, conDir);
-        if (!tank.isValid() || tank.externalTank == null) {
+        if (!tank.isValid() || tank.getExternalTank() == null) {
             return false;
         }
 
-        GasStack drained = GasUtil.getGasStack(tank.externalTank);
+        GasStack drained = GasUtil.getGasStack(tank.getExternalTank());
 
-        if (!matchedFilter(drained, con, conDir, true) || !tank.externalTank.canDrawGas(tank.conDir, drained.getGas())) {
+        if (!matchedFilter(drained, con, conDir, true) || !tank.getExternalTank().canDrawGas(tank.getConduitDir(), drained.getGas())) {
             return false;
         }
 
@@ -68,7 +70,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             return false;
         }
         drained.amount = amountAccepted;
-        drained = tank.externalTank.drawGas(tank.conDir, drained.amount, true);
+        drained = tank.getExternalTank().drawGas(tank.getConduitDir(), drained.amount, true);
         return drained != null && drained.amount > 0;
     }
 
@@ -89,7 +91,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         try {
             filling = true;
 
-            if (!matchedFilter(resource, tank.con, tank.conDir, true)) {
+            if (!matchedFilter(resource, tank.getConduit(), tank.getConduitDir(), true)) {
                 return 0;
             }
 
@@ -100,9 +102,9 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             // TODO: Only change starting pos of iterator is doFill is true so a false then true returns the same
 
             for (NetworkTank target : getIteratorForTank(tank)) {
-                if (target.externalTank != null && (!target.equals(tank) || tank.selfFeed) && target.acceptsOutput && target.isValid() && target.inputColor == tank.outputColor
-                        && matchedFilter(resource, target.con, target.conDir, false) && target.externalTank.canReceiveGas(target.conDir.getOpposite(), resource.getGas())) {
-                    int vol = target.externalTank.receiveGas(target.conDir.getOpposite(), resource.copy(), doFill);
+                if (target.getExternalTank() != null && (!target.equals(tank) || tank.isSelfFeed()) && target.acceptsOutput() && target.isValid() && target.getInputColor() == tank.getOutputColor()
+                        && matchedFilter(resource, target.getConduit(), target.getConduitDir(), false) && target.getExternalTank().canReceiveGas(target.getConduitDir().getOpposite(), resource.getGas())) {
+                    int vol = target.getExternalTank().receiveGas(target.getConduitDir().getOpposite(), resource.copy(), doFill);
                     remaining -= vol;
                     filled += vol;
                     if (remaining <= 0) {
@@ -114,7 +116,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             return filled;
 
         } finally {
-            if (!tank.roundRobin) {
+            if (!tank.isRoundRobin()) {
                 getIteratorForTank(tank).reset();
             }
             filling = false;
@@ -124,7 +126,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
     private int getExtractSpeedMultiplier(NetworkTank tank) {
         int extractSpeedMultiplier = 2;
 
-        ItemStack upgradeStack = tank.con.getFunctionUpgrade(tank.conDir);
+        ItemStack upgradeStack = tank.getConduit().getFunctionUpgrade(tank.getConduitDir());
         if (!upgradeStack.isEmpty()) {
             FunctionUpgrade upgrade = ItemFunctionUpgrade.getFunctionUpgrade(upgradeStack);
             if (upgrade == FunctionUpgrade.EXTRACT_SPEED_UPGRADE) {
@@ -161,8 +163,8 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         List<GasTankInfo> res = new ArrayList<>(tanks.size());
         NetworkTank tank = getTank(con, conDir);
         for (NetworkTank target : tanks) {
-            if (!target.equals(tank) && target.isValid() && target.externalTank != null) {
-                res.addAll(Arrays.asList(target.externalTank.getTankInfo()));
+            if (!target.equals(tank) && target.isValid() && target.getExternalTank() != null) {
+                res.addAll(Arrays.asList(target.getExternalTank().getTankInfo()));
             }
         }
         return res.toArray(new GasTankInfo[0]);

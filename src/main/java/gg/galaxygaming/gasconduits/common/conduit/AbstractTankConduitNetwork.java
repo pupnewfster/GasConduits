@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit;
 
 import crazypants.enderio.conduits.conduit.AbstractConduitNetwork;
 import mekanism.api.gas.Gas;

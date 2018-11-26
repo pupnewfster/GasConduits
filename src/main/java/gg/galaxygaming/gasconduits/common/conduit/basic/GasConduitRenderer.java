@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit.basic;
 
 import com.enderio.core.client.render.BoundingBox;
 import com.enderio.core.client.render.RenderUtil;

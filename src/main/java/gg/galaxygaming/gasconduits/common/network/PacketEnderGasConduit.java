@@ -6,7 +6,7 @@ import crazypants.enderio.base.filter.IFilter;
 import crazypants.enderio.base.filter.capability.CapabilityFilterHolder;
 import crazypants.enderio.base.filter.capability.IFilterHolder;
 import crazypants.enderio.conduits.network.PacketConduitFilter;
-import gg.galaxygaming.gasconduits.conduit.EnderGasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;

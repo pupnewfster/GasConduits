@@ -1,10 +1,10 @@
 package gg.galaxygaming.gasconduits.common.network;
 
 import crazypants.enderio.conduits.network.AbstractConduitPacket;
-import gg.galaxygaming.gasconduits.common.GasFilter;
-import gg.galaxygaming.gasconduits.common.IGasFilter;
-import gg.galaxygaming.gasconduits.conduit.EnderGasConduit;
-import gg.galaxygaming.gasconduits.conduit.IGasConduit;
+import gg.galaxygaming.gasconduits.common.filter.GasFilter;
+import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
+import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;

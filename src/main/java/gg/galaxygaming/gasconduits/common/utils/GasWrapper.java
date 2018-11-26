@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.common;
+package gg.galaxygaming.gasconduits.common.utils;
 
 import mekanism.api.gas.IGasHandler;
 import mekanism.common.capabilities.Capabilities;
@@ -10,16 +10,13 @@ import net.minecraft.world.IBlockAccess;
 import javax.annotation.Nullable;
 
 public class GasWrapper {
-    public static @Nullable
-    IGasHandler getGasHandler(IBlockAccess world, BlockPos pos, EnumFacing side) {
-        if (world == null || pos == null) {
-            return null;
-        }
-        return getGasHandler(world.getTileEntity(pos), side);
+    @Nullable
+    public static IGasHandler getGasHandler(IBlockAccess world, BlockPos pos, EnumFacing side) {
+        return world == null || pos == null ? null : getGasHandler(world.getTileEntity(pos), side);
     }
 
-    public static @Nullable
-    IGasHandler getGasHandler(TileEntity tile, EnumFacing facing) {
+    @Nullable
+    public static IGasHandler getGasHandler(TileEntity tile, EnumFacing facing) {
         if (tile instanceof IGasHandler) {
             return (IGasHandler) tile;
         } else if (tile != null && tile.hasCapability(Capabilities.GAS_HANDLER_CAPABILITY, facing)) {

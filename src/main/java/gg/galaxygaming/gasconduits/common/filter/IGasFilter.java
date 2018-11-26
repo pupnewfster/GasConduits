@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.common;
+package gg.galaxygaming.gasconduits.common.filter;
 
 import crazypants.enderio.base.filter.IFilter;
 import mekanism.api.gas.GasStack;

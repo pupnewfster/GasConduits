@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.common;
+package gg.galaxygaming.gasconduits.client;
 
 import crazypants.enderio.base.filter.gui.FilterGuiUtil;
 

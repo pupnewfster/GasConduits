@@ -1,8 +1,12 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit.basic;
 
 import crazypants.enderio.base.conduit.ConduitUtil;
 import crazypants.enderio.base.conduit.ConduitUtil.UnloadedBlockException;
 import crazypants.enderio.base.diagnostics.Prof;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduit;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduitNetwork;
+import gg.galaxygaming.gasconduits.common.conduit.ConduitTank;
+import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.profiler.Profiler;
@@ -137,7 +141,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
     }
 
     private boolean isEmpty() {
-        return getConduits().stream().noneMatch(con -> con.tank.getStored() > 0);
+        return getConduits().stream().noneMatch(con -> con.getTank().getStored() > 0);
     }
 
     private void drainConduitToNearestExternal(@Nonnull GasConduit con, List<LocatedGasHandler> externals) {

@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit.basic;
 
 import com.enderio.core.common.util.Log;
 import crazypants.enderio.base.conduit.*;
@@ -8,10 +8,13 @@ import crazypants.enderio.base.render.registry.TextureRegistry;
 import crazypants.enderio.conduits.conduit.IConduitComponent;
 import crazypants.enderio.conduits.render.ConduitTexture;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
-import gg.galaxygaming.gasconduits.GasConduitObject;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduit;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduitNetwork;
+import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
+import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.network.PacketConduitGasLevel;
-import gg.galaxygaming.gasconduits.utils.GasUtil;
+import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;

@@ -1,7 +1,7 @@
 package gg.galaxygaming.gasconduits.common.network;
 
 import crazypants.enderio.conduits.network.AbstractConduitPacket;
-import gg.galaxygaming.gasconduits.conduit.IGasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;

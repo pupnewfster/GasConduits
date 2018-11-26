@@ -1,10 +1,13 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit.advanced;
 
 import crazypants.enderio.base.conduit.IServerConduit;
 import crazypants.enderio.base.diagnostics.Prof;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
-import gg.galaxygaming.gasconduits.common.GasWrapper;
-import gg.galaxygaming.gasconduits.utils.GasUtil;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduitNetwork;
+import gg.galaxygaming.gasconduits.common.conduit.ConduitTank;
+import gg.galaxygaming.gasconduits.common.conduit.GasOutput;
+import gg.galaxygaming.gasconduits.common.utils.GasWrapper;
+import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.profiler.Profiler;
@@ -126,7 +129,7 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
                 if (cont != null && tank.getGas() != null) {
                     GasStack offer = tank.getGas().copy();
                     Prof.start(profiler, "otherMod_fill");
-                    int filled = cont.receiveGas(output.dir, offer, true);
+                    int filled = cont.receiveGas(output.getDir(), offer, true);
                     Prof.stop(profiler);
                     if (filled > 0) {
                         tank.addAmount(-filled);
@@ -225,7 +228,7 @@ public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<Advanc
     }
 
     public IGasHandler getTankContainer(GasOutput output) {
-        return GasWrapper.getGasHandler(getWorld(), output.location, output.dir);
+        return GasWrapper.getGasHandler(getWorld(), output.getLocation(), output.getDir());
     }
 
     public IGasHandler getTankContainer(@Nonnull AdvancedGasConduit con, @Nonnull EnumFacing dir) {

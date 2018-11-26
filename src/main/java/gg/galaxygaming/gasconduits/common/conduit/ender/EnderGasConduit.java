@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit.ender;
 
 import com.enderio.core.client.render.BoundingBox;
 import com.enderio.core.client.render.IconUtil;
@@ -27,10 +27,12 @@ import crazypants.enderio.conduits.render.BlockStateWrapperConduitBundle;
 import crazypants.enderio.conduits.render.ConduitTexture;
 import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import crazypants.enderio.util.Prep;
-import gg.galaxygaming.gasconduits.GasConduitObject;
-import gg.galaxygaming.gasconduits.common.GasFilter;
-import gg.galaxygaming.gasconduits.common.GasFilterGuiUtil;
-import gg.galaxygaming.gasconduits.common.IGasFilter;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractGasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
+import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
+import gg.galaxygaming.gasconduits.common.filter.GasFilter;
+import gg.galaxygaming.gasconduits.client.GasFilterGuiUtil;
+import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;

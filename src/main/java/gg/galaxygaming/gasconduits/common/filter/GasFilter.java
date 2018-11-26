@@ -1,10 +1,10 @@
-package gg.galaxygaming.gasconduits.common;
+package gg.galaxygaming.gasconduits.common.filter;
 
 import com.enderio.core.client.gui.widget.GhostSlot;
 import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.core.common.util.NNList;
 import crazypants.enderio.util.NbtValue;
-import gg.galaxygaming.gasconduits.utils.GasUtil;
+import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import io.netty.buffer.ByteBuf;
 import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;

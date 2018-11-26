@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.common;
+package gg.galaxygaming.gasconduits.common.filter;
 
 import com.enderio.core.api.client.gui.IResourceTooltipProvider;
 import com.enderio.core.client.handlers.SpecialTooltipHandler;
@@ -10,8 +10,8 @@ import crazypants.enderio.base.filter.IFilterContainer;
 import crazypants.enderio.base.filter.gui.ContainerFilter;
 import crazypants.enderio.base.lang.Lang;
 import crazypants.enderio.util.NbtValue;
-import gg.galaxygaming.gasconduits.GasConduitObject;
 import gg.galaxygaming.gasconduits.client.GasFilterGui;
+import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;

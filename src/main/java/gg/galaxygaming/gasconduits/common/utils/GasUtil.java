@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.utils;
+package gg.galaxygaming.gasconduits.common.utils;
 
 import mekanism.api.gas.*;
 import net.minecraft.item.ItemStack;

@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit;
 
 import crazypants.enderio.base.conduit.IClientConduit;
 import crazypants.enderio.base.conduit.IExtractor;

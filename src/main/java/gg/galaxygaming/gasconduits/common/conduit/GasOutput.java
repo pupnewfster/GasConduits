@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -6,8 +6,8 @@ import net.minecraft.util.math.BlockPos;
 import javax.annotation.Nonnull;
 
 public class GasOutput {
-    final EnumFacing dir;
-    final BlockPos location;
+    private final EnumFacing dir;
+    private final BlockPos location;
 
     public GasOutput(@Nonnull BlockPos pos, @Nonnull EnumFacing dir) {
         this.dir = dir;
@@ -29,6 +29,14 @@ public class GasOutput {
             return false;
         GasOutput other = (GasOutput) obj;
         return location.equals(other.location) && dir == other.dir;
+    }
+
+    public EnumFacing getDir() {
+        return dir;
+    }
+
+    public BlockPos getLocation() {
+        return location;
     }
 
     @Override

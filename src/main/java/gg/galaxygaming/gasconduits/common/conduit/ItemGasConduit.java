@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit;
 
 import com.enderio.core.api.client.gui.IAdvancedTooltipProvider;
 import com.enderio.core.client.handlers.SpecialTooltipHandler;
@@ -15,6 +15,12 @@ import crazypants.enderio.conduits.conduit.ItemConduitSubtype;
 import crazypants.enderio.conduits.render.ConduitBundleRenderManager;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
+import gg.galaxygaming.gasconduits.common.conduit.advanced.AdvancedGasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.advanced.AdvancedGasConduitRenderer;
+import gg.galaxygaming.gasconduits.common.conduit.basic.GasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.basic.GasConduitRenderer;
+import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduitRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;

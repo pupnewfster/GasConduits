@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits;
+package gg.galaxygaming.gasconduits.common.conduit;
 
 import com.enderio.core.common.util.NullHelper;
 import crazypants.enderio.api.IModTileEntity;
@@ -6,8 +6,8 @@ import crazypants.enderio.base.EnderIOTab;
 import crazypants.enderio.base.init.IModObjectBase;
 import crazypants.enderio.base.init.ModObjectRegistry;
 import crazypants.enderio.base.init.RegisterModObject;
-import gg.galaxygaming.gasconduits.common.ItemGasFilter;
-import gg.galaxygaming.gasconduits.conduit.ItemGasConduit;
+import gg.galaxygaming.gasconduits.GasConduitsConstants;
+import gg.galaxygaming.gasconduits.common.filter.ItemGasFilter;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;

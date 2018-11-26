@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit;
 
 import com.enderio.core.common.vecmath.Vector4f;
 import crazypants.enderio.base.conduit.*;
@@ -7,7 +7,8 @@ import crazypants.enderio.base.tool.ToolUtil;
 import crazypants.enderio.conduits.render.BlockStateWrapperConduitBundle.ConduitCacheKey;
 import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import gg.galaxygaming.gasconduits.client.GasRenderUtil;
-import gg.galaxygaming.gasconduits.utils.GasUtil;
+import gg.galaxygaming.gasconduits.common.conduit.basic.GasConduitNetwork;
+import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import net.minecraft.entity.player.EntityPlayer;

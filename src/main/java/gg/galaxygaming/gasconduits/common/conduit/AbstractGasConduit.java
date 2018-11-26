@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.conduit;
+package gg.galaxygaming.gasconduits.common.conduit;
 
 import com.enderio.core.api.client.gui.ITabPanel;
 import com.enderio.core.common.util.DyeColor;
@@ -6,7 +6,7 @@ import crazypants.enderio.base.conduit.*;
 import crazypants.enderio.base.machine.modes.RedstoneControlMode;
 import crazypants.enderio.conduits.conduit.AbstractConduit;
 import gg.galaxygaming.gasconduits.client.GasSettings;
-import gg.galaxygaming.gasconduits.common.GasWrapper;
+import gg.galaxygaming.gasconduits.common.utils.GasWrapper;
 import mekanism.api.gas.*;
 import mekanism.common.capabilities.Capabilities;
 import net.minecraft.nbt.NBTTagCompound;
