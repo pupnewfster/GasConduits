@@ -6,7 +6,7 @@ import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.base.tool.ToolUtil;
 import crazypants.enderio.conduits.render.BlockStateWrapperConduitBundle.ConduitCacheKey;
 import crazypants.enderio.conduits.render.ConduitTextureWrapper;
-import gg.galaxygaming.gasconduits.client.GasRenderUtil;
+import gg.galaxygaming.gasconduits.client.utils.GasRenderUtil;
 import gg.galaxygaming.gasconduits.common.conduit.basic.GasConduitNetwork;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import mekanism.api.gas.Gas;

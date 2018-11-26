@@ -21,6 +21,7 @@ import crazypants.enderio.conduits.gui.GuiExternalConnection;
 import crazypants.enderio.conduits.init.ConduitObject;
 import crazypants.enderio.conduits.lang.Lang;
 import crazypants.enderio.conduits.network.PacketExtractMode;
+import gg.galaxygaming.gasconduits.client.utils.GasFilterGuiUtil;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
 import gg.galaxygaming.gasconduits.common.network.PacketEnderGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;

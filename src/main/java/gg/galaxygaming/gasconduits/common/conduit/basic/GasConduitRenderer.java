@@ -13,7 +13,7 @@ import crazypants.enderio.base.conduit.IConduitTexture;
 import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.base.conduit.geom.ConduitGeometryUtil;
 import crazypants.enderio.conduits.render.DefaultConduitRenderer;
-import gg.galaxygaming.gasconduits.client.GasRenderUtil;
+import gg.galaxygaming.gasconduits.client.utils.GasRenderUtil;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import net.minecraft.client.renderer.Tessellator;

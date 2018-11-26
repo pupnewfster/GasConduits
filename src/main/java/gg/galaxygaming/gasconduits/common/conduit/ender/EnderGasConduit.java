@@ -31,7 +31,7 @@ import gg.galaxygaming.gasconduits.common.conduit.AbstractGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.filter.GasFilter;
-import gg.galaxygaming.gasconduits.client.GasFilterGuiUtil;
+import gg.galaxygaming.gasconduits.client.utils.GasFilterGuiUtil;
 import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;

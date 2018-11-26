@@ -14,7 +14,7 @@ import crazypants.enderio.conduits.render.BakedQuadBuilder;
 import crazypants.enderio.conduits.render.ConduitBundleRenderManager;
 import crazypants.enderio.conduits.render.ConduitInOutRenderer;
 import crazypants.enderio.conduits.render.DefaultConduitRenderer;
-import gg.galaxygaming.gasconduits.client.GasRenderUtil;
+import gg.galaxygaming.gasconduits.client.utils.GasRenderUtil;
 import mekanism.api.gas.GasStack;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

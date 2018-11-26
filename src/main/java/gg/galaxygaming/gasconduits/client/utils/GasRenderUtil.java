@@ -1,4 +1,4 @@
-package gg.galaxygaming.gasconduits.client;
+package gg.galaxygaming.gasconduits.client.utils;
 
 import com.enderio.core.client.render.RenderUtil;
 import mekanism.api.gas.Gas;
