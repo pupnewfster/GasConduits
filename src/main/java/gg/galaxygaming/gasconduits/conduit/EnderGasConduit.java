@@ -294,6 +294,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     }
 
     @Override
+    @Nonnull
     public GasTankInfo[] getTankInfo() {
         return new GasTankInfo[0];
     }
@@ -676,6 +677,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
         }
 
         @Override
+        @Nonnull
         public GasTankInfo[] getTankInfo() {
             return network == null ? new GasTankInfo[0] : network.getTankProperties(EnderGasConduit.this, side);
         }

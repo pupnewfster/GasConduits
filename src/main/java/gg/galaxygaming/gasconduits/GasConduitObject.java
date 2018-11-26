@@ -39,22 +39,18 @@ public enum GasConduitObject implements IModObjectBase {
     protected final IModTileEntity modTileEntity;
 
     GasConduitObject(@Nonnull Class<?> clazz) {
-        this(clazz, "create", null);
-    }
-
-    GasConduitObject(@Nonnull Class<?> clazz, @Nonnull String methodName, @Nullable IModTileEntity modTileEntity) {
         this.unlocalisedName = ModObjectRegistry.sanitizeName(NullHelper.notnullJ(name(), "Enum.name()"));
         this.clazz = clazz;
         if (Block.class.isAssignableFrom(clazz)) {
-            this.blockMethodName = methodName;
+            this.blockMethodName = "create";
             this.itemMethodName = null;
         } else if (Item.class.isAssignableFrom(clazz)) {
             this.blockMethodName = null;
-            this.itemMethodName = methodName;
+            this.itemMethodName = "create";
         } else {
             throw new RuntimeException("Clazz " + clazz + " unexpectedly is neither a Block nor an Item.");
         }
-        this.modTileEntity = modTileEntity;
+        this.modTileEntity = null;
     }
 
     @Nonnull

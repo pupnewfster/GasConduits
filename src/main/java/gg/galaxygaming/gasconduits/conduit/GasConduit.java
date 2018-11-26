@@ -110,6 +110,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     // --------------- Gas Capability ------------
 
     @Override
+    @Nonnull
     public GasTankInfo[] getTankInfo() {
         return network == null ? new GasTankInfo[0] : new GasTankInfo[]{tank};
     }
@@ -328,7 +329,9 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
                     }
                     return res;
                 } finally {
-                    network.unlockNetworkFromFill();
+                    if (network != null) {
+                        network.unlockNetworkFromFill();
+                    }
                 }
             } else {
                 return 0;

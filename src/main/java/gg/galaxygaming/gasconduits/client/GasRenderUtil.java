@@ -63,9 +63,11 @@ public class GasRenderUtil {
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder tes = tessellator.getBuffer();
                 tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-                tes.pos(drawX, drawY + drawHeight, 0).tex(minU, minV + (maxV - minV) * drawHeight / 16F).endVertex();
-                tes.pos(drawX + drawWidth, drawY + drawHeight, 0).tex(minU + (maxU - minU) * drawWidth / 16F, minV + (maxV - minV) * drawHeight / 16F).endVertex();
-                tes.pos(drawX + drawWidth, drawY, 0).tex(minU + (maxU - minU) * drawWidth / 16F, minV).endVertex();
+                double v = minV + (maxV - minV) * drawHeight / 16F;
+                double u = minU + (maxU - minU) * drawWidth / 16F;
+                tes.pos(drawX, drawY + drawHeight, 0).tex(minU, v).endVertex();
+                tes.pos(drawX + drawWidth, drawY + drawHeight, 0).tex(u, v).endVertex();
+                tes.pos(drawX + drawWidth, drawY, 0).tex(u, minV).endVertex();
                 tes.pos(drawX, drawY, 0).tex(minU, minV).endVertex();
                 tessellator.draw();
             }

@@ -243,6 +243,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         }
 
         @Override
+        @Nonnull
         public GasTankInfo[] getTankInfo() {
             return AbstractGasConduit.this.getTankInfo();
         }
