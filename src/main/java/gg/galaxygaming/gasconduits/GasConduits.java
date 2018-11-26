@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 
 @Mod(modid = GasConduitsConstants.MOD_ID, name = GasConduitsConstants.MOD_NAME, version = GasConduitsConstants.VERSION,
-        dependencies = GasConduitsConstants.DEPENDENCIES, acceptedMinecraftVersions = GasConduitsConstants.MCVER)
+        dependencies = GasConduitsConstants.DEPENDENCIES, acceptedMinecraftVersions = GasConduitsConstants.MC_VERSION)
 @Mod.EventBusSubscriber(modid = GasConduitsConstants.MOD_ID)
 public class GasConduits implements IEnderIOAddon {
     @SidedProxy(serverSide = GasConduitsConstants.PROXY_COMMON, clientSide = GasConduitsConstants.PROXY_CLIENT)

@@ -187,7 +187,7 @@ public class GasFilter implements IGasFilter {
         }
 
         @Override
-        public void putStack(@Nonnull ItemStack stack, int realsize) {
+        public void putStack(@Nonnull ItemStack stack, int realSize) {
             gasses[getSlot()] = GasUtil.getGasTypeFromItem(stack);
             cb.run();
         }

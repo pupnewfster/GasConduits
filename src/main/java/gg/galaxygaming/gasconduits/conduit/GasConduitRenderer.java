@@ -122,7 +122,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
 
         TextureAtlasSprite texture = GasRenderUtil.getStillTexture(gas);
         int color = gas.getTint();
-        Vector4f colorv = new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, 1);
+        Vector4f colorV = new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, 1);
 
         BoundingBox bbb;
 
@@ -145,7 +145,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
             if (face != componentDirection && face != componentDirection.getOpposite()) {
                 List<Vertex> corners = bbb.getCornersWithUvForFace(face, texture.getMinU(), texture.getMaxU(), texture.getMinV(), texture.getMaxV());
                 for (Vertex corner : corners) {
-                    data.add(new CachableRenderStatement.AddVertexWithUV(corner.x(), corner.y(), corner.z(), corner.uv.x, corner.uv.y, colorv));
+                    data.add(new CachableRenderStatement.AddVertexWithUV(corner.x(), corner.y(), corner.z(), corner.uv.x, corner.uv.y, colorV));
                 }
             }
         }

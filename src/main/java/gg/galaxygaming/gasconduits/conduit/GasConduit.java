@@ -266,7 +266,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
         if (!super.canConnectToConduit(direction, con) || !(con instanceof GasConduit)) {
             return false;
         }
-        return GasConduitNetwork.areGassesCompatable(getGasType(), ((GasConduit) con).getGasType());
+        return GasConduitNetwork.areGassesCompatible(getGasType(), ((GasConduit) con).getGasType());
     }
 
     @SideOnly(Side.CLIENT)

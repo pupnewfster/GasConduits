@@ -241,11 +241,11 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
             }
 
             for (IGasConduit n : connections) {
-                GasConduit neigbour = (GasConduit) n;
-                if (canFlowTo(con, neigbour)) { // can only flow within same network
-                    flowVolume = (int) Math.floor((targetRatio - neigbour.getTank().getFilledRatio()) * neigbour.getTank().getMaxGas());
+                GasConduit neighbour = (GasConduit) n;
+                if (canFlowTo(con, neighbour)) { // can only flow within same network
+                    flowVolume = (int) Math.floor((targetRatio - neighbour.getTank().getFilledRatio()) * neighbour.getTank().getMaxGas());
                     if (flowVolume != 0) {
-                        actions.add(new FlowAction(con, neigbour, flowVolume));
+                        actions.add(new FlowAction(con, neighbour, flowVolume));
                     }
                 }
             }

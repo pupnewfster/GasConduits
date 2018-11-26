@@ -103,7 +103,7 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
             GasStack gas = GasUtil.getGasTypeFromItem(heldItem);
             if (gas != null) {
                 if (!getBundle().getEntity().getWorld().isRemote) {
-                    if (network != null && (network.getGasType() == null || network.getTotalVolume() < 500 || GasConduitNetwork.areGassesCompatable(getGasType(), gas))) {
+                    if (network != null && (network.getGasType() == null || network.getTotalVolume() < 500 || GasConduitNetwork.areGassesCompatible(getGasType(), gas))) {
                         network.setGasType(gas);
                         network.setGasTypeLocked(true);
                         player.sendStatusMessage(new TextComponentTranslation("enderio.item_gas_conduit.locked_type", gas.getGas().getLocalizedName()), true);
@@ -208,7 +208,7 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
         if (getNetwork() == null || !getConnectionMode(side).acceptsInput()) {
             return false;
         }
-        return canExtractFromDir(side) && GasConduitNetwork.areGassesCompatable(getGasType(), gas);
+        return canExtractFromDir(side) && GasConduitNetwork.areGassesCompatible(getGasType(), gas);
     }
 
     @Override
@@ -216,7 +216,7 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
         if (getNetwork() == null || !getConnectionMode(side).acceptsOutput()) {
             return false;
         }
-        return canInputToDir(side) && GasConduitNetwork.areGassesCompatable(getGasType(), gas);
+        return canInputToDir(side) && GasConduitNetwork.areGassesCompatible(getGasType(), gas);
     }
 
     @Override

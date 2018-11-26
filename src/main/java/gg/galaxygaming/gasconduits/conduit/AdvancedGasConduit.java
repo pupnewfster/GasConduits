@@ -138,7 +138,7 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
         if (!super.canConnectToConduit(direction, con) || !(con instanceof AdvancedGasConduit)) {
             return false;
         }
-        return GasConduitNetwork.areGassesCompatable(getGasType(), ((AdvancedGasConduit) con).getGasType());
+        return GasConduitNetwork.areGassesCompatible(getGasType(), ((AdvancedGasConduit) con).getGasType());
     }
 
     @Override
@@ -252,13 +252,13 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
     @Nonnull
     public Collection<CollidableComponent> createCollidables(@Nonnull CacheKey key) {
         Collection<CollidableComponent> baseCollidables = super.createCollidables(key);
-        final EnumFacing keydir = key.dir;
-        if (keydir == null) {
+        final EnumFacing keyDir = key.dir;
+        if (keyDir == null) {
             return baseCollidables;
         }
 
-        BoundingBox bb = ConduitGeometryUtil.instance.createBoundsForConnectionController(keydir, key.offset);
-        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keydir, IPowerConduit.COLOR_CONTROLLER_ID);
+        BoundingBox bb = ConduitGeometryUtil.instance.createBoundsForConnectionController(keyDir, key.offset);
+        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keyDir, IPowerConduit.COLOR_CONTROLLER_ID);
 
         List<CollidableComponent> result = new ArrayList<>(baseCollidables);
         result.add(cc);

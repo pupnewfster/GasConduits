@@ -50,23 +50,23 @@ public class AbstractTankConduitNetwork<T extends AbstractTankConduit> extends A
     }
 
     public boolean canAcceptGas(GasStack acceptable) {
-        return areGassesCompatable(gasType, acceptable);
+        return areGassesCompatible(gasType, acceptable);
     }
 
-    public static boolean areGassesCompatable(GasStack a, GasStack b) {
+    public static boolean areGassesCompatible(GasStack a, GasStack b) {
         return a == null || b == null || a.isGasEqual(b);
     }
 
-    public static boolean areGassesCompatable(Gas a, Gas b) {
+    public static boolean areGassesCompatible(Gas a, Gas b) {
         return a == null || b == null || a == b;
     }
 
-    public static boolean areGassesCompatable(GasStack a, Gas b) {
-        return a == null || areGassesCompatable(a.getGas(), b);
+    public static boolean areGassesCompatible(GasStack a, Gas b) {
+        return a == null || areGassesCompatible(a.getGas(), b);
     }
 
-    public static boolean areGassesCompatable(Gas a, GasStack b) {
-        return areGassesCompatable(b, a);
+    public static boolean areGassesCompatible(Gas a, GasStack b) {
+        return areGassesCompatible(b, a);
     }
 
     public int getTotalVolume() {
