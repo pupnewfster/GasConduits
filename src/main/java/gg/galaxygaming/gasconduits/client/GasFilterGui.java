@@ -22,6 +22,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,5 +115,27 @@ public class GasFilterGui extends AbstractFilterGui {
     @Nonnull
     public List<GhostSlotTarget<?>> getGhostTargets() {
         return getGhostSlotHandler().getGhostSlots().stream().map(slot -> new GhostSlotTarget<>(filter, slot, getGuiLeft(), getGuiTop(), this)).collect(Collectors.toList());
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        GasStack gas = getHoveredGas(mouseX, mouseY);
+        if (gas != null) {
+            List<String> tooltip = new ArrayList<>();
+            tooltip.add(gas.getGas().getLocalizedName());
+            drawHoveringToolTipText(tooltip, mouseX, mouseY, fontRenderer);
+        }
+    }
+
+    private GasStack getHoveredGas(int mouseX, int mouseY) {
+        if (mouseY >= getGuiTop() + yOffset && mouseY <= getGuiTop() + yOffset + 16) {
+            int x = mouseX - (getGuiLeft() + xOffset);
+            if (x < 0 || x % 18 == 17) {
+                return null;
+            }
+            return filter.getGasStackAt(x / 18);
+        }
+        return null;
     }
 }

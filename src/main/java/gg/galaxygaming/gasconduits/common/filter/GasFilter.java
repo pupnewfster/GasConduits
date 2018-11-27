@@ -35,7 +35,7 @@ public class GasFilter implements IGasFilter {
 
     @Override
     public GasStack getGasStackAt(int index) {
-        return gasses[index];
+        return index < 0 || index >= gasses.length ? null : gasses[index];
     }
 
     @Override
