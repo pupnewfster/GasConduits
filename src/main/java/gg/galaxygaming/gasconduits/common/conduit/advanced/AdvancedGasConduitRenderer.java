@@ -32,18 +32,6 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
     }
 
     @Override
-    @Nonnull
-    protected BlockRenderLayer getConduitQuadsLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-
-    @Override
-    @Nonnull
-    protected BlockRenderLayer getTransmissionQuadsLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-
-    @Override
     public boolean canRenderInLayer(@Nonnull WithDefaultRendering con, @Nonnull BlockRenderLayer layer) {
         return super.canRenderInLayer(con, layer) || layer == BlockRenderLayer.CUTOUT;
     }
@@ -57,70 +45,67 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
         if (component.isCore() || component.data != null) {
             return;
         }
+        AdvancedGasConduit lc = (AdvancedGasConduit) conduit;
+        GasStack gas = lc.getGasType();
+        @Nonnull
+        TextureAtlasSprite texture = gas != null && gas.getGas() != null && gas.amount > 0 ? GasRenderUtil.getStillTexture(gas) : lc.getNotSetEdgeTexture();
 
-        if (layer == BlockRenderLayer.TRANSLUCENT) {
-            AdvancedGasConduit lc = (AdvancedGasConduit) conduit;
-            GasStack gas = lc.getGasType();
-            @Nonnull
-            TextureAtlasSprite texture = gas != null ? GasRenderUtil.getStillTexture(gas) : lc.getNotSetEdgeTexture();
+        // FIXME this logic is duplicated from DefaultConduitRenderer
+        float shrink = 1 / 32f;
+        final EnumFacing componentDirection = component.getDirection();
+        float xLen = Math.abs(componentDirection.getXOffset()) == 1 ? 0 : shrink;
+        float yLen = Math.abs(componentDirection.getYOffset()) == 1 ? 0 : shrink;
+        float zLen = Math.abs(componentDirection.getZOffset()) == 1 ? 0 : shrink;
 
-            // FIXME this logic is duplicated from DefaultConduitRenderer
-            float shrink = 1 / 32f;
-            final EnumFacing componentDirection = component.getDirection();
-            float xLen = Math.abs(componentDirection.getXOffset()) == 1 ? 0 : shrink;
-            float yLen = Math.abs(componentDirection.getYOffset()) == 1 ? 0 : shrink;
-            float zLen = Math.abs(componentDirection.getZOffset()) == 1 ? 0 : shrink;
+        BoundingBox cube = component.bound;
+        BoundingBox bb = cube.expand(-xLen, -yLen, -zLen);
 
-            BoundingBox cube = component.bound;
-            BoundingBox bb = cube.expand(-xLen, -yLen, -zLen);
+        List<Vertex> vertices = new ArrayList<>();
+        for (NNIterator<EnumFacing> itr = NNList.FACING.fastIterator(); itr.hasNext(); ) {
+            EnumFacing dir = itr.next();
+            if (dir != componentDirection && dir != componentDirection.getOpposite()) {
 
-            List<Vertex> vertices = new ArrayList<>();
-            for (NNIterator<EnumFacing> itr = NNList.FACING.fastIterator(); itr.hasNext(); ) {
-                EnumFacing dir = itr.next();
-                if (dir != componentDirection && dir != componentDirection.getOpposite()) {
-
-                    EnumFacing vDir = RenderUtil.getVDirForFace(dir);
-                    if (componentDirection == EnumFacing.UP || componentDirection == EnumFacing.DOWN) {
-                        vDir = RenderUtil.getUDirForFace(dir);
-                    } else if ((componentDirection == EnumFacing.NORTH || componentDirection == EnumFacing.SOUTH) && dir.getYOffset() != 0) {
-                        vDir = RenderUtil.getUDirForFace(dir);
-                    }
-
-                    float minU = texture.getMinU();
-                    float maxU = texture.getMaxU();
-                    float minV = texture.getMinV();
-                    float maxV = texture.getMaxV();
-
-                    double sideScale = Math.max(bb.sizeX(), bb.sizeY()) * 2 / 16f;
-                    sideScale = Math.max(sideScale, bb.sizeZ() * 2 / 16f);
-                    double width = Math.min(bb.sizeX(), bb.sizeY()) * 15f / 16f;
-
-                    List<Vertex> corners = bb.getCornersWithUvForFace(dir, minU, maxU, minV, maxV);
-                    moveEdgeCorners(corners, vDir, width);
-                    moveEdgeCorners(corners, componentDirection.getOpposite(), sideScale);
-                    vertices.addAll(corners);
-
-                    corners = bb.getCornersWithUvForFace(dir, minU, maxU, minV, maxV);
-                    moveEdgeCorners(corners, vDir.getOpposite(), width);
-                    moveEdgeCorners(corners, componentDirection.getOpposite(), sideScale);
-                    vertices.addAll(corners);
-
+                EnumFacing vDir = RenderUtil.getVDirForFace(dir);
+                if (componentDirection == EnumFacing.UP || componentDirection == EnumFacing.DOWN) {
+                    vDir = RenderUtil.getUDirForFace(dir);
+                } else if ((componentDirection == EnumFacing.NORTH || componentDirection == EnumFacing.SOUTH) && dir.getYOffset() != 0) {
+                    vDir = RenderUtil.getUDirForFace(dir);
                 }
-            }
-            BakedQuadBuilder.addBakedQuads(quads, vertices, texture, null);
-        }
 
-        if (layer == BlockRenderLayer.TRANSLUCENT && conduit.getConnectionMode(component.getDirection()) == ConnectionMode.DISABLED) {
+                float minU = texture.getMinU();
+                float maxU = texture.getMaxU();
+                float minV = texture.getMinV();
+                float maxV = texture.getMaxV();
+
+                double sideScale = Math.max(bb.sizeX(), bb.sizeY()) * 2 / 16f;
+                sideScale = Math.max(sideScale, bb.sizeZ() * 2 / 16f);
+                double width = Math.min(bb.sizeX(), bb.sizeY()) * 15f / 16f;
+
+                List<Vertex> corners = bb.getCornersWithUvForFace(dir, minU, maxU, minV, maxV);
+                moveEdgeCorners(corners, vDir, width);
+                moveEdgeCorners(corners, componentDirection.getOpposite(), sideScale);
+                vertices.addAll(corners);
+
+                corners = bb.getCornersWithUvForFace(dir, minU, maxU, minV, maxV);
+                moveEdgeCorners(corners, vDir.getOpposite(), width);
+                moveEdgeCorners(corners, componentDirection.getOpposite(), sideScale);
+                vertices.addAll(corners);
+
+            }
+        }
+        BakedQuadBuilder.addBakedQuads(quads, vertices, texture, null);
+
+        if (conduit.getConnectionMode(component.getDirection()) == ConnectionMode.DISABLED) {
             TextureAtlasSprite tex2 = ConduitBundleRenderManager.instance.getConnectorIcon(component.data);
             List<Vertex> corners = component.bound.getCornersWithUvForFace(component.getDirection(), tex2.getMinU(), tex2.getMaxU(), tex2.getMinV(), tex2.getMaxV());
-            List<Vertex> vertices = new ArrayList<>(corners);
+            List<Vertex> vertices2 = new ArrayList<>(corners);
             // back face
             for (int i = corners.size() - 1; i >= 0; i--) {
                 Vertex c = corners.get(i);
-                vertices.add(c);
+                vertices2.add(c);
             }
 
-            BakedQuadBuilder.addBakedQuads(quads, vertices, tex2, null);
+            BakedQuadBuilder.addBakedQuads(quads, vertices2, tex2, null);
         }
     }
 

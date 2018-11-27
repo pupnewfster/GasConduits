@@ -21,12 +21,6 @@ public class EnderGasConduitRenderer extends DefaultConduitRenderer {
     }
 
     @Override
-    @Nonnull
-    public BlockRenderLayer getCoreLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-
-    @Override
     protected void addConduitQuads(@Nonnull IConduitBundle bundle, @Nonnull IClientConduit conduit, @Nonnull IConduitTexture tex,
                                    @Nonnull CollidableComponent component, float selfIllum, BlockRenderLayer layer, @Nonnull List<BakedQuad> quads) {
         super.addConduitQuads(bundle, conduit, tex, component, selfIllum, layer, quads);

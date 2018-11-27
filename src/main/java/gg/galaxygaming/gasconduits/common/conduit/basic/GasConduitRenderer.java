@@ -45,12 +45,6 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
         return conduit instanceof GasConduit;
     }
 
-    @Nonnull
-    @Override
-    protected BlockRenderLayer getConduitQuadsLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-
     @Override
     protected void addTransmissionQuads(@Nonnull IConduitTexture tex, Vector4f color, @Nonnull BlockRenderLayer layer, @Nonnull IConduit conduit,
                                         @Nonnull CollidableComponent component, float selfIllum, @Nonnull List<BakedQuad> quads) {
