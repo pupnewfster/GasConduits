@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class AdvancedGasConduit extends AbstractTankConduit implements IConduitComponent {
+public class AdvancedGasConduit extends AbstractGasTankConduit implements IConduitComponent {
     public static final int CONDUIT_VOLUME = GasConduitsConstants.GAS_VOLUME;
 
     public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(1));
@@ -227,7 +227,7 @@ public class AdvancedGasConduit extends AbstractTankConduit implements IConduitC
     }
 
     @Override
-    public AbstractTankConduitNetwork<? extends AbstractTankConduit> getTankNetwork() {
+    public AbstractGasTankConduitNetwork<? extends AbstractGasTankConduit> getTankNetwork() {
         return network;
     }
 

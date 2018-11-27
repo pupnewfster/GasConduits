@@ -40,6 +40,9 @@ public class GasFilter implements IGasFilter {
 
     @Override
     public boolean setGas(int index, @Nullable GasStack gas) {
+        if (index < 0 || index >= gasses.length) {
+            return false;
+        }
         if (gas == null || gas.getGas() == null) {
             gasses[index] = null;
         } else {
@@ -53,20 +56,14 @@ public class GasFilter implements IGasFilter {
         if (stack.isEmpty()) {
             return setGas(index, (GasStack) null);
         }
+        if (index < 0 || index >= gasses.length) {
+            return false;
+        }
         GasStack f = GasUtil.getGasTypeFromItem(stack);
         if (f == null || f.getGas() == null) {
             return setGas(index, (GasStack) null);
         }
         return setGas(index, f);
-    }
-
-    @Override
-    public boolean removeGas(int index) {
-        if (index < 0 || index >= gasses.length) {
-            return false;
-        }
-        gasses[index] = null;
-        return true;
     }
 
     @Override

@@ -3,9 +3,9 @@ package gg.galaxygaming.gasconduits.common.conduit.basic;
 import crazypants.enderio.base.conduit.ConduitUtil;
 import crazypants.enderio.base.conduit.ConduitUtil.UnloadedBlockException;
 import crazypants.enderio.base.diagnostics.Prof;
-import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduit;
-import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduitNetwork;
-import gg.galaxygaming.gasconduits.common.conduit.ConduitTank;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduit;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduitNetwork;
+import gg.galaxygaming.gasconduits.common.conduit.ConduitGasTank;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
+public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit> {
     public GasConduitNetwork() {
         super(GasConduit.class);
     }
@@ -114,7 +114,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
         }
 
         List<LocatedGasHandler> externals = new ArrayList<>();
-        for (AbstractTankConduit con : getConduits()) {
+        for (AbstractGasTankConduit con : getConduits()) {
             Set<EnumFacing> extCons = con.getExternalConnections();
             for (EnumFacing dir : extCons) {
                 if (con.canOutputToDir(dir)) {
@@ -170,7 +170,7 @@ public class GasConduitNetwork extends AbstractTankConduitNetwork<GasConduit> {
     }
 
     private void flowFrom(@Nonnull GasConduit con, List<FlowAction> actions, int pushPoken) {
-        ConduitTank tank = con.getTank();
+        ConduitGasTank tank = con.getTank();
         int totalAmount = tank.getStored();
         if (totalAmount <= 0) {
             return;

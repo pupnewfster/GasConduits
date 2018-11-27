@@ -3,8 +3,8 @@ package gg.galaxygaming.gasconduits.common.conduit.advanced;
 import crazypants.enderio.base.conduit.IServerConduit;
 import crazypants.enderio.base.diagnostics.Prof;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
-import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduitNetwork;
-import gg.galaxygaming.gasconduits.common.conduit.ConduitTank;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduitNetwork;
+import gg.galaxygaming.gasconduits.common.conduit.ConduitGasTank;
 import gg.galaxygaming.gasconduits.common.conduit.GasOutput;
 import gg.galaxygaming.gasconduits.common.utils.GasWrapper;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
@@ -22,8 +22,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class AdvancedGasConduitNetwork extends AbstractTankConduitNetwork<AdvancedGasConduit> {
-    private final ConduitTank tank = new ConduitTank(0);
+public class AdvancedGasConduitNetwork extends AbstractGasTankConduitNetwork<AdvancedGasConduit> {
+    private final ConduitGasTank tank = new ConduitGasTank(0);
 
     private final Set<GasOutput> outputs = new HashSet<>();
 

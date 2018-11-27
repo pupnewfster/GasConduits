@@ -9,8 +9,8 @@ import crazypants.enderio.conduits.conduit.IConduitComponent;
 import crazypants.enderio.conduits.render.ConduitTexture;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
-import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduit;
-import gg.galaxygaming.gasconduits.common.conduit.AbstractTankConduitNetwork;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduit;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduitNetwork;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.network.PacketConduitGasLevel;
@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class GasConduit extends AbstractTankConduit implements IConduitComponent {
+public class GasConduit extends AbstractGasTankConduit implements IConduitComponent {
     static final int VOLUME_PER_CONNECTION = GasConduitsConstants.GAS_VOLUME / 4;
 
     public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(0));
@@ -244,11 +244,11 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
 
     @Override
     public boolean setNetwork(@Nonnull IConduitNetwork<?, ?> network) {
-        if (!(network instanceof AbstractTankConduitNetwork)) {
+        if (!(network instanceof AbstractGasTankConduitNetwork)) {
             return false;
         }
 
-        AbstractTankConduitNetwork<?> n = (AbstractTankConduitNetwork<?>) network;
+        AbstractGasTankConduitNetwork<?> n = (AbstractGasTankConduitNetwork<?>) network;
         if (tank.getGas() == null) {
             tank.setGas(n.getGasType() == null ? null : n.getGasType().copy());
         } else if (n.getGasType() == null) {
@@ -302,7 +302,7 @@ public class GasConduit extends AbstractTankConduit implements IConduitComponent
     }
 
     @Override
-    public AbstractTankConduitNetwork<? extends AbstractTankConduit> getTankNetwork() {
+    public AbstractGasTankConduitNetwork<? extends AbstractGasTankConduit> getTankNetwork() {
         return network;
     }
 

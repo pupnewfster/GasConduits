@@ -6,11 +6,11 @@ import mekanism.api.gas.GasStack;
 
 import javax.annotation.Nonnull;
 
-public class AbstractTankConduitNetwork<T extends AbstractTankConduit> extends AbstractConduitNetwork<IGasConduit, T> {
+public class AbstractGasTankConduitNetwork<T extends AbstractGasTankConduit> extends AbstractConduitNetwork<IGasConduit, T> {
     protected GasStack gasType;
     protected boolean gasTypeLocked = false;
 
-    protected AbstractTankConduitNetwork(@Nonnull Class<T> cl) {
+    protected AbstractGasTankConduitNetwork(@Nonnull Class<T> cl) {
         super(cl, IGasConduit.class);
     }
 

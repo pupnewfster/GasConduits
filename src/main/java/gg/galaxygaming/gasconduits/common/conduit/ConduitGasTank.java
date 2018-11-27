@@ -2,8 +2,8 @@ package gg.galaxygaming.gasconduits.common.conduit;
 
 import mekanism.api.gas.GasTank;
 
-public class ConduitTank extends GasTank {
-    public ConduitTank(int capacity) {
+public class ConduitGasTank extends GasTank {
+    public ConduitGasTank(int capacity) {
         super(capacity);
     }
 

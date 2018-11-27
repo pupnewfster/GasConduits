@@ -25,8 +25,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public abstract class AbstractTankConduit extends AbstractGasConduit {
-    protected ConduitTank tank = new ConduitTank(0);
+public abstract class AbstractGasTankConduit extends AbstractGasConduit {
+    protected ConduitGasTank tank = new ConduitGasTank(0);
     protected boolean stateDirty = false;
     protected long lastEmptyTick = 0;
     protected int numEmptyEvents = 0;
@@ -38,7 +38,7 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
         if (heldItem.isEmpty()) {
             return false;
         }
-        AbstractTankConduitNetwork<? extends AbstractTankConduit> network = getTankNetwork();
+        AbstractGasTankConduitNetwork<? extends AbstractGasTankConduit> network = getTankNetwork();
         if (ToolUtil.isToolEquipped(player, hand)) {
             if (!getBundle().getEntity().getWorld().isRemote) {
                 final CollidableComponent component = res.component;
@@ -52,10 +52,10 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
                         // Attempt to join networks
                         BlockPos pos = getBundle().getLocation().offset(faceHit);
                         IGasConduit gasConduit = ConduitUtil.getConduit(getBundle().getEntity().getWorld(), pos.getX(), pos.getY(), pos.getZ(), IGasConduit.class);
-                        if (!(gasConduit instanceof AbstractTankConduit) || !canJoinNeighbour(gasConduit)) {
+                        if (!(gasConduit instanceof AbstractGasTankConduit) || !canJoinNeighbour(gasConduit)) {
                             return false;
                         }
-                        AbstractTankConduit neighbour = (AbstractTankConduit) gasConduit;
+                        AbstractGasTankConduit neighbour = (AbstractGasTankConduit) gasConduit;
                         if (neighbour.getGasType() != null) {
                             setGasTypeOnNetwork(this, neighbour.getGasType());
                         } else if (getGasType() != null) {
@@ -124,17 +124,17 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
         stateDirty = true;
     }
 
-    private void setGasTypeOnNetwork(AbstractTankConduit con, GasStack type) {
+    private void setGasTypeOnNetwork(AbstractGasTankConduit con, GasStack type) {
         IConduitNetwork<?, ?> n = con.getNetwork();
         if (n != null) {
-            AbstractTankConduitNetwork<?> network = (AbstractTankConduitNetwork<?>) n;
+            AbstractGasTankConduitNetwork<?> network = (AbstractGasTankConduitNetwork<?>) n;
             network.setGasType(type);
         }
     }
 
     protected abstract boolean canJoinNeighbour(IGasConduit n);
 
-    public abstract AbstractTankConduitNetwork<? extends AbstractTankConduit> getTankNetwork();
+    public abstract AbstractGasTankConduitNetwork<? extends AbstractGasTankConduit> getTankNetwork();
 
     public void setGasType(GasStack gasType) {
         if (tank.getGas() != null && tank.getGas().isGasEqual(gasType)) {
@@ -149,7 +149,7 @@ public abstract class AbstractTankConduit extends AbstractGasConduit {
         stateDirty = true;
     }
 
-    public ConduitTank getTank() {
+    public ConduitGasTank getTank() {
         return tank;
     }
 

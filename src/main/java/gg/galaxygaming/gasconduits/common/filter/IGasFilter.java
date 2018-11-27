@@ -51,14 +51,6 @@ public interface IGasFilter extends IFilter {
     boolean setGas(int index, @Nonnull ItemStack stack);
 
     /**
-     * Removes a gas at the given index
-     *
-     * @param index Index of the gas to remove
-     * @return true if the gas is successfully removed
-     */
-    boolean removeGas(int index);
-
-    /**
      * Checks the whitelist/blacklist setting of the filter
      *
      * @return true if the blacklist is active
