@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 
-public class NetworkTank {
+public class NetworkGasTank {
     @Nonnull
     private final EnderGasConduit con;
     @Nonnull
@@ -26,7 +26,7 @@ public class NetworkTank {
     private final boolean roundRobin;
     private final boolean selfFeed;
 
-    public NetworkTank(@Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir) {
+    public NetworkGasTank(@Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir) {
         this.con = con;
         this.conDir = conDir;
         conduitLoc = con.getBundle().getLocation();
@@ -59,7 +59,7 @@ public class NetworkTank {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        NetworkTank other = (NetworkTank) obj;
+        NetworkGasTank other = (NetworkGasTank) obj;
         if (conDir != other.conDir) {
             return false;
         }

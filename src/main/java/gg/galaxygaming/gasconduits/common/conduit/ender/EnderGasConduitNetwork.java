@@ -7,7 +7,7 @@ import crazypants.enderio.conduits.conduit.AbstractConduitNetwork;
 import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
-import gg.galaxygaming.gasconduits.common.conduit.NetworkTank;
+import gg.galaxygaming.gasconduits.common.conduit.NetworkGasTank;
 import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import mekanism.api.gas.GasStack;
@@ -20,9 +20,9 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, EnderGasConduit> {
-    List<NetworkTank> tanks = new ArrayList<>();
-    Map<NetworkTankKey, NetworkTank> tankMap = new HashMap<>();
-    Map<NetworkTank, RoundRobinIterator<NetworkTank>> iterators;
+    List<NetworkGasTank> tanks = new ArrayList<>();
+    Map<NetworkTankKey, NetworkGasTank> tankMap = new HashMap<>();
+    Map<NetworkGasTank, RoundRobinIterator<NetworkGasTank>> iterators;
 
     boolean filling;
 
@@ -32,11 +32,11 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
     public void connectionChanged(@Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir) {
         NetworkTankKey key = new NetworkTankKey(con, conDir);
-        NetworkTank tank = new NetworkTank(con, conDir);
+        NetworkGasTank tank = new NetworkGasTank(con, conDir);
 
         // Check for later
         boolean sort = false;
-        NetworkTank oldTank = tankMap.get(key);
+        NetworkGasTank oldTank = tankMap.get(key);
         if (oldTank != null && oldTank.getPriority() != tank.getPriority()) {
             sort = true;
         }
@@ -53,7 +53,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
     }
 
     public boolean extractFrom(@Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir) {
-        NetworkTank tank = getTank(con, conDir);
+        NetworkGasTank tank = getTank(con, conDir);
         if (!tank.isValid() || tank.getExternalTank() == null) {
             return false;
         }
@@ -75,7 +75,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
     }
 
     @Nonnull
-    private NetworkTank getTank(@Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir) {
+    private NetworkGasTank getTank(@Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir) {
         return tankMap.get(new NetworkTankKey(con, conDir));
     }
 
@@ -83,7 +83,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         return fillFrom(getTank(con, conDir), resource, doFill);
     }
 
-    public int fillFrom(@Nonnull NetworkTank tank, GasStack resource, boolean doFill) {
+    public int fillFrom(@Nonnull NetworkGasTank tank, GasStack resource, boolean doFill) {
         if (filling) {
             return 0;
         }
@@ -101,7 +101,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             int remaining = resource.amount;
             // TODO: Only change starting pos of iterator is doFill is true so a false then true returns the same
 
-            for (NetworkTank target : getIteratorForTank(tank)) {
+            for (NetworkGasTank target : getIteratorForTank(tank)) {
                 if (target.getExternalTank() != null && (!target.equals(tank) || tank.isSelfFeed()) && target.acceptsOutput() && target.isValid() && target.getInputColor() == tank.getOutputColor()
                         && matchedFilter(resource, target.getConduit(), target.getConduitDir(), false) && target.getExternalTank().canReceiveGas(target.getConduitDir().getOpposite(), resource.getGas())) {
                     int vol = target.getExternalTank().receiveGas(target.getConduitDir().getOpposite(), resource.copy(), doFill);
@@ -123,7 +123,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         }
     }
 
-    private int getExtractSpeedMultiplier(NetworkTank tank) {
+    private int getExtractSpeedMultiplier(NetworkGasTank tank) {
         int extractSpeedMultiplier = 2;
 
         ItemStack upgradeStack = tank.getConduit().getFunctionUpgrade(tank.getConduitDir());
@@ -147,11 +147,11 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         return filter == null || filter.isEmpty() || filter.matchesFilter(drained);
     }
 
-    private RoundRobinIterator<NetworkTank> getIteratorForTank(@Nonnull NetworkTank tank) {
+    private RoundRobinIterator<NetworkGasTank> getIteratorForTank(@Nonnull NetworkGasTank tank) {
         if (iterators == null) {
             iterators = new HashMap<>();
         }
-        RoundRobinIterator<NetworkTank> res = iterators.get(tank);
+        RoundRobinIterator<NetworkGasTank> res = iterators.get(tank);
         if (res == null) {
             res = new RoundRobinIterator<>(tanks);
             iterators.put(tank, res);
@@ -161,8 +161,8 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
     public GasTankInfo[] getTankProperties(@Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir) {
         List<GasTankInfo> res = new ArrayList<>(tanks.size());
-        NetworkTank tank = getTank(con, conDir);
-        for (NetworkTank target : tanks) {
+        NetworkGasTank tank = getTank(con, conDir);
+        for (NetworkGasTank target : tanks) {
             if (!target.equals(tank) && target.isValid() && target.getExternalTank() != null) {
                 res.addAll(Arrays.asList(target.getExternalTank().getTankInfo()));
             }
