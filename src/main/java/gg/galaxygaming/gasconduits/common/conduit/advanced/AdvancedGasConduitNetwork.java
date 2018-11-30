@@ -2,12 +2,12 @@ package gg.galaxygaming.gasconduits.common.conduit.advanced;
 
 import crazypants.enderio.base.conduit.IServerConduit;
 import crazypants.enderio.base.diagnostics.Prof;
-import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduitNetwork;
 import gg.galaxygaming.gasconduits.common.conduit.ConduitGasTank;
 import gg.galaxygaming.gasconduits.common.conduit.GasOutput;
-import gg.galaxygaming.gasconduits.common.utils.GasWrapper;
+import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
+import gg.galaxygaming.gasconduits.common.utils.GasWrapper;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.profiler.Profiler;
@@ -170,7 +170,7 @@ public class AdvancedGasConduitNetwork extends AbstractGasTankConduitNetwork<Adv
         if (resource == null) {
             return 0;
         }
-        resource.amount = Math.min(resource.amount, GasConduitConfig.tier2_maxIO);
+        resource.amount = Math.min(resource.amount, GasConduitConfig.tier2_maxIO.get());
         boolean gasWasValid = !tank.containsValidGas();
         int res = tank.receive(resource, doFill);
         if (doFill && res > 0 && !gasWasValid) {

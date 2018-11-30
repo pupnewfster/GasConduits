@@ -13,7 +13,6 @@ import crazypants.enderio.base.gui.IconEIO;
 import crazypants.enderio.conduits.conduit.AbstractItemConduit;
 import crazypants.enderio.conduits.conduit.ItemConduitSubtype;
 import crazypants.enderio.conduits.render.ConduitBundleRenderManager;
-import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.conduit.advanced.AdvancedGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.advanced.AdvancedGasConduitRenderer;
@@ -21,6 +20,7 @@ import gg.galaxygaming.gasconduits.common.conduit.basic.GasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.basic.GasConduitRenderer;
 import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduitRenderer;
+import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -90,14 +90,14 @@ public class ItemGasConduit extends AbstractItemConduit implements IAdvancedTool
         int maxIo;
 
         if (itemstack.getItemDamage() == 0) {
-            extractRate = GasConduitConfig.tier1_extractRate;
-            maxIo = GasConduitConfig.tier1_maxIO;
+            extractRate = GasConduitConfig.tier1_extractRate.get();
+            maxIo = GasConduitConfig.tier1_maxIO.get();
         } else if (itemstack.getItemDamage() == 1) {
-            extractRate = GasConduitConfig.tier2_extractRate;
-            maxIo = GasConduitConfig.tier2_maxIO;
+            extractRate = GasConduitConfig.tier2_extractRate.get();
+            maxIo = GasConduitConfig.tier2_maxIO.get();
         } else {
-            extractRate = GasConduitConfig.tier3_extractRate;
-            maxIo = GasConduitConfig.tier3_maxIO;
+            extractRate = GasConduitConfig.tier3_extractRate.get();
+            maxIo = GasConduitConfig.tier3_maxIO.get();
         }
 
         String mbt = new TextComponentTranslation("gasconduits.gas.millibuckets_tick").getUnformattedComponentText();

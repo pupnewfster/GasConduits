@@ -4,10 +4,10 @@ import com.enderio.core.common.util.RoundRobinIterator;
 import crazypants.enderio.base.conduit.item.FunctionUpgrade;
 import crazypants.enderio.base.conduit.item.ItemFunctionUpgrade;
 import crazypants.enderio.conduits.conduit.AbstractConduitNetwork;
-import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.NetworkGasTank;
+import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
 import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import mekanism.api.gas.GasStack;
@@ -64,7 +64,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             return false;
         }
 
-        drained.amount = Math.min(drained.amount, GasConduitConfig.tier3_extractRate * getExtractSpeedMultiplier(tank) / 2);
+        drained.amount = Math.min(drained.amount, GasConduitConfig.tier3_extractRate.get() * getExtractSpeedMultiplier(tank) / 2);
         int amountAccepted = fillFrom(tank, drained.copy(), true);
         if (amountAccepted <= 0) {
             return false;
@@ -96,7 +96,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             }
 
             resource = resource.copy();
-            resource.amount = Math.min(resource.amount, GasConduitConfig.tier3_maxIO * getExtractSpeedMultiplier(tank) / 2);
+            resource.amount = Math.min(resource.amount, GasConduitConfig.tier3_maxIO.get() * getExtractSpeedMultiplier(tank) / 2);
             int filled = 0;
             int remaining = resource.amount;
             // TODO: Only change starting pos of iterator is doFill is true so a false then true returns the same

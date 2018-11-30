@@ -7,12 +7,12 @@ import crazypants.enderio.base.network.PacketHandler;
 import crazypants.enderio.base.render.registry.TextureRegistry;
 import crazypants.enderio.conduits.conduit.IConduitComponent;
 import crazypants.enderio.conduits.render.ConduitTexture;
-import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduit;
 import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduitNetwork;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
+import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
 import gg.galaxygaming.gasconduits.common.network.PacketConduitGasLevel;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import mekanism.api.gas.Gas;
@@ -88,13 +88,14 @@ public class GasConduit extends AbstractGasTankConduit implements IConduitCompon
             return;
         }
 
+        int tier1ExtractRate = GasConduitConfig.tier1_extractRate.get();
         for (EnumFacing dir : externalConnections) {
             if (autoExtractForDir(dir)) {
                 IGasHandler extTank = getExternalHandler(dir);
                 GasStack couldDrain = GasUtil.getGasStack(extTank);
                 if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas()) && extTank.canDrawGas(dir.getOpposite(), couldDrain.getGas())) {
-                    if (couldDrain.amount > GasConduitConfig.tier1_extractRate) {
-                        couldDrain.amount = GasConduitConfig.tier1_extractRate;
+                    if (couldDrain.amount > tier1ExtractRate) {
+                        couldDrain.amount = tier1ExtractRate;
                     }
                     int used = pushGas(dir, couldDrain, true, network == null ? -1 : network.getNextPushToken());
                     if (used > 0) {
@@ -143,7 +144,7 @@ public class GasConduit extends AbstractGasTankConduit implements IConduitCompon
             return 0;
         }
         resource = resource.copy();
-        resource.amount = Math.min(GasConduitConfig.tier1_maxIO, resource.amount);
+        resource.amount = Math.min(GasConduitConfig.tier1_maxIO.get(), resource.amount);
 
         if (doPush) {
             return pushGas(from, resource, doFill, pushToken);

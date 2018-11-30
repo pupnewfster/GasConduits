@@ -19,10 +19,10 @@ import crazypants.enderio.conduits.conduit.power.PowerConduit;
 import crazypants.enderio.conduits.render.BlockStateWrapperConduitBundle;
 import crazypants.enderio.conduits.render.ConduitTexture;
 import crazypants.enderio.conduits.render.ConduitTextureWrapper;
-import gg.galaxygaming.gasconduits.GasConduitConfig;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.conduit.*;
 import gg.galaxygaming.gasconduits.common.conduit.basic.GasConduitNetwork;
+import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -84,8 +84,9 @@ public class AdvancedGasConduit extends AbstractGasTankConduit implements ICondu
             return;
         }
 
+        int tier2ExtractRate = GasConduitConfig.tier2_extractRate.get();
         for (EnumFacing dir : externalConnections) {
-            if (autoExtractForDir(dir) && network.extractFrom(this, dir, GasConduitConfig.tier2_extractRate)) {
+            if (autoExtractForDir(dir) && network.extractFrom(this, dir, tier2ExtractRate)) {
                 ticksSinceFailedExtract = 0;
             }
         }
