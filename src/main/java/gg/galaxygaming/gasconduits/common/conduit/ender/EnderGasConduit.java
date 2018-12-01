@@ -18,7 +18,6 @@ import crazypants.enderio.base.render.registry.TextureRegistry;
 import crazypants.enderio.base.tool.ToolUtil;
 import crazypants.enderio.conduits.capability.CapabilityUpgradeHolder;
 import crazypants.enderio.conduits.capability.IUpgradeHolder;
-import crazypants.enderio.conduits.conduit.IConduitComponent;
 import crazypants.enderio.conduits.conduit.IEnderConduit;
 import crazypants.enderio.conduits.conduit.item.ItemConduit;
 import crazypants.enderio.conduits.conduit.power.IPowerConduit;
@@ -27,12 +26,13 @@ import crazypants.enderio.conduits.render.BlockStateWrapperConduitBundle;
 import crazypants.enderio.conduits.render.ConduitTexture;
 import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import crazypants.enderio.util.Prep;
+import gg.galaxygaming.gasconduits.client.utils.GasFilterGuiUtil;
 import gg.galaxygaming.gasconduits.common.conduit.AbstractGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.filter.GasFilter;
-import gg.galaxygaming.gasconduits.client.utils.GasFilterGuiUtil;
 import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
+import gg.galaxygaming.gasconduits.common.filter.IItemFilterGasUpgrade;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
@@ -51,7 +51,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class EnderGasConduit extends AbstractGasConduit implements IConduitComponent, IFilterHolder<IGasFilter>, IUpgradeHolder, IEnderConduit {
+public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder<IGasFilter>, IUpgradeHolder, IEnderConduit {
     public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(3));
     public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(2));
 
@@ -579,6 +579,11 @@ public class EnderGasConduit extends AbstractGasConduit implements IConduitCompo
     @Override
     public int getOutputFilterIndex() {
         return GasFilterGuiUtil.INDEX_OUTPUT_GAS;
+    }
+
+    @Override
+    public boolean isFilterUpgradeAccepted(@Nonnull ItemStack stack, boolean isInput) {
+        return stack.getItem() instanceof IItemFilterGasUpgrade;
     }
 
     // ------------------------------------------------

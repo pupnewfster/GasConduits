@@ -5,7 +5,6 @@ import crazypants.enderio.base.conduit.*;
 import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.base.network.PacketHandler;
 import crazypants.enderio.base.render.registry.TextureRegistry;
-import crazypants.enderio.conduits.conduit.IConduitComponent;
 import crazypants.enderio.conduits.render.ConduitTexture;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduit;
@@ -31,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class GasConduit extends AbstractGasTankConduit implements IConduitComponent {
+public class GasConduit extends AbstractGasTankConduit {
     static final int VOLUME_PER_CONNECTION = GasConduitsConstants.GAS_VOLUME / 4;
 
     public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(0));

@@ -13,7 +13,6 @@ import crazypants.enderio.base.machine.modes.RedstoneControlMode;
 import crazypants.enderio.base.render.registry.TextureRegistry;
 import crazypants.enderio.base.render.registry.TextureRegistry.TextureSupplier;
 import crazypants.enderio.conduits.conduit.AbstractConduitNetwork;
-import crazypants.enderio.conduits.conduit.IConduitComponent;
 import crazypants.enderio.conduits.conduit.power.IPowerConduit;
 import crazypants.enderio.conduits.conduit.power.PowerConduit;
 import crazypants.enderio.conduits.render.BlockStateWrapperConduitBundle;
@@ -38,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class AdvancedGasConduit extends AbstractGasTankConduit implements IConduitComponent {
+public class AdvancedGasConduit extends AbstractGasTankConduit {
     public static final int CONDUIT_VOLUME = GasConduitsConstants.GAS_VOLUME;
 
     public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(1));
