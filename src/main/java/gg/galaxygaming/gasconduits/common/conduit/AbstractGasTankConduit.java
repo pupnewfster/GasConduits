@@ -92,7 +92,7 @@ public abstract class AbstractGasTankConduit extends AbstractGasConduit {
                     if (network.gasTypeLocked) {
                         network.setGasTypeLocked(false);
                         numEmptyEvents = 0;
-                        player.sendStatusMessage(new TextComponentTranslation("enderio.item_gas_conduit.unlocked_type"), true);
+                        player.sendStatusMessage(new TextComponentTranslation("gasconduits.item_gas_conduit.unlocked_type"), true);
                     }
                 } else if (network != null) {
                     network.setGasType(null);
@@ -107,7 +107,7 @@ public abstract class AbstractGasTankConduit extends AbstractGasConduit {
                     if (network != null && (network.getGasType() == null || network.getTotalVolume() < 500 || GasConduitNetwork.areGassesCompatible(getGasType(), gas))) {
                         network.setGasType(gas);
                         network.setGasTypeLocked(true);
-                        player.sendStatusMessage(new TextComponentTranslation("enderio.item_gas_conduit.locked_type", gas.getGas().getLocalizedName()), true);
+                        player.sendStatusMessage(new TextComponentTranslation("gasconduits.item_gas_conduit.locked_type", gas.getGas().getLocalizedName()), true);
                     }
                 }
                 return true;
