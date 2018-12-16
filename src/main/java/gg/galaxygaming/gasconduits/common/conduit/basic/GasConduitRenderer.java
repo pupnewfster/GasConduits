@@ -89,7 +89,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
     }
 
     public static void renderGasOutline(@Nonnull CollidableComponent component, @Nonnull GasStack gas) {
-        renderGasOutline(component, gas, 1 - ConduitGeometryUtil.getHeight(), 1f / 16f);
+        renderGasOutline(component, gas, 1 - ConduitGeometryUtil.getInstance().getHeight(), 1f / 16f);
     }
 
     public static void renderGasOutline(@Nonnull CollidableComponent component, @Nonnull GasStack gasStack, double scaleFactor, float outlineWidth) {

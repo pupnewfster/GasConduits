@@ -258,7 +258,7 @@ public class AdvancedGasConduit extends AbstractGasTankConduit {
             return baseCollidables;
         }
 
-        BoundingBox bb = ConduitGeometryUtil.instance.createBoundsForConnectionController(keyDir, key.offset);
+        BoundingBox bb = ConduitGeometryUtil.getInstance().createBoundsForConnectionController(keyDir, key.offset);
         CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keyDir, IPowerConduit.COLOR_CONTROLLER_ID);
 
         List<CollidableComponent> result = new ArrayList<>(baseCollidables);
