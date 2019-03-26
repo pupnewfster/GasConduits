@@ -12,6 +12,7 @@ import crazypants.enderio.base.lang.Lang;
 import crazypants.enderio.util.NbtValue;
 import gg.galaxygaming.gasconduits.client.GasFilterGui;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +34,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemGasFilter extends Item implements IItemFilterGasUpgrade, IResourceTooltipProvider {
-    public static ItemGasFilter create(@Nonnull IModObject modObject) {
+    public static ItemGasFilter create(@Nonnull IModObject modObject, @Nullable Block block) {
         return new ItemGasFilter(modObject);
     }
 

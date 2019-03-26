@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://files.minecraftforge.net/maven" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -32,6 +32,10 @@ repositories {
         url = "https://minecraft.curseforge.com/api/maven/"
     }
     maven {
+        name = "EnderCore"
+        url = "https://maven.tterrag.com/"
+    }
+    maven {
         name = "EnderIO"
         url = "https://maven2.tterrag.com/"
     }
@@ -48,8 +52,9 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "endercore:EnderCore:${mc_version}:0.5.43"
-    deobfCompile "com.enderio:EnderIO:${mc_version}-5.0.39"
+
+    deobfCompile "com.enderio.core:EnderCore:${mc_version}-0.5.52"
+    deobfCompile "com.enderio:EnderIO:${mc_version}-5.0.43"
     deobfCompile "mekanism:Mekanism:${mc_version}:9.4.13.349"
     compile "info.loenwind.autoconfig:AutoConfig:${mc_version}-1.0.1"
     // compile against the JEI API but do not include it at runtime

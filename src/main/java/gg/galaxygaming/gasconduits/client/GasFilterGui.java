@@ -5,7 +5,6 @@ import crazypants.enderio.base.filter.gui.AbstractFilterGui;
 import crazypants.enderio.base.filter.gui.ContainerFilter;
 import crazypants.enderio.base.filter.gui.FilterGuiUtil;
 import crazypants.enderio.base.gui.IconEIO;
-import crazypants.enderio.base.integration.jei.GhostSlotTarget;
 import crazypants.enderio.base.lang.Lang;
 import gg.galaxygaming.gasconduits.client.utils.GasRenderUtil;
 import gg.galaxygaming.gasconduits.common.filter.GasFilter;
@@ -24,7 +23,6 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GasFilterGui extends AbstractFilterGui {
     private static final int ID_WHITELIST = FilterGuiUtil.nextButtonId();
@@ -109,12 +107,6 @@ public class GasFilterGui extends AbstractFilterGui {
     @Nonnull
     protected String getUnlocalisedNameForHeading() {
         return new TextComponentTranslation("gasconduits.gui.gas_filter").getUnformattedComponentText();
-    }
-
-    @Override
-    @Nonnull
-    public List<GhostSlotTarget<?>> getGhostTargets() {
-        return getGhostSlotHandler().getGhostSlots().stream().map(slot -> new GhostSlotTarget<>(filter, slot, getGuiLeft(), getGuiTop(), this)).collect(Collectors.toList());
     }
 
     @Override

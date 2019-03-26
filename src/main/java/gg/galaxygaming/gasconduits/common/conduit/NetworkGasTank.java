@@ -98,6 +98,7 @@ public class NetworkGasTank {
         return conDir;
     }
 
+    @Nonnull
     public EnumFacing getTankDir() {
         return tankDir;
     }

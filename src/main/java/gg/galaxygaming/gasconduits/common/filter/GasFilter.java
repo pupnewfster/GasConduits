@@ -3,9 +3,11 @@ package gg.galaxygaming.gasconduits.common.filter;
 import com.enderio.core.client.gui.widget.GhostSlot;
 import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.core.common.util.NNList;
+import crazypants.enderio.base.integration.jei.IHaveGhostTargets;
 import crazypants.enderio.util.NbtValue;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import io.netty.buffer.ByteBuf;
+import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -173,7 +175,7 @@ public class GasFilter implements IGasFilter {
         return gasses.length;
     }
 
-    class GasFilterGhostSlot extends GhostSlot {
+    class GasFilterGhostSlot extends GhostSlot implements IHaveGhostTargets.ICustomGhostSlot {
         private final Runnable cb;
 
         GasFilterGhostSlot(int slot, int x, int y, Runnable cb) {
@@ -185,7 +187,7 @@ public class GasFilter implements IGasFilter {
 
         @Override
         public void putStack(@Nonnull ItemStack stack, int realSize) {
-            gasses[getSlot()] = GasUtil.getGasTypeFromItem(stack);
+            setGas(getSlot(), stack);
             cb.run();
         }
 
@@ -193,6 +195,22 @@ public class GasFilter implements IGasFilter {
         public @Nonnull
         ItemStack getStack() {
             return ItemStack.EMPTY;
+        }
+
+        @Override
+        public void putIngredient(Object ingredient) {
+            GasStack stack = null;
+            if (ingredient instanceof Gas) {
+                stack = new GasStack((Gas) ingredient, 0);
+            } else if (ingredient instanceof GasStack) {
+                stack = (GasStack) ingredient;
+            }
+            setGas(getSlot(), stack);
+        }
+
+        @Override
+        public boolean isType(Object ingredient) {
+            return ingredient instanceof GasStack || ingredient instanceof Gas;
         }
     }
 

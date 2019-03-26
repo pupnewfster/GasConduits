@@ -21,6 +21,10 @@ import gg.galaxygaming.gasconduits.common.conduit.basic.GasConduitRenderer;
 import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduitRenderer;
 import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -28,12 +32,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-
 public class ItemGasConduit extends AbstractItemConduit implements IAdvancedTooltipProvider {
-    public static ItemGasConduit create(@Nonnull IModObject modObject) {
+    public static ItemGasConduit create(@Nonnull IModObject modObject, @Nullable Block block) {
         return new ItemGasConduit(modObject);
     }
 

@@ -1,6 +1,7 @@
 package gg.galaxygaming.gasconduits.common.conduit;
 
 import com.enderio.core.common.util.NullHelper;
+import crazypants.enderio.api.IModObject;
 import crazypants.enderio.api.IModTileEntity;
 import crazypants.enderio.base.EnderIOTab;
 import crazypants.enderio.base.init.IModObjectBase;
@@ -8,16 +9,17 @@ import crazypants.enderio.base.init.ModObjectRegistry;
 import crazypants.enderio.base.init.RegisterModObject;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.filter.ItemGasFilter;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 public enum GasConduitObject implements IModObjectBase {
-    itemGasConduit(ItemGasConduit.class),
-    itemGasFilter(ItemGasFilter.class);
+    itemGasConduit(ItemGasConduit::create),
+    itemGasFilter(ItemGasFilter::create);
 
     public static void registerBlocksEarly(@Nonnull RegisterModObject event) {
         event.register(GasConduitObject.class);
@@ -31,47 +33,63 @@ public enum GasConduitObject implements IModObjectBase {
     @Nullable
     protected Item item;
 
-    @Nonnull
-    protected final Class<?> clazz;
     @Nullable
-    protected final String blockMethodName, itemMethodName;
+    protected final Function<IModObject, Block> blockMaker;
+
+    @Nullable
+    protected final BiFunction<IModObject, Block, Item> itemMaker;
+
     @Nullable
     protected final IModTileEntity modTileEntity;
 
-    GasConduitObject(@Nonnull Class<?> clazz) {
+    GasConduitObject(@Nonnull BiFunction<IModObject, Block, Item> itemMaker) {
+        this(null, itemMaker, null);
+    }
+
+    GasConduitObject(@Nonnull Function<IModObject, Block> blockMaker) {
+        this(blockMaker, null, null);
+    }
+
+    GasConduitObject(@Nonnull Function<IModObject, Block> blockMaker,
+          @Nonnull BiFunction<IModObject, Block, Item> itemMaker) {
+        this(blockMaker, itemMaker, null);
+    }
+
+    GasConduitObject(@Nonnull Function<IModObject, Block> blockMaker, @Nonnull IModTileEntity modTileEntity) {
+        this(blockMaker, null, modTileEntity);
+    }
+
+    GasConduitObject(@Nullable Function<IModObject, Block> blockMaker,
+          @Nullable BiFunction<IModObject, Block, Item> itemMaker, @Nullable IModTileEntity modTileEntity) {
         this.unlocalisedName = ModObjectRegistry.sanitizeName(NullHelper.notnullJ(name(), "Enum.name()"));
-        this.clazz = clazz;
-        if (Block.class.isAssignableFrom(clazz)) {
-            this.blockMethodName = "create";
-            this.itemMethodName = null;
-        } else if (Item.class.isAssignableFrom(clazz)) {
-            this.blockMethodName = null;
-            this.itemMethodName = "create";
-        } else {
-            throw new RuntimeException("Clazz " + clazz + " unexpectedly is neither a Block nor an Item.");
+        this.blockMaker = blockMaker;
+        this.itemMaker = itemMaker;
+        if (blockMaker == null && itemMaker == null) {
+            throw new RuntimeException(this + " unexpectedly is neither a Block nor an Item.");
         }
         this.modTileEntity = null;
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public Class<?> getClazz() {
-        return clazz;
+    @Deprecated
+    public final Class<?> getClazz() {
+        return null;
     }
 
     @Override
-    public void setItem(@Nullable Item obj) {
+    public final void setItem(@Nullable Item obj) {
         this.item = obj;
     }
 
     @Override
-    public void setBlock(@Nullable Block obj) {
+    public final void setBlock(@Nullable Block obj) {
         this.block = obj;
     }
 
     @Nonnull
     @Override
-    public String getUnlocalisedName() {
+    public final String getUnlocalisedName() {
         return unlocalisedName;
     }
 
@@ -83,13 +101,13 @@ public enum GasConduitObject implements IModObjectBase {
 
     @Nullable
     @Override
-    public Block getBlock() {
+    public final Block getBlock() {
         return block;
     }
 
     @Nullable
     @Override
-    public Item getItem() {
+    public final Item getItem() {
         return item;
     }
 
@@ -106,15 +124,29 @@ public enum GasConduitObject implements IModObjectBase {
         return IModObjectBase.super.apply(blockIn);
     }
 
+    @Nonnull
     @Override
-    @Nullable
-    public String getBlockMethodName() {
-        return blockMethodName;
+    public Function<IModObject, Block> getBlockCreator() {
+        return blockMaker != null ? blockMaker : mo -> null;
+    }
+
+    @Nonnull
+    @Override
+    public BiFunction<IModObject, Block, Item> getItemCreator() {
+        return NullHelper.first(itemMaker, IModObject.WithBlockItem.itemCreator);
     }
 
     @Override
     @Nullable
-    public String getItemMethodName() {
-        return itemMethodName;
+    @Deprecated
+    public final String getBlockMethodName() {
+        return null;
+    }
+
+    @Override
+    @Nullable
+    @Deprecated
+    public final String getItemMethodName() {
+        return null;
     }
 }
