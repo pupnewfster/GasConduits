@@ -1,12 +1,13 @@
 package gg.galaxygaming.gasconduits.common.conduit;
 
 import crazypants.enderio.conduits.conduit.AbstractConduitNetwork;
+import javax.annotation.Nonnull;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 
-import javax.annotation.Nonnull;
+public class AbstractGasTankConduitNetwork<T extends AbstractGasTankConduit> extends
+      AbstractConduitNetwork<IGasConduit, T> {
 
-public class AbstractGasTankConduitNetwork<T extends AbstractGasTankConduit> extends AbstractConduitNetwork<IGasConduit, T> {
     protected GasStack gasType;
     protected boolean gasTypeLocked = false;
 
@@ -50,23 +51,19 @@ public class AbstractGasTankConduitNetwork<T extends AbstractGasTankConduit> ext
     }
 
     public boolean canAcceptGas(GasStack acceptable) {
-        return areGassesCompatible(gasType, acceptable);
+        return areGasesCompatible(gasType, acceptable);
     }
 
-    public static boolean areGassesCompatible(GasStack a, GasStack b) {
+    public static boolean areGasesCompatible(GasStack a, GasStack b) {
         return a == null || b == null || a.isGasEqual(b);
     }
 
-    public static boolean areGassesCompatible(Gas a, Gas b) {
+    public static boolean areGasesCompatible(Gas a, Gas b) {
         return a == null || b == null || a == b;
     }
 
-    public static boolean areGassesCompatible(GasStack a, Gas b) {
-        return a == null || areGassesCompatible(a.getGas(), b);
-    }
-
-    public static boolean areGassesCompatible(Gas a, GasStack b) {
-        return areGassesCompatible(b, a);
+    public static boolean areGasesCompatible(GasStack a, Gas b) {
+        return a == null || areGasesCompatible(a.getGas(), b);
     }
 
     public int getTotalVolume() {

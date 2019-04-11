@@ -1,6 +1,5 @@
 package gg.galaxygaming.gasconduits.common.conduit.advanced;
 
-import crazypants.enderio.base.conduit.IServerConduit;
 import crazypants.enderio.base.diagnostics.Prof;
 import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduitNetwork;
 import gg.galaxygaming.gasconduits.common.conduit.ConduitGasTank;
@@ -8,6 +7,11 @@ import gg.galaxygaming.gasconduits.common.conduit.GasOutput;
 import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import gg.galaxygaming.gasconduits.common.utils.GasWrapper;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.profiler.Profiler;
@@ -16,23 +20,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 public class AdvancedGasConduitNetwork extends AbstractGasTankConduitNetwork<AdvancedGasConduit> {
-    private final ConduitGasTank tank = new ConduitGasTank(0);
 
+    private final ConduitGasTank tank = new ConduitGasTank(0);
     private final Set<GasOutput> outputs = new HashSet<>();
 
     private Iterator<GasOutput> outputIterator;
-
     private boolean lastSyncedActive = false;
-
     private int lastSyncedVolume = -1;
-
     private int ticksEmpty;
 
     public AdvancedGasConduitNetwork() {
@@ -149,9 +144,7 @@ public class AdvancedGasConduitNetwork extends AbstractGasTankConduitNetwork<Adv
                 if (ticksEmpty > 40) {
                     setGasType(null);
                     ticksEmpty = 0;
-                    for (IServerConduit con : getConduits()) {
-                        con.setActive(false);
-                    }
+                    getConduits().forEach(con -> con.setActive(false));
                     lastSyncedActive = false;
                 }
             }
@@ -159,7 +152,6 @@ public class AdvancedGasConduitNetwork extends AbstractGasTankConduitNetwork<Adv
         }
 
         ticksEmpty = 0;
-
         if (!lastSyncedActive) {
             getConduits().forEach(con -> con.setActive(true));
             lastSyncedActive = true;
@@ -194,7 +186,8 @@ public class AdvancedGasConduitNetwork extends AbstractGasTankConduitNetwork<Adv
         return result;
     }
 
-    public boolean extractFrom(@Nonnull AdvancedGasConduit advancedGasConduit, @Nonnull EnumFacing dir, int maxExtractPerTick) {
+    public boolean extractFrom(@Nonnull AdvancedGasConduit advancedGasConduit, @Nonnull EnumFacing dir,
+          int maxExtractPerTick) {
         if (tank.isFull()) {
             return false;
         }

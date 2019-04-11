@@ -1,25 +1,25 @@
 package gg.galaxygaming.gasconduits.common.filter;
 
 import crazypants.enderio.base.filter.IFilter;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 public interface IGasFilter extends IFilter {
+
     /**
      * Checks if the filter has no gas stacks
      *
-     * @return true if the filter has no gasses
+     * @return true if the filter has no gases
      */
     @Override
     boolean isEmpty();
 
     /**
-     * Gets the number of gasses in the filter
+     * Gets the number of gases in the filter
      *
-     * @return The number of gasses in the filter
+     * @return The number of gases in the filter
      */
     int size();
 
@@ -36,7 +36,7 @@ public interface IGasFilter extends IFilter {
      * Sets the gas in the given slot
      *
      * @param index Index of the slot
-     * @param gas   Gas to insert. Gas can be null to make the slot empty
+     * @param gas Gas to insert. Gas can be null to make the slot empty
      * @return true if the gas was successfully set
      */
     boolean setGas(int index, @Nullable GasStack gas);

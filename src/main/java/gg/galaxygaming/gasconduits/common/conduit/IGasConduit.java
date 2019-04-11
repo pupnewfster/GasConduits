@@ -3,14 +3,13 @@ package gg.galaxygaming.gasconduits.common.conduit;
 import crazypants.enderio.base.conduit.IClientConduit;
 import crazypants.enderio.base.conduit.IExtractor;
 import crazypants.enderio.base.conduit.IServerConduit;
-import mekanism.api.gas.IGasHandler;
-import mekanism.api.gas.ITubeConnection;
-import net.minecraft.util.EnumFacing;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import mekanism.api.gas.IGasHandler;
+import net.minecraft.util.EnumFacing;
 
-public interface IGasConduit extends IGasHandler, IExtractor, IServerConduit, IClientConduit, ITubeConnection {
+public interface IGasConduit extends IGasHandler, IExtractor, IServerConduit, IClientConduit {
+
     boolean canOutputToDir(@Nonnull EnumFacing dir);
 
     boolean canExtractFromDir(@Nonnull EnumFacing dir);

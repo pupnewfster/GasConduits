@@ -2,36 +2,47 @@ package gg.galaxygaming.gasconduits.common.conduit;
 
 import com.enderio.core.api.client.gui.ITabPanel;
 import com.enderio.core.common.util.DyeColor;
-import crazypants.enderio.base.conduit.*;
+import crazypants.enderio.base.conduit.ConduitUtil;
+import crazypants.enderio.base.conduit.ConnectionMode;
+import crazypants.enderio.base.conduit.IClientConduit;
+import crazypants.enderio.base.conduit.IConduit;
+import crazypants.enderio.base.conduit.IConduitBundle;
+import crazypants.enderio.base.conduit.IGuiExternalConnection;
 import crazypants.enderio.base.machine.modes.RedstoneControlMode;
 import crazypants.enderio.conduits.conduit.AbstractConduit;
 import gg.galaxygaming.gasconduits.client.GasSettings;
 import gg.galaxygaming.gasconduits.common.utils.GasWrapper;
-import mekanism.api.gas.*;
+import java.util.EnumMap;
+import java.util.Map.Entry;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
+import mekanism.api.gas.GasTankInfo;
+import mekanism.api.gas.IGasHandler;
 import mekanism.common.capabilities.Capabilities;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.EnumMap;
-import java.util.Map.Entry;
-
 public abstract class AbstractGasConduit extends AbstractConduit implements IGasConduit {
+
     protected final EnumMap<EnumFacing, RedstoneControlMode> extractionModes = new EnumMap<>(EnumFacing.class);
     protected final EnumMap<EnumFacing, DyeColor> extractionColors = new EnumMap<>(EnumFacing.class);
 
-    public static IGasHandler getExternalGasHandler(@Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EnumFacing side) {
+    public static IGasHandler getExternalGasHandler(@Nonnull IBlockAccess world, @Nonnull BlockPos pos,
+          @Nonnull EnumFacing side) {
         return world.getTileEntity(pos) instanceof IConduitBundle ? null : GasWrapper.getGasHandler(world, pos, side);
     }
 
     public IGasHandler getExternalHandler(EnumFacing direction) {
-        return getExternalGasHandler(getBundle().getBundleworld(), getBundle().getLocation().offset(direction), direction.getOpposite());
+        return getExternalGasHandler(getBundle().getBundleworld(), getBundle().getLocation().offset(direction),
+              direction.getOpposite());
     }
 
     @Override
@@ -168,10 +179,10 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == Capabilities.GAS_HANDLER_CAPABILITY || capability == Capabilities.TUBE_CONNECTION_CAPABILITY) {
-            if (facing != null && containsExternalConnection(facing)) {
-                ConnectionMode mode = getConnectionMode(facing);
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing side) {
+        if (capability == Capabilities.GAS_HANDLER_CAPABILITY) {
+            if (side != null && containsExternalConnection(side)) {
+                ConnectionMode mode = getConnectionMode(side);
                 return mode.acceptsInput() || mode.acceptsOutput();
             }
         }
@@ -181,29 +192,21 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     @SuppressWarnings("unchecked")
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        return hasCapability(capability, facing) ? (T) getGasDir(facing) : null;
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing side) {
+        return hasCapability(capability, side) ? (T) getGasDir(side) : null;
     }
 
     @Override
     @Nullable
     public IGasHandler getGasDir(@Nullable EnumFacing dir) {
-        if (dir != null) {
-            return new ConnectionGasSide(dir);
-        }
-        return null;
-    }
-
-    @Override
-    public boolean canTubeConnect(EnumFacing facing) {
-        ConnectionMode connectionMode = getConnectionMode(facing);
-        return connectionMode.acceptsOutput() || connectionMode.acceptsInput();
+        return dir != null ? new ConnectionGasSide(dir) : null;
     }
 
     /**
      * Inner class for holding the direction of capabilities.
      */
-    protected class ConnectionGasSide implements IGasHandler, ITubeConnection {
+    protected class ConnectionGasSide implements IGasHandler, ICapabilityProvider {
+
         protected EnumFacing side;
 
         public ConnectionGasSide(EnumFacing side) {
@@ -229,7 +232,8 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         @Override
         public boolean canReceiveGas(EnumFacing facing, Gas gas) {
             if (side.equals(facing) && getConnectionMode(facing).acceptsInput()) {
-                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
+                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing),
+                      getExtractionSignalColor(facing));
             }
             return false;
         }
@@ -237,7 +241,8 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         @Override
         public boolean canDrawGas(EnumFacing facing, Gas gas) {
             if (side.equals(facing) && getConnectionMode(facing).acceptsOutput()) {
-                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
+                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing),
+                      getExtractionSignalColor(facing));
             }
             return false;
         }
@@ -249,12 +254,21 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         }
 
         @Override
-        public boolean canTubeConnect(EnumFacing facing) {
-            if (!side.equals(facing)) {
-                return false;
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            if (capability == Capabilities.GAS_HANDLER_CAPABILITY) {
+                if (!side.equals(facing)) {
+                    return false;
+                }
+                ConnectionMode connectionMode = getConnectionMode(facing);
+                return connectionMode.acceptsOutput() || connectionMode.acceptsInput();
             }
-            ConnectionMode connectionMode = getConnectionMode(facing);
-            return connectionMode.acceptsOutput() || connectionMode.acceptsInput();
+            return false;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            return hasCapability(capability, facing) ? Capabilities.GAS_HANDLER_CAPABILITY.cast(this) : null;
         }
     }
 }

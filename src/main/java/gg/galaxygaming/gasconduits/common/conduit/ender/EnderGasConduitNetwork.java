@@ -10,16 +10,20 @@ import gg.galaxygaming.gasconduits.common.conduit.NetworkGasTank;
 import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
 import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Nonnull;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
-import java.util.*;
-
 public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, EnderGasConduit> {
+
     List<NetworkGasTank> tanks = new ArrayList<>();
     Map<NetworkTankKey, NetworkGasTank> tankMap = new HashMap<>();
     Map<NetworkGasTank, RoundRobinIterator<NetworkGasTank>> iterators;
@@ -41,7 +45,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             sort = true;
         }
 
-        tanks.remove(tank); // remove old tank, NB: =/hash is only calced on location and dir
+        tanks.remove(tank); // remove old tank, NB: =/hash is only calculated on location and dir
         tankMap.remove(key);
         tanks.add(tank);
         tankMap.put(key, tank);
@@ -60,11 +64,13 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
         GasStack drained = GasUtil.getGasStack(tank.getExternalTank());
 
-        if (!matchedFilter(drained, con, conDir, true) || !tank.getExternalTank().canDrawGas(tank.getConduitDir(), drained.getGas())) {
+        if (!matchedFilter(drained, con, conDir, true) || !tank.getExternalTank()
+              .canDrawGas(tank.getConduitDir(), drained.getGas())) {
             return false;
         }
 
-        drained.amount = Math.min(drained.amount, GasConduitConfig.tier3_extractRate.get() * getExtractSpeedMultiplier(tank) / 2);
+        drained.amount = Math
+              .min(drained.amount, GasConduitConfig.tier3_extractRate.get() * getExtractSpeedMultiplier(tank) / 2);
         int amountAccepted = fillFrom(tank, drained.copy(), true);
         if (amountAccepted <= 0) {
             return false;
@@ -96,15 +102,19 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             }
 
             resource = resource.copy();
-            resource.amount = Math.min(resource.amount, GasConduitConfig.tier3_maxIO.get() * getExtractSpeedMultiplier(tank) / 2);
+            resource.amount = Math
+                  .min(resource.amount, GasConduitConfig.tier3_maxIO.get() * getExtractSpeedMultiplier(tank) / 2);
             int filled = 0;
             int remaining = resource.amount;
             // TODO: Only change starting pos of iterator is doFill is true so a false then true returns the same
 
             for (NetworkGasTank target : getIteratorForTank(tank)) {
-                if (target.getExternalTank() != null && (!target.equals(tank) || tank.isSelfFeed()) && target.acceptsOutput() && target.isValid() && target.getInputColor() == tank.getOutputColor()
-                        && matchedFilter(resource, target.getConduit(), target.getConduitDir(), false) && target.getExternalTank().canReceiveGas(target.getConduitDir().getOpposite(), resource.getGas())) {
-                    int vol = target.getExternalTank().receiveGas(target.getConduitDir().getOpposite(), resource.copy(), doFill);
+                if (target.getExternalTank() != null && (!target.equals(tank) || tank.isSelfFeed()) && target
+                      .acceptsOutput() && target.isValid() && target.getInputColor() == tank.getOutputColor()
+                      && matchedFilter(resource, target.getConduit(), target.getConduitDir(), false) && target
+                      .getExternalTank().canReceiveGas(target.getConduitDir().getOpposite(), resource.getGas())) {
+                    int vol = target.getExternalTank()
+                          .receiveGas(target.getConduitDir().getOpposite(), resource.copy(), doFill);
                     remaining -= vol;
                     filled += vol;
                     if (remaining <= 0) {
@@ -130,7 +140,8 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         if (!upgradeStack.isEmpty()) {
             FunctionUpgrade upgrade = ItemFunctionUpgrade.getFunctionUpgrade(upgradeStack);
             if (upgrade == FunctionUpgrade.EXTRACT_SPEED_UPGRADE) {
-                extractSpeedMultiplier += GasConduitsConstants.GAS_MAX_EXTRACTED_SCALER * Math.min(upgrade.maxStackSize, upgradeStack.getCount());
+                extractSpeedMultiplier += GasConduitsConstants.GAS_MAX_EXTRACTED_SCALER * Math
+                      .min(upgrade.maxStackSize, upgradeStack.getCount());
             } else if (upgrade == FunctionUpgrade.EXTRACT_SPEED_DOWNGRADE) {
                 extractSpeedMultiplier = 1;
             }
@@ -139,7 +150,8 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         return extractSpeedMultiplier;
     }
 
-    private boolean matchedFilter(GasStack drained, @Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir, boolean isInput) {
+    private boolean matchedFilter(GasStack drained, @Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir,
+          boolean isInput) {
         if (drained == null) {
             return false;
         }
@@ -171,6 +183,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
     }
 
     static class NetworkTankKey {
+
         EnumFacing conDir;
         BlockPos conduitLoc;
 
@@ -185,9 +198,14 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = prime + ((conDir == null) ? 0 : conDir.hashCode());
-            return prime * result + ((conduitLoc == null) ? 0 : conduitLoc.hashCode());
+            int code = 1;
+            if (conDir != null) {
+                code = 31 * code + conDir.hashCode();
+            }
+            if (conduitLoc != null) {
+                code = 31 * code + conduitLoc.hashCode();
+            }
+            return code;
         }
 
         @Override

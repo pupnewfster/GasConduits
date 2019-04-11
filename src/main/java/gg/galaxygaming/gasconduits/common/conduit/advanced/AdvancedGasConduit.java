@@ -19,9 +19,18 @@ import crazypants.enderio.conduits.render.BlockStateWrapperConduitBundle;
 import crazypants.enderio.conduits.render.ConduitTexture;
 import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
-import gg.galaxygaming.gasconduits.common.conduit.*;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduit;
+import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduitNetwork;
+import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
+import gg.galaxygaming.gasconduits.common.conduit.GasOutput;
+import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.basic.GasConduitNetwork;
 import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -31,20 +40,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 public class AdvancedGasConduit extends AbstractGasTankConduit {
+
     public static final int CONDUIT_VOLUME = GasConduitsConstants.GAS_VOLUME;
 
-    public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(1));
-    public static final IConduitTexture ICON_KEY_LOCKED = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(2));
-    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(1));
+    public static final IConduitTexture ICON_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(1));
+    public static final IConduitTexture ICON_KEY_LOCKED = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(2));
+    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(1));
 
-    public static final TextureSupplier ICON_EMPTY_EDGE = TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_advanced_edge", false);
+    public static final TextureSupplier ICON_EMPTY_EDGE = TextureRegistry
+          .registerTexture("gasconduits:blocks/gas_conduit_advanced_edge", false);
 
     private AdvancedGasConduitNetwork network;
 
@@ -57,13 +65,12 @@ public class AdvancedGasConduit extends AbstractGasTankConduit {
     @Override
     public void updateEntity(@Nonnull World world) {
         super.updateEntity(world);
-        if (world.isRemote) {
-            return;
-        }
-        doExtract();
-        if (stateDirty) {
-            getBundle().dirty();
-            stateDirty = false;
+        if (!world.isRemote) {
+            doExtract();
+            if (stateDirty) {
+                getBundle().dirty();
+                stateDirty = false;
+            }
         }
     }
 
@@ -139,7 +146,7 @@ public class AdvancedGasConduit extends AbstractGasTankConduit {
         if (!super.canConnectToConduit(direction, con) || !(con instanceof AdvancedGasConduit)) {
             return false;
         }
-        return GasConduitNetwork.areGassesCompatible(getGasType(), ((AdvancedGasConduit) con).getGasType());
+        return GasConduitNetwork.areGasesCompatible(getGasType(), ((AdvancedGasConduit) con).getGasType());
     }
 
     @Override
@@ -155,13 +162,12 @@ public class AdvancedGasConduit extends AbstractGasTankConduit {
     }
 
     private void refreshInputs(@Nonnull EnumFacing dir) {
-        if (network == null) {
-            return;
-        }
-        GasOutput lo = new GasOutput(getBundle().getLocation().offset(dir), dir.getOpposite());
-        network.removeInput(lo);
-        if (canInputToDir(dir) && containsExternalConnection(dir)) {
-            network.addInput(lo);
+        if (network != null) {
+            GasOutput lo = new GasOutput(getBundle().getLocation().offset(dir), dir.getOpposite());
+            network.removeInput(lo);
+            if (canInputToDir(dir) && containsExternalConnection(dir)) {
+                network.addInput(lo);
+            }
         }
     }
 
@@ -253,13 +259,14 @@ public class AdvancedGasConduit extends AbstractGasTankConduit {
     @Nonnull
     public Collection<CollidableComponent> createCollidables(@Nonnull CacheKey key) {
         Collection<CollidableComponent> baseCollidables = super.createCollidables(key);
-        final EnumFacing keyDir = key.dir;
+        EnumFacing keyDir = key.dir;
         if (keyDir == null) {
             return baseCollidables;
         }
 
         BoundingBox bb = ConduitGeometryUtil.getInstance().createBoundsForConnectionController(keyDir, key.offset);
-        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keyDir, IPowerConduit.COLOR_CONTROLLER_ID);
+        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keyDir,
+              IPowerConduit.COLOR_CONTROLLER_ID);
 
         List<CollidableComponent> result = new ArrayList<>(baseCollidables);
         result.add(cc);

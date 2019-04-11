@@ -6,11 +6,17 @@ import com.enderio.core.common.util.DyeColor;
 import com.enderio.core.common.util.NNList;
 import com.enderio.core.common.util.NNList.NNIterator;
 import com.enderio.core.common.vecmath.Vector4f;
-import crazypants.enderio.base.conduit.*;
+import crazypants.enderio.base.conduit.ConduitUtil;
+import crazypants.enderio.base.conduit.ConnectionMode;
+import crazypants.enderio.base.conduit.IConduit;
+import crazypants.enderio.base.conduit.IConduitNetwork;
+import crazypants.enderio.base.conduit.IConduitTexture;
+import crazypants.enderio.base.conduit.RaytraceResult;
 import crazypants.enderio.base.conduit.geom.CollidableCache.CacheKey;
 import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.base.conduit.geom.ConduitGeometryUtil;
 import crazypants.enderio.base.filter.FilterRegistry;
+import crazypants.enderio.base.filter.IFilter;
 import crazypants.enderio.base.filter.capability.CapabilityFilterHolder;
 import crazypants.enderio.base.filter.capability.IFilterHolder;
 import crazypants.enderio.base.machine.modes.RedstoneControlMode;
@@ -33,6 +39,14 @@ import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.filter.GasFilter;
 import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
 import gg.galaxygaming.gasconduits.common.filter.IItemFilterGasUpgrade;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
@@ -46,14 +60,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.Map.Entry;
+public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder<IGasFilter>, IUpgradeHolder,
+      IEnderConduit {
 
-public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder<IGasFilter>, IUpgradeHolder, IEnderConduit {
-    public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(3));
-    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(2));
+    public static final IConduitTexture ICON_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(3));
+    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(2));
 
     private EnderGasConduitNetwork network;
     private int ticksSinceFailedExtract;
@@ -112,13 +125,14 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
     }
 
     @Override
-    public boolean onBlockActivated(@Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull RaytraceResult res, @Nonnull List<RaytraceResult> all) {
+    public boolean onBlockActivated(@Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull RaytraceResult res,
+          @Nonnull List<RaytraceResult> all) {
         if (Prep.isInvalid(player.getHeldItem(hand)) || !ToolUtil.isToolEquipped(player, hand)) {
             return false;
         }
 
         if (!getBundle().getEntity().getWorld().isRemote) {
-            final CollidableComponent component = res.component;
+            CollidableComponent component = res.component;
             if (component != null) {
                 EnumFacing faceHit = res.movingObjectPosition.sideHit;
                 if (component.isCore()) {
@@ -171,18 +185,22 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
         } else {
             outputFilterUpgrades.put(dir, stack);
         }
-        setFilter(dir, FilterRegistry.getFilterForUpgrade(stack), isInput);
+        IFilter filter = FilterRegistry.getFilterForUpgrade(stack);
+        if (filter instanceof IGasFilter) {
+            //Should always be true, mainly double checked to avoid null warning
+            setFilter(dir, (IGasFilter) filter, isInput);
+        }
         setClientStateDirty();
     }
 
     @Override
     public boolean setNetwork(@Nonnull IConduitNetwork<?, ?> network) {
-        if (!(network instanceof EnderGasConduitNetwork)) {
-            return false;
+        if (network instanceof EnderGasConduitNetwork) {
+            this.network = (EnderGasConduitNetwork) network;
+            externalConnections.forEach(dir -> this.network.connectionChanged(this, dir));
+            return super.setNetwork(network);
         }
-        this.network = (EnderGasConduitNetwork) network;
-        externalConnections.forEach(dir -> this.network.connectionChanged(this, dir));
-        return super.setNetwork(network);
+        return false;
     }
 
     @Override
@@ -527,7 +545,8 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
     @Override
     public boolean hasInternalCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY
-                || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY && facing != null && containsExternalConnection(facing);
+              || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY && facing != null
+              && containsExternalConnection(facing);
     }
 
     // FILTERS
@@ -663,7 +682,8 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
     @Nullable
     @Override
     public <T> T getInternalCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY ? (T) this : null;
+        return capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY
+              || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY ? (T) this : null;
     }
 
     @SuppressWarnings("unchecked")
@@ -674,13 +694,15 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
     }
 
     protected class ConnectionEnderGasSide extends ConnectionGasSide {
+
         public ConnectionEnderGasSide(EnumFacing side) {
             super(side);
         }
 
         @Override
         public int receiveGas(EnumFacing facing, GasStack resource, boolean doFill) {
-            return canReceiveGas(facing, resource.getGas()) ? network == null ? 0 : network.fillFrom(EnderGasConduit.this, facing, resource, doFill) : 0;
+            return canReceiveGas(facing, resource.getGas()) ? network == null ? 0
+                  : network.fillFrom(EnderGasConduit.this, facing, resource, doFill) : 0;
         }
 
         @Override
@@ -694,13 +716,14 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
     @Nonnull
     public Collection<CollidableComponent> createCollidables(@Nonnull CacheKey key) {
         Collection<CollidableComponent> baseCollidables = super.createCollidables(key);
-        final EnumFacing keydir = key.dir;
+        EnumFacing keydir = key.dir;
         if (keydir == null) {
             return baseCollidables;
         }
 
         BoundingBox bb = ConduitGeometryUtil.getInstance().createBoundsForConnectionController(keydir, key.offset);
-        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keydir, IPowerConduit.COLOR_CONTROLLER_ID);
+        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keydir,
+              IPowerConduit.COLOR_CONTROLLER_ID);
 
         List<CollidableComponent> result = new ArrayList<>(baseCollidables);
         result.add(cc);

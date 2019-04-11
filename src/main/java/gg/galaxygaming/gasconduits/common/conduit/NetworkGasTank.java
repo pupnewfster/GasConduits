@@ -3,13 +3,13 @@ package gg.galaxygaming.gasconduits.common.conduit;
 import com.enderio.core.common.util.DyeColor;
 import crazypants.enderio.base.conduit.ConnectionMode;
 import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
+import javax.annotation.Nonnull;
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
-
 public class NetworkGasTank {
+
     @Nonnull
     private final EnderGasConduit con;
     @Nonnull
@@ -31,7 +31,8 @@ public class NetworkGasTank {
         this.conDir = conDir;
         conduitLoc = con.getBundle().getLocation();
         tankDir = conDir.getOpposite();
-        externalTank = AbstractGasConduit.getExternalGasHandler(con.getBundle().getBundleworld(), conduitLoc.offset(conDir), tankDir);
+        externalTank = AbstractGasConduit
+              .getExternalGasHandler(con.getBundle().getBundleworld(), conduitLoc.offset(conDir), tankDir);
         acceptsOutput = con.getConnectionMode(conDir).acceptsOutput();
         inputColor = con.getOutputColor(conDir);
         outputColor = con.getInputColor(conDir);
@@ -46,9 +47,10 @@ public class NetworkGasTank {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = prime + conDir.hashCode();
-        return prime * result + conduitLoc.hashCode();
+        int code = 1;
+        code = 31 * code + conDir.hashCode();
+        code = 31 * code + conduitLoc.hashCode();
+        return code;
     }
 
     @Override

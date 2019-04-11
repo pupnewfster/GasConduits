@@ -7,6 +7,12 @@ import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduit;
 import gg.galaxygaming.gasconduits.common.conduit.AbstractGasTankConduitNetwork;
 import gg.galaxygaming.gasconduits.common.conduit.ConduitGasTank;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.profiler.Profiler;
@@ -14,14 +20,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit> {
+
     public GasConduitNetwork() {
         super(GasConduit.class);
     }
@@ -120,7 +120,8 @@ public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit>
                 if (con.canOutputToDir(dir)) {
                     IGasHandler externalTank = con.getExternalHandler(dir);
                     if (externalTank != null) {
-                        externals.add(new LocatedGasHandler(externalTank, con.getBundle().getLocation().offset(dir), dir.getOpposite()));
+                        externals.add(new LocatedGasHandler(externalTank, con.getBundle().getLocation().offset(dir),
+                              dir.getOpposite()));
                     }
                 }
             }
@@ -226,8 +227,9 @@ public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit>
 
         try {
             BlockPos pos = con.getBundle().getLocation();
-            Collection<IGasConduit> connections = ConduitUtil.getConnectedConduits(con.getBundle().getEntity().getWorld(), pos.getX(), pos.getY(), pos.getZ(),
-                    IGasConduit.class);
+            Collection<IGasConduit> connections = ConduitUtil
+                  .getConnectedConduits(con.getBundle().getEntity().getWorld(), pos.getX(), pos.getY(), pos.getZ(),
+                        IGasConduit.class);
             for (IGasConduit n : connections) {
                 GasConduit neighbour = (GasConduit) n;
                 if (canFlowTo(con, neighbour)) { // can only flow within same network
@@ -247,7 +249,8 @@ public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit>
             for (IGasConduit n : connections) {
                 GasConduit neighbour = (GasConduit) n;
                 if (canFlowTo(con, neighbour)) { // can only flow within same network
-                    flowVolume = (int) Math.floor((targetRatio - neighbour.getTank().getFilledRatio()) * neighbour.getTank().getMaxGas());
+                    flowVolume = (int) Math.floor(
+                          (targetRatio - neighbour.getTank().getFilledRatio()) * neighbour.getTank().getMaxGas());
                     if (flowVolume != 0) {
                         actions.add(new FlowAction(con, neighbour, flowVolume));
                     }
@@ -268,12 +271,13 @@ public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit>
         return neighbour.getTank().getFilledRatio() < con.getTank().getFilledRatio();
     }
 
-    static class FlowAction {
-        final GasConduit from;
-        final GasConduit to;
-        final int amount;
+    private static class FlowAction {
 
-        FlowAction(GasConduit fromIn, GasConduit toIn, int amountIn) {
+        private final GasConduit from;
+        private final GasConduit to;
+        private final int amount;
+
+        private FlowAction(GasConduit fromIn, GasConduit toIn, int amountIn) {
             if (amountIn < 0) {
                 to = fromIn;
                 from = toIn;
@@ -285,7 +289,7 @@ public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit>
             }
         }
 
-        void apply() {
+        private void apply() {
             if (amount != 0) {
                 // don't take more than it has
                 int actual = Math.min(amount, from.getTank().getStored());
@@ -297,12 +301,13 @@ public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit>
         }
     }
 
-    static class LocatedGasHandler {
-        final IGasHandler tank;
-        final BlockPos pos;
-        final EnumFacing dir;
+    private static class LocatedGasHandler {
 
-        LocatedGasHandler(IGasHandler tank, BlockPos pos, EnumFacing dir) {
+        private final IGasHandler tank;
+        private final BlockPos pos;
+        private final EnumFacing dir;
+
+        private LocatedGasHandler(IGasHandler tank, BlockPos pos, EnumFacing dir) {
             this.tank = tank;
             this.pos = pos;
             this.dir = dir;

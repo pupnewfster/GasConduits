@@ -23,19 +23,19 @@ import crazypants.enderio.conduits.lang.Lang;
 import crazypants.enderio.conduits.network.PacketExtractMode;
 import gg.galaxygaming.gasconduits.client.utils.GasFilterGuiUtil;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
-import gg.galaxygaming.gasconduits.common.network.PacketEnderGasConduit;
-import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
+import gg.galaxygaming.gasconduits.common.network.PacketEnderGasConduit;
+import java.awt.Color;
+import javax.annotation.Nonnull;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
-import java.awt.Color;
-
 public class GasSettings extends BaseSettingsPanel {
+
     static final int ID_REDSTONE_BUTTON = GuiExternalConnection.nextButtonId();
 
     private static final int ID_COLOR_BUTTON = GuiExternalConnection.nextButtonId();
@@ -66,7 +66,8 @@ public class GasSettings extends BaseSettingsPanel {
     private final IGasConduit conduit;
 
     public GasSettings(@Nonnull final IGuiExternalConnection gui, @Nonnull IClientConduit con) {
-        super(IconEIO.WRENCH_OVERLAY_GAS, GasConduitObject.itemGasConduit.getUnlocalisedName(), gui, con, "in_out_settings");
+        super(IconEIO.WRENCH_OVERLAY_GAS, GasConduitObject.itemGasConduit.getUnlocalisedName(), gui, con,
+              "in_out_settings");
 
         conduit = (IGasConduit) con;
         if (con instanceof EnderGasConduit) {
@@ -107,7 +108,8 @@ public class GasSettings extends BaseSettingsPanel {
         colorB.setToolTipHeading(Lang.GUI_SIGNAL_COLOR.get());
         colorB.setColorIndex(conduit.getExtractionSignalColor(gui.getDir()).ordinal());
 
-        rsB = new RedstoneModeButton(gui, ID_REDSTONE_BUTTON, x, y, new ConduitRedstoneModeControlable(conduit, gui, colorB));
+        rsB = new RedstoneModeButton(gui, ID_REDSTONE_BUTTON, x, y,
+              new ConduitRedstoneModeControlable(conduit, gui, colorB));
 
         x = priLeft + priWidth + 9;
 
@@ -173,7 +175,7 @@ public class GasSettings extends BaseSettingsPanel {
     private void createGhostSlots() {
         NNList<ItemStack> filtersAll = new NNList<>(new ItemStack(GasConduitObject.itemGasFilter.getItemNN()));
         NNList<ItemStack> upgrades = new NNList<>(new ItemStack(ConduitObject.item_extract_speed_upgrade.getItemNN()),
-                new ItemStack(ConduitObject.item_extract_speed_downgrade.getItemNN()));
+              new ItemStack(ConduitObject.item_extract_speed_downgrade.getItemNN()));
         gui.getContainer().createGhostSlots(gui.getGhostSlotHandler().getGhostSlots(), filtersAll, upgrades);
     }
 

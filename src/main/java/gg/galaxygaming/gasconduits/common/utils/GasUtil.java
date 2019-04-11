@@ -1,13 +1,17 @@
 package gg.galaxygaming.gasconduits.common.utils;
 
-import mekanism.api.gas.*;
-import net.minecraft.item.ItemStack;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
+import mekanism.api.gas.GasTankInfo;
+import mekanism.api.gas.IGasHandler;
+import mekanism.api.gas.IGasItem;
+import net.minecraft.item.ItemStack;
 
 public class GasUtil {
-    public static boolean areGassesTheSame(@Nullable Gas gas, @Nullable Gas gas2) {
+
+    public static boolean areGasesTheSame(@Nullable Gas gas, @Nullable Gas gas2) {
         if (gas == null) {
             return gas2 == null;
         }
@@ -23,14 +27,6 @@ public class GasUtil {
         }
         if (stack.getItem() instanceof IGasItem) {
             return ((IGasItem) stack.getItem()).getGas(stack);
-        }
-        return null;
-    }
-
-    @Nullable
-    public static IGasItem getGasHandler(@Nonnull ItemStack stack) {
-        if (stack.getItem() instanceof IGasItem) {
-            return (IGasItem) stack.getItem();
         }
         return null;
     }

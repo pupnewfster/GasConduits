@@ -1,20 +1,22 @@
 package gg.galaxygaming.gasconduits.common.network;
 
 import crazypants.enderio.conduits.network.AbstractConduitPacket;
+import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
+import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
 import gg.galaxygaming.gasconduits.common.filter.GasFilter;
 import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
-import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
-import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketGasFilter extends AbstractConduitPacket<IGasConduit> {
+
     private EnumFacing dir;
     private boolean isInput;
     private IGasFilter filter;
@@ -57,17 +59,16 @@ public class PacketGasFilter extends AbstractConduitPacket<IGasConduit> {
     }
 
     public static class Handler implements IMessageHandler<PacketGasFilter, IMessage> {
+
         @Override
         public IMessage onMessage(PacketGasFilter message, MessageContext ctx) {
             IGasConduit conduit = message.getConduit(ctx);
-            if (!(conduit instanceof EnderGasConduit)) {
-                return null;
+            if (conduit instanceof EnderGasConduit) {
+                ((EnderGasConduit) conduit).setFilter(message.dir, message.filter, message.isInput);
+                World world = message.getWorld(ctx);
+                IBlockState bs = world.getBlockState(message.getPos());
+                world.notifyBlockUpdate(message.getPos(), bs, bs, 3);
             }
-            EnderGasConduit eCon = (EnderGasConduit) conduit;
-            eCon.setFilter(message.dir, message.filter, message.isInput);
-
-            IBlockState bs = message.getWorld(ctx).getBlockState(message.getPos());
-            message.getWorld(ctx).notifyBlockUpdate(message.getPos(), bs, bs, 3);
             return null;
         }
     }

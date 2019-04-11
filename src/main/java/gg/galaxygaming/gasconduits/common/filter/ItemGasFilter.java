@@ -6,12 +6,16 @@ import com.enderio.core.common.TileEntityBase;
 import crazypants.enderio.api.IModObject;
 import crazypants.enderio.base.EnderIOTab;
 import crazypants.enderio.base.filter.FilterRegistry;
+import crazypants.enderio.base.filter.IFilter;
 import crazypants.enderio.base.filter.IFilterContainer;
 import crazypants.enderio.base.filter.gui.ContainerFilter;
 import crazypants.enderio.base.lang.Lang;
 import crazypants.enderio.util.NbtValue;
 import gg.galaxygaming.gasconduits.client.GasFilterGui;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -29,11 +33,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-
 public class ItemGasFilter extends Item implements IItemFilterGasUpgrade, IResourceTooltipProvider {
+
     public static ItemGasFilter create(@Nonnull IModObject modObject, @Nullable Block block) {
         return new ItemGasFilter(modObject);
     }
@@ -69,7 +70,8 @@ public class ItemGasFilter extends Item implements IItemFilterGasUpgrade, IResou
 
     @Override
     @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player,
+          @Nonnull EnumHand hand) {
         if (!world.isRemote && player.isSneaking()) {
             GasConduitObject.itemGasFilter.openGui(world, player.getPosition(), player, null, hand.ordinal());
             return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
@@ -79,7 +81,8 @@ public class ItemGasFilter extends Item implements IItemFilterGasUpgrade, IResou
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn) {
+    public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip,
+          @Nonnull ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (FilterRegistry.isFilterSet(stack) && SpecialTooltipHandler.showAdvancedTooltips()) {
             tooltip.add(Lang.ITEM_FILTER_CONFIGURED.get(TextFormatting.ITALIC));
@@ -91,13 +94,20 @@ public class ItemGasFilter extends Item implements IItemFilterGasUpgrade, IResou
     @Override
     @Nullable
     @SideOnly(Side.CLIENT)
-    public GuiScreen getClientGuiElement(@Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nullable EnumFacing facing, int param1) {
+    public GuiScreen getClientGuiElement(@Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos,
+          @Nullable EnumFacing facing, int param1) {
         Container container = player.openContainer;
         if (container instanceof IFilterContainer) {
-            return new GasFilterGui(player.inventory, new ContainerFilter(player, (TileEntityBase) world.getTileEntity(pos), facing, param1),
-                    world.getTileEntity(pos), ((IFilterContainer<IGasFilter>) container).getFilter(param1));
+            return new GasFilterGui(player.inventory,
+                  new ContainerFilter(player, (TileEntityBase) world.getTileEntity(pos), facing, param1),
+                  world.getTileEntity(pos), ((IFilterContainer<IGasFilter>) container).getFilter(param1));
         }
-        return new GasFilterGui(player.inventory, new ContainerFilter(player, null, facing, param1), null,
-                FilterRegistry.getFilterForUpgrade(player.getHeldItem(EnumHand.values()[param1])));
+        IFilter filter = FilterRegistry.getFilterForUpgrade(player.getHeldItem(EnumHand.values()[param1]));
+        if (filter instanceof IGasFilter) {
+            //Should always be true, mainly double checked to avoid null warning
+            return new GasFilterGui(player.inventory, new ContainerFilter(player, null, facing, param1), null,
+                  (IGasFilter) filter);
+        }
+        return null;
     }
 }

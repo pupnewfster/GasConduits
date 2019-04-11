@@ -26,7 +26,7 @@ public enum GasConduitObject implements IModObjectBase {
     }
 
     @Nonnull
-    final String unlocalisedName;
+    protected final String unlocalisedName;
 
     @Nullable
     protected Block block;

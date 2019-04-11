@@ -7,49 +7,42 @@ import crazypants.enderio.base.integration.jei.IHaveGhostTargets;
 import crazypants.enderio.util.NbtValue;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
 import io.netty.buffer.ByteBuf;
+import java.util.Arrays;
+import java.util.Objects;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 public class GasFilter implements IGasFilter {
-    private final GasStack[] gasses = new GasStack[5];
+
+    private final GasStack[] gases = new GasStack[5];
     private boolean isBlacklist;
 
     @Override
     public boolean isEmpty() {
-        for (GasStack f : gasses) {
-            if (f != null) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.stream(gases).noneMatch(Objects::nonNull);
     }
 
     @Override
     public int size() {
-        return gasses.length;
+        return gases.length;
     }
 
     @Override
     public GasStack getGasStackAt(int index) {
-        return index < 0 || index >= gasses.length ? null : gasses[index];
+        return index < 0 || index >= gases.length ? null : gases[index];
     }
 
     @Override
     public boolean setGas(int index, @Nullable GasStack gas) {
-        if (index < 0 || index >= gasses.length) {
+        if (index < 0 || index >= gases.length) {
             return false;
         }
-        if (gas == null || gas.getGas() == null) {
-            gasses[index] = null;
-        } else {
-            gasses[index] = gas;
-        }
+        gases[index] = gas == null || gas.getGas() == null ? null : gas;
         return true;
     }
 
@@ -58,7 +51,7 @@ public class GasFilter implements IGasFilter {
         if (stack.isEmpty()) {
             return setGas(index, (GasStack) null);
         }
-        if (index < 0 || index >= gasses.length) {
+        if (index < 0 || index >= gases.length) {
             return false;
         }
         GasStack f = GasUtil.getGasTypeFromItem(stack);
@@ -86,11 +79,9 @@ public class GasFilter implements IGasFilter {
     @Override
     public void writeToNBT(@Nonnull NBTTagCompound nbtRoot) {
         NbtValue.FILTER_BLACKLIST.setBoolean(nbtRoot, isBlacklist);
-
         NBTTagList gasList = new NBTTagList();
-
         int index = 0;
-        for (GasStack g : gasses) {
+        for (GasStack g : gases) {
             NBTTagCompound fRoot = new NBTTagCompound();
             if (g != null) {
                 fRoot.setInteger("index", index);
@@ -99,25 +90,30 @@ public class GasFilter implements IGasFilter {
             }
             index++;
         }
-        nbtRoot.setTag("gasses", gasList);
+        nbtRoot.setTag("gases", gasList);
 
     }
 
     @Override
     public void readFromNBT(@Nonnull NBTTagCompound nbtRoot) {
-
         isBlacklist = NbtValue.FILTER_BLACKLIST.getBoolean(nbtRoot);
         clear();
 
-        NBTTagList tagList = nbtRoot.getTagList("gasses", nbtRoot.getId());
+        NBTTagList tagList;
+        if (nbtRoot.hasKey("gasses")) {
+            //Load legacy data that was saved with a typo
+            tagList = nbtRoot.getTagList("gasses", nbtRoot.getId());
+        } else {
+            tagList = nbtRoot.getTagList("gases", nbtRoot.getId());
+        }
         for (int i = 0; i < tagList.tagCount(); i++) {
-            gasses[i] = GasStack.readFromNBT(tagList.getCompoundTagAt(i));
+            gases[i] = GasStack.readFromNBT(tagList.getCompoundTagAt(i));
         }
     }
 
     private void clear() {
-        for (int i = 0; i < gasses.length; i++) {
-            gasses[i] = null;
+        for (int i = 0; i < gases.length; i++) {
+            gases[i] = null;
         }
     }
 
@@ -129,7 +125,7 @@ public class GasFilter implements IGasFilter {
         if (isEmpty()) {
             return true;
         }
-        for (GasStack f : gasses) {
+        for (GasStack f : gases) {
             if (f != null && f.isGasEqual(drained)) {
                 return !isBlacklist;
             }
@@ -172,10 +168,11 @@ public class GasFilter implements IGasFilter {
 
     @Override
     public int getSlotCount() {
-        return gasses.length;
+        return gases.length;
     }
 
     class GasFilterGhostSlot extends GhostSlot implements IHaveGhostTargets.ICustomGhostSlot {
+
         private final Runnable cb;
 
         GasFilterGhostSlot(int slot, int x, int y, Runnable cb) {

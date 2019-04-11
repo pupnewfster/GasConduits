@@ -1,7 +1,11 @@
 package gg.galaxygaming.gasconduits.common.conduit.basic;
 
 import com.enderio.core.common.util.Log;
-import crazypants.enderio.base.conduit.*;
+import crazypants.enderio.base.conduit.ConduitUtil;
+import crazypants.enderio.base.conduit.ConnectionMode;
+import crazypants.enderio.base.conduit.IConduit;
+import crazypants.enderio.base.conduit.IConduitNetwork;
+import crazypants.enderio.base.conduit.IConduitTexture;
 import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.base.network.PacketHandler;
 import crazypants.enderio.base.render.registry.TextureRegistry;
@@ -14,6 +18,8 @@ import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
 import gg.galaxygaming.gasconduits.common.network.PacketConduitGasLevel;
 import gg.galaxygaming.gasconduits.common.utils.GasUtil;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
@@ -27,19 +33,24 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 public class GasConduit extends AbstractGasTankConduit {
+
     static final int VOLUME_PER_CONNECTION = GasConduitsConstants.GAS_VOLUME / 4;
 
-    public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(0));
-    public static final IConduitTexture ICON_KEY_LOCKED = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_locked", false));
-    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(0));
-    public static final IConduitTexture ICON_EXTRACT_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_extract", false));
-    public static final IConduitTexture ICON_EMPTY_EXTRACT_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/empty_gas_conduit_extract", false));
-    public static final IConduitTexture ICON_INSERT_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_insert", false));
-    public static final IConduitTexture ICON_EMPTY_INSERT_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/empty_gas_conduit_insert", false));
+    public static final IConduitTexture ICON_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(0));
+    public static final IConduitTexture ICON_KEY_LOCKED = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_locked", false));
+    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(0));
+    public static final IConduitTexture ICON_EXTRACT_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_extract", false));
+    public static final IConduitTexture ICON_EMPTY_EXTRACT_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/empty_gas_conduit_extract", false));
+    public static final IConduitTexture ICON_INSERT_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_insert", false));
+    public static final IConduitTexture ICON_EMPTY_INSERT_KEY = new ConduitTexture(
+          TextureRegistry.registerTexture("gasconduits:blocks/empty_gas_conduit_insert", false));
 
     private GasConduitNetwork network;
 
@@ -70,7 +81,8 @@ public class GasConduit extends AbstractGasTankConduit {
             // need to send a custom packet as we don't want want to trigger a full chunk update, just
             // need to get the required values to the entity renderer
             BlockPos pos = getBundle().getLocation();
-            PacketHandler.INSTANCE.sendToAllAround(new PacketConduitGasLevel(this), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
+            PacketHandler.INSTANCE.sendToAllAround(new PacketConduitGasLevel(this),
+                  new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
             lastSyncRatio = tank.getFilledRatio();
         }
     }
@@ -92,7 +104,8 @@ public class GasConduit extends AbstractGasTankConduit {
             if (autoExtractForDir(dir)) {
                 IGasHandler extTank = getExternalHandler(dir);
                 GasStack couldDrain = GasUtil.getGasStack(extTank);
-                if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas()) && extTank.canDrawGas(dir.getOpposite(), couldDrain.getGas())) {
+                if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas()) && extTank
+                      .canDrawGas(dir.getOpposite(), couldDrain.getGas())) {
                     if (couldDrain.amount > tier1ExtractRate) {
                         couldDrain.amount = tier1ExtractRate;
                     }
@@ -133,15 +146,15 @@ public class GasConduit extends AbstractGasTankConduit {
 
     public int receiveGas(EnumFacing from, GasStack resource, boolean doFill, boolean doPush, int pushToken) {
         if (network == null) {
-            Log.error("The network for this conduit was null when asked to receiveGas. Please report this to the Ender IO github");
+            Log.error(
+                  "The network for this conduit was null when asked to receiveGas. Please report this to the GasConduits github");
             return 0;
         }
 
-        if (network.canAcceptGas(resource)) {
-            network.setGasType(resource);
-        } else {
+        if (!network.canAcceptGas(resource)) {
             return 0;
         }
+        network.setGasType(resource);
         resource = resource.copy();
         resource.amount = Math.min(GasConduitConfig.tier1_maxIO.get(), resource.amount);
 
@@ -162,7 +175,8 @@ public class GasConduit extends AbstractGasTankConduit {
     }
 
     private EnumFacing getNextDir(@Nonnull EnumFacing dir) {
-        return dir.ordinal() >= EnumFacing.VALUES.length - 1 ? EnumFacing.VALUES[0] : EnumFacing.VALUES[dir.ordinal() + 1];
+        return dir.ordinal() >= EnumFacing.VALUES.length - 1 ? EnumFacing.VALUES[0]
+              : EnumFacing.VALUES[dir.ordinal() + 1];
     }
 
     private int pushGas(@Nullable EnumFacing from, GasStack pushStack, boolean doPush, int token) {
@@ -216,12 +230,13 @@ public class GasConduit extends AbstractGasTankConduit {
         if (!getConnectionMode(from).acceptsInput() || network == null || gas == null) {
             return false;
         }
-        return tank.getGas() == null || GasUtil.areGassesTheSame(gas, tank.getGasType());
+        return tank.getGas() == null || GasUtil.areGasesTheSame(gas, tank.getGasType());
     }
 
     @Override
     public boolean canDrawGas(EnumFacing from, Gas gas) {
-        return getConnectionMode(from).acceptsOutput() && tank.getGasType() != null && gas != null && GasUtil.areGassesTheSame(tank.getGasType(), gas);
+        return getConnectionMode(from).acceptsOutput() && tank.getGasType() != null && gas != null && GasUtil
+              .areGasesTheSame(tank.getGasType(), gas);
     }
 
     @Override
@@ -270,7 +285,7 @@ public class GasConduit extends AbstractGasTankConduit {
         if (!super.canConnectToConduit(direction, con) || !(con instanceof GasConduit)) {
             return false;
         }
-        return GasConduitNetwork.areGassesCompatible(getGasType(), ((GasConduit) con).getGasType());
+        return GasConduitNetwork.areGasesCompatible(getGasType(), ((GasConduit) con).getGasType());
     }
 
     @SideOnly(Side.CLIENT)
@@ -280,7 +295,7 @@ public class GasConduit extends AbstractGasTankConduit {
         if (component.isCore()) {
             return ICON_CORE_KEY;
         }
-        final EnumFacing componentDirection = component.getDirection();
+        EnumFacing componentDirection = component.getDirection();
         if (getConnectionMode(componentDirection) == ConnectionMode.INPUT) {
             return getGasType() == null ? ICON_EMPTY_EXTRACT_KEY : ICON_EXTRACT_KEY;
         }
@@ -318,6 +333,7 @@ public class GasConduit extends AbstractGasTankConduit {
     }
 
     protected class ConnectionGasConduitSide extends ConnectionGasSide {
+
         public ConnectionGasConduitSide(EnumFacing side) {
             super(side);
         }
@@ -326,7 +342,8 @@ public class GasConduit extends AbstractGasTankConduit {
         public int receiveGas(EnumFacing side, GasStack resource, boolean doFill) {
             if (canReceiveGas(side, resource.getGas()) && network != null && network.lockNetworkForFill()) {
                 try {
-                    int res = GasConduit.this.receiveGas(side, resource, doFill, true, network == null ? -1 : network.getNextPushToken());
+                    int res = GasConduit.this
+                          .receiveGas(side, resource, doFill, true, network == null ? -1 : network.getNextPushToken());
                     if (doFill && externalConnections.contains(side) && network != null) {
                         network.addedFromExternal(res);
                     }
@@ -336,9 +353,8 @@ public class GasConduit extends AbstractGasTankConduit {
                         network.unlockNetworkFromFill();
                     }
                 }
-            } else {
-                return 0;
             }
+            return 0;
         }
     }
 

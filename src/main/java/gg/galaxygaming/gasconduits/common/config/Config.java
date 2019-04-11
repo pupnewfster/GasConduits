@@ -4,6 +4,7 @@ import crazypants.enderio.base.config.factory.ValueFactoryEIO;
 import gg.galaxygaming.gasconduits.GasConduitsConstants;
 
 public final class Config {
+
     public static final ValueFactoryEIO F = new ValueFactoryEIO(GasConduitsConstants.MOD_ID);
 
     static {

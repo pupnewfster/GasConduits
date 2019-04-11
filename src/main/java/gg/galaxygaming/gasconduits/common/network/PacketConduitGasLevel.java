@@ -3,16 +3,16 @@ package gg.galaxygaming.gasconduits.common.network;
 import crazypants.enderio.conduits.network.AbstractConduitPacket;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import io.netty.buffer.ByteBuf;
+import javax.annotation.Nonnull;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import javax.annotation.Nonnull;
-
 public class PacketConduitGasLevel extends AbstractConduitPacket<IGasConduit> {
-    public NBTTagCompound tc;
+
+    private NBTTagCompound tc;
 
     public PacketConduitGasLevel() {
     }
@@ -36,10 +36,11 @@ public class PacketConduitGasLevel extends AbstractConduitPacket<IGasConduit> {
     }
 
     public static class Handler implements IMessageHandler<PacketConduitGasLevel, IMessage> {
+
         @Override
         public IMessage onMessage(PacketConduitGasLevel message, MessageContext ctx) {
-            final NBTTagCompound nbt = message.tc;
-            final IGasConduit conduit = message.getConduit(ctx);
+            NBTTagCompound nbt = message.tc;
+            IGasConduit conduit = message.getConduit(ctx);
             if (nbt != null && conduit != null) {
                 conduit.readFromNBT(nbt);
             }

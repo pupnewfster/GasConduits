@@ -1,11 +1,11 @@
 package gg.galaxygaming.gasconduits.common.conduit;
 
+import javax.annotation.Nonnull;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
-
 public class GasOutput {
+
     private final EnumFacing dir;
     private final BlockPos location;
 
@@ -16,17 +16,20 @@ public class GasOutput {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = prime + location.hashCode();
-        return prime * result + dir.hashCode();
+        int code = 1;
+        code = 31 * code + location.hashCode();
+        code = 31 * code + dir.hashCode();
+        return code;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null || getClass() != obj.getClass())
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
+        }
         GasOutput other = (GasOutput) obj;
         return location.equals(other.location) && dir == other.dir;
     }

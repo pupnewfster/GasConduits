@@ -9,22 +9,19 @@ import crazypants.enderio.base.lang.Lang;
 import gg.galaxygaming.gasconduits.client.utils.GasRenderUtil;
 import gg.galaxygaming.gasconduits.common.filter.GasFilter;
 import gg.galaxygaming.gasconduits.common.filter.IGasFilter;
-import mekanism.api.gas.GasStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
-
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
+import mekanism.api.gas.GasStack;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class GasFilterGui extends AbstractFilterGui {
+
     private static final int ID_WHITELIST = FilterGuiUtil.nextButtonId();
 
     private final IconButton whiteListB;
@@ -34,7 +31,8 @@ public class GasFilterGui extends AbstractFilterGui {
     private int xOffset;
     private int yOffset;
 
-    public GasFilterGui(@Nonnull InventoryPlayer playerInv, @Nonnull ContainerFilter filterContainer, TileEntity te, @Nonnull IGasFilter filterIn) {
+    public GasFilterGui(@Nonnull InventoryPlayer playerInv, @Nonnull ContainerFilter filterContainer, TileEntity te,
+          @Nonnull IGasFilter filterIn) {
         super(playerInv, filterContainer, te, filterIn, "gas_filter");
 
         xOffset = 13;
@@ -53,7 +51,8 @@ public class GasFilterGui extends AbstractFilterGui {
     }
 
     public void createFilterSlots() {
-        filter.createGhostSlots(getGhostSlotHandler().getGhostSlots(), xOffset + 1, yOffset + 1, this::sendFilterChange);
+        filter.createGhostSlots(getGhostSlotHandler().getGhostSlots(), xOffset + 1, yOffset + 1,
+              this::sendFilterChange);
     }
 
     @Override
@@ -80,12 +79,11 @@ public class GasFilterGui extends AbstractFilterGui {
 
     @Override
     public void renderCustomOptions(int top, float par1, int par2, int par3) {
-        int x = getGuiLeft() + xOffset;
-        int y = getGuiTop() + yOffset;
         GlStateManager.color(1, 1, 1);
         bindGuiTexture();
-
         if (!filter.isEmpty()) {
+            int x = getGuiLeft() + xOffset;
+            int y = getGuiTop() + yOffset;
             for (int i = 0; i < filter.size(); i++) {
                 GasStack g = filter.getGasStackAt(i);
                 if (g != null) {
@@ -96,10 +94,9 @@ public class GasFilterGui extends AbstractFilterGui {
     }
 
     private void renderGas(GasStack g, int x, int y) {
-        ResourceLocation iconKey = g.getGas().getIcon();
-        TextureAtlasSprite icon = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(iconKey.toString());
-        if (icon != null) {
-            GasRenderUtil.renderGuiTank(g, 1000, 1000, x + 1, y + 1, 0, 16, 16);
+        if (g.getGas().getSprite() != null) {
+            //Should this just be allowed to run
+            GasRenderUtil.renderGuiTank(g, 1000, 1000, x + 1, y + 1, 16, 16);
         }
     }
 
@@ -123,10 +120,9 @@ public class GasFilterGui extends AbstractFilterGui {
     private GasStack getHoveredGas(int mouseX, int mouseY) {
         if (mouseY >= getGuiTop() + yOffset && mouseY <= getGuiTop() + yOffset + 16) {
             int x = mouseX - (getGuiLeft() + xOffset);
-            if (x < 0 || x % 18 == 17) {
-                return null;
+            if (x >= 0 && x % 18 != 17) {
+                return filter.getGasStackAt(x / 18);
             }
-            return filter.getGasStackAt(x / 18);
         }
         return null;
     }

@@ -8,15 +8,15 @@ import crazypants.enderio.base.filter.capability.IFilterHolder;
 import crazypants.enderio.conduits.network.PacketConduitFilter;
 import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
 import io.netty.buffer.ByteBuf;
+import javax.annotation.Nonnull;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import javax.annotation.Nonnull;
-
 public class PacketEnderGasConduit extends PacketConduitFilter<EnderGasConduit> {
+
     private DyeColor colIn;
     private DyeColor colOut;
     private int priority;
@@ -56,6 +56,7 @@ public class PacketEnderGasConduit extends PacketConduitFilter<EnderGasConduit> 
     }
 
     public static class Handler implements IMessageHandler<PacketEnderGasConduit, IMessage> {
+
         @Override
         public IMessage onMessage(PacketEnderGasConduit message, MessageContext ctx) {
             EnderGasConduit conduit = message.getConduit(ctx);
@@ -76,9 +77,12 @@ public class PacketEnderGasConduit extends PacketConduitFilter<EnderGasConduit> 
 
         private void applyFilter(EnumFacing dir, IConduit conduit, IFilter filter, boolean isInput) {
             if (conduit.hasInternalCapability(CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY, dir)) {
-                IFilterHolder<IFilter> filterHolder = conduit.getInternalCapability(CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY, dir);
+                IFilterHolder<IFilter> filterHolder = CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY.cast(conduit
+                      .getInternalCapability(CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY, dir));
                 if (filterHolder != null) {
-                    filterHolder.setFilter(isInput ? filterHolder.getInputFilterIndex() : filterHolder.getOutputFilterIndex(), dir.ordinal(), filter);
+                    filterHolder
+                          .setFilter(isInput ? filterHolder.getInputFilterIndex() : filterHolder.getOutputFilterIndex(),
+                                dir.ordinal(), filter);
                 }
             }
         }
