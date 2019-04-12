@@ -55,7 +55,7 @@ dependencies {
 
     deobfCompile "com.enderio.core:EnderCore:${mc_version}-0.5.52"
     deobfCompile "com.enderio:EnderIO:${mc_version}-5.0.43"
-    deobfCompile "mekanism:Mekanism:${mc_version}:9.4.13.349"
+    deobfCompile "mekanism:Mekanism:${mc_version}:9.7.0.369"
     compile "info.loenwind.autoconfig:AutoConfig:${mc_version}-1.0.1"
     // compile against the JEI API but do not include it at runtime
     deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
