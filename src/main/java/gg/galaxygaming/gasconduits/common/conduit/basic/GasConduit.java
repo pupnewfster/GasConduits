@@ -103,7 +103,7 @@ public class GasConduit extends AbstractGasTankConduit {
         for (EnumFacing dir : externalConnections) {
             if (autoExtractForDir(dir)) {
                 IGasHandler extTank = getExternalHandler(dir);
-                GasStack couldDrain = GasUtil.getGasStack(extTank);
+                GasStack couldDrain = GasUtil.getGasStack(extTank, dir.getOpposite());
                 if (couldDrain != null && canReceiveGas(dir, couldDrain.getGas()) && extTank
                       .canDrawGas(dir.getOpposite(), couldDrain.getGas())) {
                     if (couldDrain.amount > tier1ExtractRate) {

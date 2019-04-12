@@ -62,7 +62,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             return false;
         }
 
-        GasStack drained = GasUtil.getGasStack(tank.getExternalTank());
+        GasStack drained = GasUtil.getGasStack(tank.getExternalTank(), conDir.getOpposite());
 
         if (!matchedFilter(drained, con, conDir, true) || !tank.getExternalTank()
               .canDrawGas(tank.getConduitDir(), drained.getGas())) {

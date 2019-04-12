@@ -197,7 +197,7 @@ public class AdvancedGasConduitNetwork extends AbstractGasTankConduitNetwork<Adv
             int maxExtract = Math.min(maxExtractPerTick, tank.getNeeded());
 
             if (gasType == null || !tank.containsValidGas()) {
-                GasStack newGas = GasUtil.getGasStack(extTank);
+                GasStack newGas = GasUtil.getGasStack(extTank, dir.getOpposite());
                 if (newGas == null) {
                     return false;
                 }
