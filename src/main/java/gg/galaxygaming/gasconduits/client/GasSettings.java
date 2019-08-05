@@ -196,10 +196,6 @@ public class GasSettings extends BaseSettingsPanel {
             loopB.onGuiInit();
             loopB.setSelected(eCon.isSelfFeedEnabled(gui.getDir()));
         }
-
-        if (isEnder) {
-            filtersChanged();
-        }
     }
 
     @Override
