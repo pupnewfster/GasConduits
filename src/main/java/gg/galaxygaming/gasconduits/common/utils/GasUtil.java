@@ -43,8 +43,7 @@ public class GasUtil {
             GasStack gasStack = info.getGas();
             //Require current found type to be null or the same as this tank's type
             // and this gas type to be accessible from the side accessed
-            if (gasStack != null && (type == null || areGasesTheSame(type, gasStack.getGas())) && handler
-                  .canDrawGas(side, gasStack.getGas())) {
+            if (gasStack != null && (type == null || areGasesTheSame(type, gasStack.getGas())) && handler.canDrawGas(side, gasStack.getGas())) {
                 stored += info.getStored();
                 type = gasStack.getGas();
             }

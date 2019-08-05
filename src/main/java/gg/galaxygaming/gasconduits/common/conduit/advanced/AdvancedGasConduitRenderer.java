@@ -41,10 +41,8 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
     }
 
     @Override
-    protected void addConduitQuads(@Nonnull IConduitBundle bundle, @Nonnull IClientConduit conduit,
-          @Nonnull IConduitTexture tex,
-          @Nonnull CollidableComponent component, float selfIllum, BlockRenderLayer layer,
-          @Nonnull List<BakedQuad> quads) {
+    protected void addConduitQuads(@Nonnull IConduitBundle bundle, @Nonnull IClientConduit conduit, @Nonnull IConduitTexture tex, @Nonnull CollidableComponent component,
+          float selfIllum, BlockRenderLayer layer, @Nonnull List<BakedQuad> quads) {
         super.addConduitQuads(bundle, conduit, tex, component, selfIllum, layer, quads);
         ConduitInOutRenderer.renderIO(bundle, conduit, component, layer, quads, DyeColor.RED, DyeColor.RED);
 
@@ -54,9 +52,7 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
         AdvancedGasConduit lc = (AdvancedGasConduit) conduit;
         GasStack gas = lc.getGasType();
         @Nonnull
-        TextureAtlasSprite texture =
-              gas != null && gas.getGas() != null && gas.amount > 0 ? GasRenderUtil.getStillTexture(gas)
-                    : lc.getNotSetEdgeTexture();
+        TextureAtlasSprite texture = gas != null && gas.getGas() != null && gas.amount > 0 ? GasRenderUtil.getStillTexture(gas) : lc.getNotSetEdgeTexture();
 
         // FIXME this logic is duplicated from DefaultConduitRenderer
         float shrink = 1 / 32f;
@@ -76,8 +72,7 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
                 EnumFacing vDir = RenderUtil.getVDirForFace(dir);
                 if (componentDirection == EnumFacing.UP || componentDirection == EnumFacing.DOWN) {
                     vDir = RenderUtil.getUDirForFace(dir);
-                } else if ((componentDirection == EnumFacing.NORTH || componentDirection == EnumFacing.SOUTH)
-                      && dir.getYOffset() != 0) {
+                } else if ((componentDirection == EnumFacing.NORTH || componentDirection == EnumFacing.SOUTH) && dir.getYOffset() != 0) {
                     vDir = RenderUtil.getUDirForFace(dir);
                 }
 
@@ -106,9 +101,7 @@ public class AdvancedGasConduitRenderer extends DefaultConduitRenderer {
 
         if (conduit.getConnectionMode(component.getDirection()) == ConnectionMode.DISABLED) {
             TextureAtlasSprite tex2 = ConduitBundleRenderManager.instance.getConnectorIcon(component.data);
-            List<Vertex> corners = component.bound
-                  .getCornersWithUvForFace(component.getDirection(), tex2.getMinU(), tex2.getMaxU(), tex2.getMinV(),
-                        tex2.getMaxV());
+            List<Vertex> corners = component.bound.getCornersWithUvForFace(component.getDirection(), tex2.getMinU(), tex2.getMaxU(), tex2.getMinV(), tex2.getMaxV());
             List<Vertex> vertices2 = new ArrayList<>(corners);
             // back face
             for (int i = corners.size() - 1; i >= 0; i--) {

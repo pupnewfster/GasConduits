@@ -20,6 +20,7 @@ public interface IGasConduit extends IGasHandler, IExtractor, IServerConduit, IC
      * Used to get the capability of the conduit for the given direction
      *
      * @param from side for the capability
+     *
      * @return returns the connection with reference to the relevant side
      */
     IGasHandler getGasDir(@Nullable EnumFacing from);

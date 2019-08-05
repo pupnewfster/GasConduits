@@ -27,6 +27,7 @@ public interface IGasFilter extends IFilter {
      * Gets the gas stack at the given index
      *
      * @param index The index of the gas
+     *
      * @return GasStack at the given index, null if there is none
      */
     @Nullable
@@ -36,7 +37,8 @@ public interface IGasFilter extends IFilter {
      * Sets the gas in the given slot
      *
      * @param index Index of the slot
-     * @param gas Gas to insert. Gas can be null to make the slot empty
+     * @param gas   Gas to insert. Gas can be null to make the slot empty
+     *
      * @return true if the gas was successfully set
      */
     boolean setGas(int index, @Nullable GasStack gas);
@@ -46,6 +48,7 @@ public interface IGasFilter extends IFilter {
      *
      * @param index Index of the gas filter
      * @param stack The ItemStack to get the gas from
+     *
      * @return true if the gas is successfully set
      */
     boolean setGas(int index, @Nonnull ItemStack stack);
@@ -75,6 +78,7 @@ public interface IGasFilter extends IFilter {
      * Checks if the gas matches the filter
      *
      * @param drained Gas to check
+     *
      * @return true if it matches the filter settings
      */
     boolean matchesFilter(GasStack drained);

@@ -44,15 +44,11 @@ public class AdvancedGasConduit extends AbstractGasTankConduit {
 
     public static final int CONDUIT_VOLUME = GasConduitsConstants.GAS_VOLUME;
 
-    public static final IConduitTexture ICON_KEY = new ConduitTexture(
-          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(1));
-    public static final IConduitTexture ICON_KEY_LOCKED = new ConduitTexture(
-          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(2));
-    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(
-          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(1));
+    public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(1));
+    public static final IConduitTexture ICON_KEY_LOCKED = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(2));
+    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(1));
 
-    public static final TextureSupplier ICON_EMPTY_EDGE = TextureRegistry
-          .registerTexture("gasconduits:blocks/gas_conduit_advanced_edge", false);
+    public static final TextureSupplier ICON_EMPTY_EDGE = TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_advanced_edge", false);
 
     private AdvancedGasConduitNetwork network;
 
@@ -265,8 +261,7 @@ public class AdvancedGasConduit extends AbstractGasTankConduit {
         }
 
         BoundingBox bb = ConduitGeometryUtil.getInstance().createBoundsForConnectionController(keyDir, key.offset);
-        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keyDir,
-              IPowerConduit.COLOR_CONTROLLER_ID);
+        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keyDir, IPowerConduit.COLOR_CONTROLLER_ID);
 
         List<CollidableComponent> result = new ArrayList<>(baseCollidables);
         result.add(cc);

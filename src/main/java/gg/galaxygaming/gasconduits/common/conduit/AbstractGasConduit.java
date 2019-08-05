@@ -35,14 +35,12 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
     protected final EnumMap<EnumFacing, RedstoneControlMode> extractionModes = new EnumMap<>(EnumFacing.class);
     protected final EnumMap<EnumFacing, DyeColor> extractionColors = new EnumMap<>(EnumFacing.class);
 
-    public static IGasHandler getExternalGasHandler(@Nonnull IBlockAccess world, @Nonnull BlockPos pos,
-          @Nonnull EnumFacing side) {
+    public static IGasHandler getExternalGasHandler(@Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EnumFacing side) {
         return world.getTileEntity(pos) instanceof IConduitBundle ? null : GasWrapper.getGasHandler(world, pos, side);
     }
 
     public IGasHandler getExternalHandler(EnumFacing direction) {
-        return getExternalGasHandler(getBundle().getBundleworld(), getBundle().getLocation().offset(direction),
-              direction.getOpposite());
+        return getExternalGasHandler(getBundle().getBundleworld(), getBundle().getLocation().offset(direction), direction.getOpposite());
     }
 
     @Override
@@ -232,8 +230,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         @Override
         public boolean canReceiveGas(EnumFacing facing, Gas gas) {
             if (side.equals(facing) && getConnectionMode(facing).acceptsInput()) {
-                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing),
-                      getExtractionSignalColor(facing));
+                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
             }
             return false;
         }
@@ -241,8 +238,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         @Override
         public boolean canDrawGas(EnumFacing facing, Gas gas) {
             if (side.equals(facing) && getConnectionMode(facing).acceptsOutput()) {
-                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing),
-                      getExtractionSignalColor(facing));
+                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
             }
             return false;
         }

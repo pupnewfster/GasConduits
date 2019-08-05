@@ -60,13 +60,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder<IGasFilter>, IUpgradeHolder,
-      IEnderConduit {
+public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder<IGasFilter>, IUpgradeHolder, IEnderConduit {
 
-    public static final IConduitTexture ICON_KEY = new ConduitTexture(
-          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(3));
-    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(
-          TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(2));
+    public static final IConduitTexture ICON_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit", false), ConduitTexture.arm(3));
+    public static final IConduitTexture ICON_CORE_KEY = new ConduitTexture(TextureRegistry.registerTexture("gasconduits:blocks/gas_conduit_core", false), ConduitTexture.core(2));
 
     private EnderGasConduitNetwork network;
     private int ticksSinceFailedExtract;
@@ -125,8 +122,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
     }
 
     @Override
-    public boolean onBlockActivated(@Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull RaytraceResult res,
-          @Nonnull List<RaytraceResult> all) {
+    public boolean onBlockActivated(@Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull RaytraceResult res, @Nonnull List<RaytraceResult> all) {
         if (Prep.isInvalid(player.getHeldItem(hand)) || !ToolUtil.isToolEquipped(player, hand)) {
             return false;
         }
@@ -544,9 +540,8 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
 
     @Override
     public boolean hasInternalCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY
-              || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY && facing != null
-              && containsExternalConnection(facing);
+        return capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY && facing != null
+                                                                                && containsExternalConnection(facing);
     }
 
     // FILTERS
@@ -682,8 +677,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
     @Nullable
     @Override
     public <T> T getInternalCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY
-              || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY ? (T) this : null;
+        return capability == CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY || capability == CapabilityUpgradeHolder.UPGRADE_HOLDER_CAPABILITY ? (T) this : null;
     }
 
     @SuppressWarnings("unchecked")
@@ -701,8 +695,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
 
         @Override
         public int receiveGas(EnumFacing facing, GasStack resource, boolean doFill) {
-            return canReceiveGas(facing, resource.getGas()) ? network == null ? 0
-                  : network.fillFrom(EnderGasConduit.this, facing, resource, doFill) : 0;
+            return canReceiveGas(facing, resource.getGas()) ? network == null ? 0 : network.fillFrom(EnderGasConduit.this, facing, resource, doFill) : 0;
         }
 
         @Override
@@ -722,8 +715,7 @@ public class EnderGasConduit extends AbstractGasConduit implements IFilterHolder
         }
 
         BoundingBox bb = ConduitGeometryUtil.getInstance().createBoundsForConnectionController(keydir, key.offset);
-        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keydir,
-              IPowerConduit.COLOR_CONTROLLER_ID);
+        CollidableComponent cc = new CollidableComponent(IGasConduit.class, bb, keydir, IPowerConduit.COLOR_CONTROLLER_ID);
 
         List<CollidableComponent> result = new ArrayList<>(baseCollidables);
         result.add(cc);

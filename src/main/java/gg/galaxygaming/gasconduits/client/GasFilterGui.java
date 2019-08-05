@@ -31,8 +31,7 @@ public class GasFilterGui extends AbstractFilterGui {
     private int xOffset;
     private int yOffset;
 
-    public GasFilterGui(@Nonnull InventoryPlayer playerInv, @Nonnull ContainerFilter filterContainer, TileEntity te,
-          @Nonnull IGasFilter filterIn) {
+    public GasFilterGui(@Nonnull InventoryPlayer playerInv, @Nonnull ContainerFilter filterContainer, TileEntity te, @Nonnull IGasFilter filterIn) {
         super(playerInv, filterContainer, te, filterIn, "gas_filter");
 
         xOffset = 13;
@@ -51,8 +50,7 @@ public class GasFilterGui extends AbstractFilterGui {
     }
 
     public void createFilterSlots() {
-        filter.createGhostSlots(getGhostSlotHandler().getGhostSlots(), xOffset + 1, yOffset + 1,
-              this::sendFilterChange);
+        filter.createGhostSlots(getGhostSlotHandler().getGhostSlots(), xOffset + 1, yOffset + 1, this::sendFilterChange);
     }
 
     @Override

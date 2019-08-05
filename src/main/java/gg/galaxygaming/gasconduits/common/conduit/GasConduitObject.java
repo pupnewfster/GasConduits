@@ -50,8 +50,7 @@ public enum GasConduitObject implements IModObjectBase {
         this(blockMaker, null, null);
     }
 
-    GasConduitObject(@Nonnull Function<IModObject, Block> blockMaker,
-          @Nonnull BiFunction<IModObject, Block, Item> itemMaker) {
+    GasConduitObject(@Nonnull Function<IModObject, Block> blockMaker, @Nonnull BiFunction<IModObject, Block, Item> itemMaker) {
         this(blockMaker, itemMaker, null);
     }
 
@@ -59,8 +58,7 @@ public enum GasConduitObject implements IModObjectBase {
         this(blockMaker, null, modTileEntity);
     }
 
-    GasConduitObject(@Nullable Function<IModObject, Block> blockMaker,
-          @Nullable BiFunction<IModObject, Block, Item> itemMaker, @Nullable IModTileEntity modTileEntity) {
+    GasConduitObject(@Nullable Function<IModObject, Block> blockMaker, @Nullable BiFunction<IModObject, Block, Item> itemMaker, @Nullable IModTileEntity modTileEntity) {
         this.unlocalisedName = ModObjectRegistry.sanitizeName(NullHelper.notnullJ(name(), "Enum.name()"));
         this.blockMaker = blockMaker;
         this.itemMaker = itemMaker;

@@ -27,6 +27,9 @@ minecraft {
 }
 
 repositories {
+    flatDir {
+        dirs 'libs'
+    }
     maven {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
@@ -54,12 +57,14 @@ repositories {
 dependencies {
     //Compile Only for Ender Core as we need some of the newer stuff from it
     // that the version that is bundled with EnderIO does not contain
-    compileOnly "com.enderio.core:EnderCore:${mc_version}-0.5.52:core"
-    deobfCompile "com.enderio:EnderIO:${mc_version}-5.0.43"
-    deobfCompile "mekanism:Mekanism:${mc_version}:9.7.0.369"
-    compile "info.loenwind.autoconfig:AutoConfig:${mc_version}-1.0.1"
+    //compileOnly "com.enderio.core:EnderCore:${mc_version}-0.5.65:core"
+    //compileOnly "com.enderio.core:EnderCore:${mc_version}-0.5.65:deobf"
+    compile name: 'EnderCore-1.12.2-0.5.65-deobf'
+    deobfCompile "com.enderio:EnderIO:${mc_version}-5.0.50"
+    deobfCompile "mekanism:Mekanism:${mc_version}:9.7.9.380"
+    compile "info.loenwind.autoconfig:AutoConfig:${mc_version}-1.0.2"
     //Given we are only compiling EnderCore we also need a reference to auto save
-    compile "info.loenwind.autosave:AutoSave:${mc_version}-1.0.10"
+    compile "info.loenwind.autosave:AutoSave:${mc_version}-1.0.11"
     // compile against the JEI API but do not include it at runtime
     deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
     // at runtime, use the full JEI jar

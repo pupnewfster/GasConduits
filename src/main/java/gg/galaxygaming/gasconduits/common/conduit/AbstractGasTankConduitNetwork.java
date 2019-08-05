@@ -5,8 +5,7 @@ import javax.annotation.Nonnull;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 
-public class AbstractGasTankConduitNetwork<T extends AbstractGasTankConduit> extends
-      AbstractConduitNetwork<IGasConduit, T> {
+public class AbstractGasTankConduitNetwork<T extends AbstractGasTankConduit> extends AbstractConduitNetwork<IGasConduit, T> {
 
     protected GasStack gasType;
     protected boolean gasTypeLocked = false;

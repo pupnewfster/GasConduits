@@ -50,16 +50,13 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
     }
 
     @Override
-    protected void addTransmissionQuads(@Nonnull IConduitTexture tex, Vector4f color, @Nonnull BlockRenderLayer layer,
-          @Nonnull IConduit conduit,
+    protected void addTransmissionQuads(@Nonnull IConduitTexture tex, Vector4f color, @Nonnull BlockRenderLayer layer, @Nonnull IConduit conduit,
           @Nonnull CollidableComponent component, float selfIllum, @Nonnull List<BakedQuad> quads) {
         // Handled in dynamic render
     }
 
     @Override
-    protected void renderConduitDynamic(@Nonnull IConduitTexture tex,
-          @Nonnull IClientConduit.WithDefaultRendering conduit,
-          @Nonnull CollidableComponent component, float brightness) {
+    protected void renderConduitDynamic(@Nonnull IConduitTexture tex, @Nonnull IClientConduit.WithDefaultRendering conduit, @Nonnull CollidableComponent component, float brightness) {
         if (component.isDirectional()) {
             GasConduit lc = (GasConduit) conduit;
             GasStack gas = lc.getGasType();
@@ -70,8 +67,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
     }
 
     @Override
-    protected void renderTransmissionDynamic(@Nonnull IConduit conduit, @Nonnull IConduitTexture tex,
-          @Nullable Vector4f color, @Nonnull CollidableComponent component, float selfIllum) {
+    protected void renderTransmissionDynamic(@Nonnull IConduit conduit, @Nonnull IConduitTexture tex, @Nullable Vector4f color, @Nonnull CollidableComponent component, float selfIllum) {
         float filledRatio = ((GasConduit) conduit).getTank().getFilledRatio();
         if (filledRatio <= 0 || !component.isDirectional()) {
             return;
@@ -88,10 +84,8 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
                 float zLen = Math.abs(componentDirection.getZOffset()) == 1 ? 0 : shrink;
 
                 BoundingBox bb = cube.expand(-xLen, -yLen, -zLen);
-                drawDynamicSection(bb, sprite.getInterpolatedU(tex.getUv().x * 16),
-                      sprite.getInterpolatedU(tex.getUv().z * 16),
-                      sprite.getInterpolatedV(tex.getUv().y * 16), sprite.getInterpolatedV(tex.getUv().w * 16), color,
-                      componentDirection, true);
+                drawDynamicSection(bb, sprite.getInterpolatedU(tex.getUv().x * 16), sprite.getInterpolatedU(tex.getUv().z * 16),
+                      sprite.getInterpolatedV(tex.getUv().y * 16), sprite.getInterpolatedV(tex.getUv().w * 16), color, componentDirection, true);
             }
         }
     }
@@ -100,12 +94,10 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
         renderGasOutline(component, gas, 1 - ConduitGeometryUtil.getInstance().getHeight(), 1f / 16f);
     }
 
-    public static void renderGasOutline(@Nonnull CollidableComponent component, @Nonnull GasStack gasStack,
-          double scaleFactor, float outlineWidth) {
+    public static void renderGasOutline(@Nonnull CollidableComponent component, @Nonnull GasStack gasStack, double scaleFactor, float outlineWidth) {
         Gas gas = gasStack.getGas();
         if (gas != null) {
-            computeGasOutlineToCache(component, gas, scaleFactor, outlineWidth)
-                  .forEach(CachableRenderStatement::execute);
+            computeGasOutlineToCache(component, gas, scaleFactor, outlineWidth).forEach(CachableRenderStatement::execute);
         }
     }
 
@@ -114,8 +106,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
     // (3) could this be done more efficiently (on the fly)?
     private static Map<CollidableComponent, Map<Gas, List<CachableRenderStatement>>> cache = new WeakHashMap<>();
 
-    public static List<CachableRenderStatement> computeGasOutlineToCache(@Nonnull CollidableComponent component,
-          @Nonnull Gas gas, double scaleFactor, float width) {
+    public static List<CachableRenderStatement> computeGasOutlineToCache(@Nonnull CollidableComponent component, @Nonnull Gas gas, double scaleFactor, float width) {
         Map<Gas, List<CachableRenderStatement>> cache0 = cache.computeIfAbsent(component, k -> new HashMap<>());
 
         List<CachableRenderStatement> data = cache0.get(gas);
@@ -127,8 +118,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
 
         TextureAtlasSprite texture = GasRenderUtil.getStillTexture(gas);
         int color = gas.getTint();
-        Vector4f colorV = new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d,
-              1);
+        Vector4f colorV = new Vector4f((color >> 16 & 0xFF) / 255d, (color >> 8 & 0xFF) / 255d, (color & 0xFF) / 255d, 1);
 
         BoundingBox bbb;
 
@@ -149,13 +139,9 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
         for (NNIterator<EnumFacing> itr = NNList.FACING.fastIterator(); itr.hasNext(); ) {
             EnumFacing face = itr.next();
             if (face != componentDirection && face != componentDirection.getOpposite()) {
-                List<Vertex> corners = bbb
-                      .getCornersWithUvForFace(face, texture.getMinU(), texture.getMaxU(), texture.getMinV(),
-                            texture.getMaxV());
+                List<Vertex> corners = bbb.getCornersWithUvForFace(face, texture.getMinU(), texture.getMaxU(), texture.getMinV(), texture.getMaxV());
                 for (Vertex corner : corners) {
-                    data.add(
-                          new CachableRenderStatement.AddVertexWithUV(corner.x(), corner.y(), corner.z(), corner.uv.x,
-                                corner.uv.y, colorV));
+                    data.add(new CachableRenderStatement.AddVertexWithUV(corner.x(), corner.y(), corner.z(), corner.uv.x, corner.uv.y, colorV));
                 }
             }
         }
@@ -182,8 +168,7 @@ public class GasConduitRenderer extends DefaultConduitRenderer implements IResou
 
             @Override
             public void execute() {
-                Tessellator.getInstance().getBuffer().pos(x, y, z).tex(u, v).color(color.x, color.y, color.z, color.w)
-                      .endVertex();
+                Tessellator.getInstance().getBuffer().pos(x, y, z).tex(u, v).color(color.x, color.y, color.z, color.w).endVertex();
             }
         }
     }

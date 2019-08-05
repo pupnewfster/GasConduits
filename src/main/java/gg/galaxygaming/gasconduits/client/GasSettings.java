@@ -66,8 +66,7 @@ public class GasSettings extends BaseSettingsPanel {
     private final IGasConduit conduit;
 
     public GasSettings(@Nonnull final IGuiExternalConnection gui, @Nonnull IClientConduit con) {
-        super(IconEIO.WRENCH_OVERLAY_GAS, GasConduitObject.itemGasConduit.getUnlocalisedName(), gui, con,
-              "in_out_settings");
+        super(IconEIO.WRENCH_OVERLAY_GAS, GasConduitObject.itemGasConduit.getUnlocalisedName(), gui, con, "in_out_settings");
 
         conduit = (IGasConduit) con;
         if (con instanceof EnderGasConduit) {
@@ -108,8 +107,7 @@ public class GasSettings extends BaseSettingsPanel {
         colorB.setToolTipHeading(Lang.GUI_SIGNAL_COLOR.get());
         colorB.setColorIndex(conduit.getExtractionSignalColor(gui.getDir()).ordinal());
 
-        rsB = new RedstoneModeButton(gui, ID_REDSTONE_BUTTON, x, y,
-              new ConduitRedstoneModeControlable(conduit, gui, colorB));
+        rsB = new RedstoneModeButton(gui, ID_REDSTONE_BUTTON, x, y, new ConduitRedstoneModeControlable(conduit, gui, colorB));
 
         x = priLeft + priWidth + 9;
 

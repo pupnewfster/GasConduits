@@ -31,8 +31,7 @@ public class NetworkGasTank {
         this.conDir = conDir;
         conduitLoc = con.getBundle().getLocation();
         tankDir = conDir.getOpposite();
-        externalTank = AbstractGasConduit
-              .getExternalGasHandler(con.getBundle().getBundleworld(), conduitLoc.offset(conDir), tankDir);
+        externalTank = AbstractGasConduit.getExternalGasHandler(con.getBundle().getBundleworld(), conduitLoc.offset(conDir), tankDir);
         acceptsOutput = con.getConnectionMode(conDir).acceptsOutput();
         inputColor = con.getOutputColor(conDir);
         outputColor = con.getInputColor(conDir);

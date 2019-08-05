@@ -64,13 +64,11 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
 
         GasStack drained = GasUtil.getGasStack(tank.getExternalTank(), conDir.getOpposite());
 
-        if (!matchedFilter(drained, con, conDir, true) || !tank.getExternalTank()
-              .canDrawGas(tank.getConduitDir(), drained.getGas())) {
+        if (!matchedFilter(drained, con, conDir, true) || !tank.getExternalTank().canDrawGas(tank.getConduitDir(), drained.getGas())) {
             return false;
         }
 
-        drained.amount = Math
-              .min(drained.amount, GasConduitConfig.tier3_extractRate.get() * getExtractSpeedMultiplier(tank) / 2);
+        drained.amount = Math.min(drained.amount, GasConduitConfig.tier3_extractRate.get() * getExtractSpeedMultiplier(tank) / 2);
         int amountAccepted = fillFrom(tank, drained.copy(), true);
         if (amountAccepted <= 0) {
             return false;
@@ -102,19 +100,16 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             }
 
             resource = resource.copy();
-            resource.amount = Math
-                  .min(resource.amount, GasConduitConfig.tier3_maxIO.get() * getExtractSpeedMultiplier(tank) / 2);
+            resource.amount = Math.min(resource.amount, GasConduitConfig.tier3_maxIO.get() * getExtractSpeedMultiplier(tank) / 2);
             int filled = 0;
             int remaining = resource.amount;
             // TODO: Only change starting pos of iterator is doFill is true so a false then true returns the same
 
             for (NetworkGasTank target : getIteratorForTank(tank)) {
-                if (target.getExternalTank() != null && (!target.equals(tank) || tank.isSelfFeed()) && target
-                      .acceptsOutput() && target.isValid() && target.getInputColor() == tank.getOutputColor()
-                      && matchedFilter(resource, target.getConduit(), target.getConduitDir(), false) && target
-                      .getExternalTank().canReceiveGas(target.getConduitDir().getOpposite(), resource.getGas())) {
-                    int vol = target.getExternalTank()
-                          .receiveGas(target.getConduitDir().getOpposite(), resource.copy(), doFill);
+                if (target.getExternalTank() != null && (!target.equals(tank) || tank.isSelfFeed()) && target.acceptsOutput() && target.isValid() &&
+                    target.getInputColor() == tank.getOutputColor() && matchedFilter(resource, target.getConduit(), target.getConduitDir(), false) &&
+                    target.getExternalTank().canReceiveGas(target.getConduitDir().getOpposite(), resource.getGas())) {
+                    int vol = target.getExternalTank().receiveGas(target.getConduitDir().getOpposite(), resource.copy(), doFill);
                     remaining -= vol;
                     filled += vol;
                     if (remaining <= 0) {
@@ -140,8 +135,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         if (!upgradeStack.isEmpty()) {
             FunctionUpgrade upgrade = ItemFunctionUpgrade.getFunctionUpgrade(upgradeStack);
             if (upgrade == FunctionUpgrade.EXTRACT_SPEED_UPGRADE) {
-                extractSpeedMultiplier += GasConduitsConstants.GAS_MAX_EXTRACTED_SCALER * Math
-                      .min(upgrade.maxStackSize, upgradeStack.getCount());
+                extractSpeedMultiplier += GasConduitsConstants.GAS_MAX_EXTRACTED_SCALER * Math.min(upgrade.getMaxStackSize(), upgradeStack.getCount());
             } else if (upgrade == FunctionUpgrade.EXTRACT_SPEED_DOWNGRADE) {
                 extractSpeedMultiplier = 1;
             }
@@ -150,8 +144,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         return extractSpeedMultiplier;
     }
 
-    private boolean matchedFilter(GasStack drained, @Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir,
-          boolean isInput) {
+    private boolean matchedFilter(GasStack drained, @Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir, boolean isInput) {
         if (drained == null) {
             return false;
         }

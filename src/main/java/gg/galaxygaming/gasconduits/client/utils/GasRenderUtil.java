@@ -26,8 +26,7 @@ public class GasRenderUtil {
         return textureEntry != null ? textureEntry : RenderUtil.getMissingSprite();
     }
 
-    public static void renderGuiTank(@Nullable GasStack gas, int capacity, int amount, double x, double y, double width,
-          double height) {
+    public static void renderGuiTank(@Nullable GasStack gas, int capacity, int amount, double x, double y, double width, double height) {
         if (gas == null || gas.getGas() == null || amount <= 0) {
             return;
         }

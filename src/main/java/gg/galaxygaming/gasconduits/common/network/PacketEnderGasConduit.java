@@ -77,12 +77,9 @@ public class PacketEnderGasConduit extends PacketConduitFilter<EnderGasConduit> 
 
         private void applyFilter(EnumFacing dir, IConduit conduit, IFilter filter, boolean isInput) {
             if (conduit.hasInternalCapability(CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY, dir)) {
-                IFilterHolder<IFilter> filterHolder = CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY.cast(conduit
-                      .getInternalCapability(CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY, dir));
+                IFilterHolder<IFilter> filterHolder = CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY.cast(conduit.getInternalCapability(CapabilityFilterHolder.FILTER_HOLDER_CAPABILITY, dir));
                 if (filterHolder != null) {
-                    filterHolder
-                          .setFilter(isInput ? filterHolder.getInputFilterIndex() : filterHolder.getOutputFilterIndex(),
-                                dir.ordinal(), filter);
+                    filterHolder.setFilter(isInput ? filterHolder.getInputFilterIndex() : filterHolder.getOutputFilterIndex(), dir.ordinal(), filter);
                 }
             }
         }

@@ -120,8 +120,7 @@ public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit>
                 if (con.canOutputToDir(dir)) {
                     IGasHandler externalTank = con.getExternalHandler(dir);
                     if (externalTank != null) {
-                        externals.add(new LocatedGasHandler(externalTank, con.getBundle().getLocation().offset(dir),
-                              dir.getOpposite()));
+                        externals.add(new LocatedGasHandler(externalTank, con.getBundle().getLocation().offset(dir), dir.getOpposite()));
                     }
                 }
             }
@@ -227,9 +226,7 @@ public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit>
 
         try {
             BlockPos pos = con.getBundle().getLocation();
-            Collection<IGasConduit> connections = ConduitUtil
-                  .getConnectedConduits(con.getBundle().getEntity().getWorld(), pos.getX(), pos.getY(), pos.getZ(),
-                        IGasConduit.class);
+            Collection<IGasConduit> connections = ConduitUtil.getConnectedConduits(con.getBundle().getEntity().getWorld(), pos.getX(), pos.getY(), pos.getZ(), IGasConduit.class);
             for (IGasConduit n : connections) {
                 GasConduit neighbour = (GasConduit) n;
                 if (canFlowTo(con, neighbour)) { // can only flow within same network
@@ -249,8 +246,7 @@ public class GasConduitNetwork extends AbstractGasTankConduitNetwork<GasConduit>
             for (IGasConduit n : connections) {
                 GasConduit neighbour = (GasConduit) n;
                 if (canFlowTo(con, neighbour)) { // can only flow within same network
-                    flowVolume = (int) Math.floor(
-                          (targetRatio - neighbour.getTank().getFilledRatio()) * neighbour.getTank().getMaxGas());
+                    flowVolume = (int) Math.floor((targetRatio - neighbour.getTank().getFilledRatio()) * neighbour.getTank().getMaxGas());
                     if (flowVolume != 0) {
                         actions.add(new FlowAction(con, neighbour, flowVolume));
                     }
