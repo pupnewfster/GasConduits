@@ -10,6 +10,7 @@ import crazypants.enderio.base.conduit.IConduitBundle;
 import crazypants.enderio.base.conduit.IGuiExternalConnection;
 import crazypants.enderio.base.machine.modes.RedstoneControlMode;
 import crazypants.enderio.conduits.conduit.AbstractConduit;
+import crazypants.enderio.util.EnumReader;
 import gg.galaxygaming.gasconduits.client.GasSettings;
 import gg.galaxygaming.gasconduits.common.utils.GasWrapper;
 import java.util.EnumMap;
@@ -39,7 +40,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         return world.getTileEntity(pos) instanceof IConduitBundle ? null : GasWrapper.getGasHandler(world, pos, side);
     }
 
-    public IGasHandler getExternalHandler(EnumFacing direction) {
+    public IGasHandler getExternalHandler(@Nonnull EnumFacing direction) {
         return getExternalGasHandler(getBundle().getBundleworld(), getBundle().getLocation().offset(direction), direction.getOpposite());
     }
 
@@ -107,7 +108,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
 
     @Override
     protected void readTypeSettings(@Nonnull EnumFacing dir, @Nonnull NBTTagCompound dataRoot) {
-        setExtractionSignalColor(dir, DyeColor.values()[dataRoot.getShort("extractionSignalColor")]);
+        setExtractionSignalColor(dir, EnumReader.get(DyeColor.class, dataRoot.getShort("extractionSignalColor")));
         setExtractionRedstoneMode(RedstoneControlMode.fromOrdinal(dataRoot.getShort("extractionRedstoneMode")), dir);
     }
 
@@ -144,14 +145,14 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
             if (nbtRoot.hasKey(key)) {
                 short ord = nbtRoot.getShort(key);
                 if (ord >= 0 && ord < RedstoneControlMode.values().length) {
-                    extractionModes.put(dir, RedstoneControlMode.values()[ord]);
+                    extractionModes.put(dir, EnumReader.get(RedstoneControlMode.class, ord));
                 }
             }
             key = "extSC." + dir.name();
             if (nbtRoot.hasKey(key)) {
                 short ord = nbtRoot.getShort(key);
                 if (ord >= 0 && ord < DyeColor.values().length) {
-                    extractionColors.put(dir, DyeColor.values()[ord]);
+                    extractionColors.put(dir, EnumReader.get(DyeColor.class, ord));
                 }
             }
         }
@@ -205,9 +206,10 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
      */
     protected class ConnectionGasSide implements IGasHandler, ICapabilityProvider {
 
+        @Nonnull
         protected EnumFacing side;
 
-        public ConnectionGasSide(EnumFacing side) {
+        public ConnectionGasSide(@Nonnull EnumFacing side) {
             this.side = side;
         }
 

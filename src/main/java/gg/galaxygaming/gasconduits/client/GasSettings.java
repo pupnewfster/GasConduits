@@ -21,6 +21,7 @@ import crazypants.enderio.conduits.gui.GuiExternalConnection;
 import crazypants.enderio.conduits.init.ConduitObject;
 import crazypants.enderio.conduits.lang.Lang;
 import crazypants.enderio.conduits.network.PacketExtractMode;
+import crazypants.enderio.util.EnumReader;
 import gg.galaxygaming.gasconduits.client.utils.GasFilterGuiUtil;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
@@ -46,7 +47,7 @@ public class GasSettings extends BaseSettingsPanel {
     private static final int ID_ROUND_ROBIN = GuiExternalConnection.nextButtonId();
     private static final int ID_LOOP = GuiExternalConnection.nextButtonId();
 
-    private final RedstoneModeButton rsB;
+    private final RedstoneModeButton<?> rsB;
     private final ColorButton colorB;
     private boolean isEnder = false;
     private EnderGasConduit eCon;
@@ -63,6 +64,7 @@ public class GasSettings extends BaseSettingsPanel {
     private int priLeft = 46;
     private int priWidth = 32;
 
+    @Nonnull
     private final IGasConduit conduit;
 
     public GasSettings(@Nonnull final IGuiExternalConnection gui, @Nonnull IClientConduit con) {
@@ -135,10 +137,10 @@ public class GasSettings extends BaseSettingsPanel {
             doOpenFilterGui(GasFilterGuiUtil.INDEX_INPUT_GAS);
             return;
         } else if (guiButton.id == ID_INSERT_CHANNEL) {
-            DyeColor col = DyeColor.values()[insertChannelB.getColorIndex()];
+            DyeColor col = EnumReader.get(DyeColor.class, insertChannelB.getColorIndex());
             eCon.setOutputColor(gui.getDir(), col);
         } else if (guiButton.id == ID_EXTRACT_CHANNEL) {
-            DyeColor col = DyeColor.values()[extractChannelB.getColorIndex()];
+            DyeColor col = EnumReader.get(DyeColor.class, extractChannelB.getColorIndex());
             eCon.setInputColor(gui.getDir(), col);
         } else if (guiButton.id == ID_PRIORITY_UP) {
             eCon.setOutputPriority(gui.getDir(), eCon.getOutputPriority(gui.getDir()) + 1);

@@ -1,10 +1,7 @@
 package gg.galaxygaming.gasconduits.common.conduit.ender;
 
 import com.enderio.core.common.util.RoundRobinIterator;
-import crazypants.enderio.base.conduit.item.FunctionUpgrade;
-import crazypants.enderio.base.conduit.item.ItemFunctionUpgrade;
 import crazypants.enderio.conduits.conduit.AbstractConduitNetwork;
-import gg.galaxygaming.gasconduits.GasConduitsConstants;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.NetworkGasTank;
 import gg.galaxygaming.gasconduits.common.config.GasConduitConfig;
@@ -18,7 +15,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -68,7 +64,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             return false;
         }
 
-        drained.amount = Math.min(drained.amount, GasConduitConfig.tier3_extractRate.get() * getExtractSpeedMultiplier(tank) / 2);
+        drained.amount = Math.min(drained.amount, (int) (GasConduitConfig.tier3_extractRate.get() * getExtractSpeedMultiplier(tank)));
         int amountAccepted = fillFrom(tank, drained.copy(), true);
         if (amountAccepted <= 0) {
             return false;
@@ -100,7 +96,7 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
             }
 
             resource = resource.copy();
-            resource.amount = Math.min(resource.amount, GasConduitConfig.tier3_maxIO.get() * getExtractSpeedMultiplier(tank) / 2);
+            resource.amount = Math.min(resource.amount, (int) (GasConduitConfig.tier3_maxIO.get() * getExtractSpeedMultiplier(tank)));
             int filled = 0;
             int remaining = resource.amount;
             // TODO: Only change starting pos of iterator is doFill is true so a false then true returns the same
@@ -128,20 +124,8 @@ public class EnderGasConduitNetwork extends AbstractConduitNetwork<IGasConduit, 
         }
     }
 
-    private int getExtractSpeedMultiplier(NetworkGasTank tank) {
-        int extractSpeedMultiplier = 2;
-
-        ItemStack upgradeStack = tank.getConduit().getFunctionUpgrade(tank.getConduitDir());
-        if (!upgradeStack.isEmpty()) {
-            FunctionUpgrade upgrade = ItemFunctionUpgrade.getFunctionUpgrade(upgradeStack);
-            if (upgrade == FunctionUpgrade.EXTRACT_SPEED_UPGRADE) {
-                extractSpeedMultiplier += GasConduitsConstants.GAS_MAX_EXTRACTED_SCALER * Math.min(upgrade.getMaxStackSize(), upgradeStack.getCount());
-            } else if (upgrade == FunctionUpgrade.EXTRACT_SPEED_DOWNGRADE) {
-                extractSpeedMultiplier = 1;
-            }
-        }
-
-        return extractSpeedMultiplier;
+    private float getExtractSpeedMultiplier(NetworkGasTank tank) {
+        return tank.con.getExtractSpeedMultiplier(tank.conDir);
     }
 
     private boolean matchedFilter(GasStack drained, @Nonnull EnderGasConduit con, @Nonnull EnumFacing conDir, boolean isInput) {

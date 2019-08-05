@@ -11,9 +11,9 @@ import net.minecraft.util.math.BlockPos;
 public class NetworkGasTank {
 
     @Nonnull
-    private final EnderGasConduit con;
+    public final EnderGasConduit con;
     @Nonnull
-    private final EnumFacing conDir;
+    public final EnumFacing conDir;
     private final IGasHandler externalTank;
     @Nonnull
     private final EnumFacing tankDir;

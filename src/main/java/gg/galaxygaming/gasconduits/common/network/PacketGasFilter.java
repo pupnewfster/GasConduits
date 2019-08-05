@@ -1,6 +1,7 @@
 package gg.galaxygaming.gasconduits.common.network;
 
 import crazypants.enderio.conduits.network.AbstractConduitPacket;
+import crazypants.enderio.util.EnumReader;
 import gg.galaxygaming.gasconduits.common.conduit.IGasConduit;
 import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
 import gg.galaxygaming.gasconduits.common.filter.GasFilter;
@@ -49,7 +50,7 @@ public class PacketGasFilter extends AbstractConduitPacket<IGasConduit> {
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
         short ord = buf.readShort();
-        dir = ord < 0 ? null : EnumFacing.values()[ord];
+        dir = ord < 0 ? null : EnumReader.get(EnumFacing.class, ord);
         isInput = buf.readBoolean();
         NBTTagCompound tag = ByteBufUtils.readTag(buf);
         filter = new GasFilter();

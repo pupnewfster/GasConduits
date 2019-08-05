@@ -112,9 +112,7 @@ public class GasFilter implements IGasFilter {
     }
 
     private void clear() {
-        for (int i = 0; i < gases.length; i++) {
-            gases[i] = null;
-        }
+        Arrays.fill(gases, null);
     }
 
     @Override
@@ -203,6 +201,7 @@ public class GasFilter implements IGasFilter {
                 stack = (GasStack) ingredient;
             }
             setGas(getSlot(), stack);
+            cb.run();
         }
 
         @Override

@@ -10,6 +10,7 @@ import crazypants.enderio.base.filter.IFilter;
 import crazypants.enderio.base.filter.IFilterContainer;
 import crazypants.enderio.base.filter.gui.ContainerFilter;
 import crazypants.enderio.base.lang.Lang;
+import crazypants.enderio.util.EnumReader;
 import crazypants.enderio.util.NbtValue;
 import gg.galaxygaming.gasconduits.client.GasFilterGui;
 import gg.galaxygaming.gasconduits.common.conduit.GasConduitObject;
@@ -98,7 +99,7 @@ public class ItemGasFilter extends Item implements IItemFilterGasUpgrade, IResou
             return new GasFilterGui(player.inventory, new ContainerFilter(player, (TileEntityBase) world.getTileEntity(pos), facing, param1), world.getTileEntity(pos),
                   ((IFilterContainer<IGasFilter>) container).getFilter(param1));
         }
-        IFilter filter = FilterRegistry.getFilterForUpgrade(player.getHeldItem(EnumHand.values()[param1]));
+        IFilter filter = FilterRegistry.getFilterForUpgrade(player.getHeldItem(EnumReader.get(EnumHand.class, param1)));
         if (filter instanceof IGasFilter) {
             //Should always be true, mainly double checked to avoid null warning
             return new GasFilterGui(player.inventory, new ContainerFilter(player, null, facing, param1), null, (IGasFilter) filter);

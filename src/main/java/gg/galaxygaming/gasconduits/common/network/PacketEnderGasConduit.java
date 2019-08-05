@@ -6,6 +6,7 @@ import crazypants.enderio.base.filter.IFilter;
 import crazypants.enderio.base.filter.capability.CapabilityFilterHolder;
 import crazypants.enderio.base.filter.capability.IFilterHolder;
 import crazypants.enderio.conduits.network.PacketConduitFilter;
+import crazypants.enderio.util.EnumReader;
 import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit;
 import io.netty.buffer.ByteBuf;
 import javax.annotation.Nonnull;
@@ -48,8 +49,8 @@ public class PacketEnderGasConduit extends PacketConduitFilter<EnderGasConduit> 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        colIn = DyeColor.values()[buf.readShort()];
-        colOut = DyeColor.values()[buf.readShort()];
+        colIn = EnumReader.get(DyeColor.class, buf.readShort());
+        colOut = EnumReader.get(DyeColor.class, buf.readShort());
         priority = buf.readInt();
         roundRobin = buf.readBoolean();
         selfFeed = buf.readBoolean();
