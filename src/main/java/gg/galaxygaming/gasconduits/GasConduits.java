@@ -1,6 +1,6 @@
 package gg.galaxygaming.gasconduits;
 
-import com.enderio.core.common.transform.EnderCorePlugin;
+import com.enderio.core.common.mixin.SimpleMixinLoader;
 import com.enderio.core.common.util.NNList;
 import crazypants.enderio.api.addon.IEnderIOAddon;
 import crazypants.enderio.base.config.ConfigHandlerEIO;
@@ -31,7 +31,7 @@ public class GasConduits implements IEnderIOAddon {
     private static ConfigHandler configHandler;
 
     public GasConduits() {
-        EnderCorePlugin.instance().loadMixinSources(this);
+        SimpleMixinLoader.loadMixinSources(this);
     }
 
     @EventHandler
