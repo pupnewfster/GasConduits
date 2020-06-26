@@ -29,11 +29,6 @@ public enum GasConduitObject implements IModObjectBase {
     protected final String unlocalisedName;
 
     @Nullable
-    protected Block block;
-    @Nullable
-    protected Item item;
-
-    @Nullable
     protected final Function<IModObject, Block> blockMaker;
 
     @Nullable
@@ -68,23 +63,6 @@ public enum GasConduitObject implements IModObjectBase {
         this.modTileEntity = null;
     }
 
-    @Nullable
-    @Override
-    @Deprecated
-    public final Class<?> getClazz() {
-        return null;
-    }
-
-    @Override
-    public final void setItem(@Nullable Item obj) {
-        this.item = obj;
-    }
-
-    @Override
-    public final void setBlock(@Nullable Block obj) {
-        this.block = obj;
-    }
-
     @Nonnull
     @Override
     public final String getUnlocalisedName() {
@@ -95,18 +73,6 @@ public enum GasConduitObject implements IModObjectBase {
     @Override
     public ResourceLocation getRegistryName() {
         return new ResourceLocation(GasConduitsConstants.MOD_ID, getUnlocalisedName());
-    }
-
-    @Nullable
-    @Override
-    public final Block getBlock() {
-        return block;
-    }
-
-    @Nullable
-    @Override
-    public final Item getItem() {
-        return item;
     }
 
     @Override
@@ -132,19 +98,5 @@ public enum GasConduitObject implements IModObjectBase {
     @Override
     public BiFunction<IModObject, Block, Item> getItemCreator() {
         return NullHelper.first(itemMaker, IModObject.WithBlockItem.itemCreator);
-    }
-
-    @Override
-    @Nullable
-    @Deprecated
-    public final String getBlockMethodName() {
-        return null;
-    }
-
-    @Override
-    @Nullable
-    @Deprecated
-    public final String getItemMethodName() {
-        return null;
     }
 }
