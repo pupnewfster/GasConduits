@@ -94,6 +94,10 @@ repositories {
         url = "https://maven.tterrag.com/"
     }
     maven {
+        name = "EnderIO - Temp"
+        url = "https://maven.hypherionmc.me/"
+    }
+    maven {
         name = "JEI"
         url = "http://dvs1.progwml6.com/files/maven"
     }

@@ -89,7 +89,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
             return false;
         }
         RedstoneControlMode mode = getExtractionRedstoneMode(dir);
-        return ConduitUtil.isRedstoneControlModeMet(this, mode, getExtractionSignalColor(dir));
+        return ConduitUtil.isRedstoneControlModeMet(this, mode, getExtractionSignalColor(dir), dir);
     }
 
     @Override
@@ -232,7 +232,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         @Override
         public boolean canReceiveGas(EnumFacing facing, Gas gas) {
             if (side.equals(facing) && getConnectionMode(facing).acceptsInput()) {
-                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
+                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing), facing);
             }
             return false;
         }
@@ -240,7 +240,7 @@ public abstract class AbstractGasConduit extends AbstractConduit implements IGas
         @Override
         public boolean canDrawGas(EnumFacing facing, Gas gas) {
             if (side.equals(facing) && getConnectionMode(facing).acceptsOutput()) {
-                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing));
+                return ConduitUtil.isRedstoneControlModeMet(AbstractGasConduit.this, getExtractionRedstoneMode(facing), getExtractionSignalColor(facing), facing);
             }
             return false;
         }
